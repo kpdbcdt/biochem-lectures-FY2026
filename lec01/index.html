@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学 Lec 01 — 糖質 (Interactive Lab)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: #f7f9fc;
+    color: #1a2633;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 22px; }
+  header p { margin: 0; opacity: 0.92; font-size: 13px; }
+  .meta-bar {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a6978;
+  }
+  .meta-bar b { color: #1a2633; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #5a6978;
+    border-radius: 5px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab-bar button:hover { background: #f0fff4; }
+  .tab-bar button.active {
+    background: #276749;
+    color: white;
+    border-color: #276749;
+  }
+  .panel {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 { margin: 0 0 8px 0; font-size: 18px; color: #276749; }
+  .panel h3 { margin: 16px 0 8px 0; font-size: 15px; color: #276749; }
+  .objective {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    margin: 8px 0 14px 0;
+    font-size: 13px;
+    color: #22543d;
+    border-radius: 4px;
+  }
+  .objective b { color: #1a4a3c; }
+  .ctrl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .ctrl label { font-size: 13px; color: #5a6978; font-weight: 500; margin-right: 4px; }
+  .ctrl button, .ctrl select, .ctrl input {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #1a2633;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ctrl button:hover { background: #f0fff4; }
+  .ctrl button.primary {
+    background: #38a169;
+    color: white;
+    border-color: #2f855a;
+  }
+  .ctrl button.primary:hover { background: #2f855a; }
+  .ctrl input[type=number] { width: 90px; }
+  .display-box {
+    background: #fafbfc;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    min-height: 80px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .display-box.center { text-align: center; }
+  .display-box svg { max-width: 100%; height: auto; }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  table.cmp th, table.cmp td {
+    border: 1px solid #d7dce5;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th { background: #f0fff4; color: #22543d; font-weight: 600; }
+  table.cmp tr:nth-child(even) td { background: #fafbfc; }
+  .pill {
+    display: inline-block;
+    background: #edf2f7;
+    color: #5a6978;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  .pill.alpha { background: #fef3c7; color: #92400e; }
+  .pill.beta { background: #dbeafe; color: #1e40af; }
+  .pill.acid { background: #fce7f3; color: #9d174d; }
+  .pill.base { background: #d1fae5; color: #065f46; }
+  .pill.gram_pos { background: #fee2e2; color: #991b1b; }
+  .pill.gram_neg { background: #e0e7ff; color: #3730a3; }
+  .result-box {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .result-box b { color: #22543d; }
+  .quiz-card {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .quiz-card .stem { font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+  .quiz-card ul.options { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .quiz-card ul.options li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #d7dce5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fafbfc;
+    user-select: none;
+  }
+  .quiz-card ul.options li:hover { background: #f0fff4; }
+  .quiz-card ul.options li.selected { background: #dbeafe; border-color: #2b6cb0; }
+  .quiz-card ul.options li.correct { background: #c6f6d5; border-color: #22543d; color: #22543d; }
+  .quiz-card ul.options li.incorrect { background: #fed7d7; border-color: #9b2c2c; color: #9b2c2c; }
+  .quiz-explain {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: none;
+  }
+  .quiz-explain.shown { display: block; }
+  .quiz-explain b { color: #22543d; }
+  .quiz-summary {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  footer {
+    text-align: center;
+    color: #5a6978;
+    font-size: 12px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid #d7dce5;
+  }
+  footer a { color: #38a169; text-decoration: none; }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header { padding: 18px 20px; }
+    header h1 { font-size: 18px; }
+    .panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧪 生化学 Lec 01 — 糖質 (Interactive Lab)</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 · 月曜 1 限 · 6/1 (録画配信) · 長谷耕二 先生</p>
+</header>
+
+<div class="meta-bar">
+  <b>学修目標</b>: 代表的な単糖・二糖・多糖の種類、構造、性質、役割を説明できる<br>
+  <b>使い方</b>: 下のタブを切り替えて 5 つの interactive tools + 復習クイズで学習。何度でも挑戦できます。<br>
+  <b>教科書対応</b>: イラストレイテッド生化学 第8版 7章 / エッセンシャル細胞生物学 第5版 2章
+</div>
+
+<div class="tab-bar">
+  <button data-tab="stereo" class="active">🍬 Sugar Stereo</button>
+  <button data-tab="glyco">🔗 Glycosidic Bond</button>
+  <button data-tab="poly">🌾 Polysaccharide</button>
+  <button data-tab="methyl">🧮 Methylation Calc</button>
+  <button data-tab="abx">💊 Antibiotic Target</button>
+  <button data-tab="quiz">📝 Quiz (15問)</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: Sugar Stereo Explorer                                 -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-stereo">
+  <h2>🍬 Sugar Stereo Explorer — 糖立体化学エクスプローラー</h2>
+  <div class="objective"><b>学習目標</b>: D/L 配置、α/β アノマー、エピマー (Glc/Man/Gal) の違いを構造で識別できる。フィッシャー投影と Haworth 式を相互変換できる。</div>
+
+  <div class="ctrl">
+    <label>単糖:</label>
+    <select id="stereo-sugar">
+      <option value="glc">D-グルコース (Glc)</option>
+      <option value="man">D-マンノース (Man) — C2 エピマー</option>
+      <option value="gal">D-ガラクトース (Gal) — C4 エピマー</option>
+      <option value="fru">D-フルクトース (Fru) — ケトース</option>
+    </select>
+    <label>表記:</label>
+    <select id="stereo-form">
+      <option value="fischer">フィッシャー投影 (鎖状)</option>
+      <option value="haworth_alpha">Haworth (α アノマー)</option>
+      <option value="haworth_beta">Haworth (β アノマー)</option>
+    </select>
+  </div>
+
+  <div class="display-box center" id="stereo-display"></div>
+
+  <div class="result-box" id="stereo-info"></div>
+
+  <h3>エピマー比較表</h3>
+  <table class="cmp">
+    <tr><th>糖ペア</th><th>違いの位置</th><th>関係</th></tr>
+    <tr><td>D-Glc vs D-Man</td><td>C2 の OH 立体</td><td><b>C2 エピマー</b></td></tr>
+    <tr><td>D-Glc vs D-Gal</td><td>C4 の OH 立体</td><td><b>C4 エピマー</b></td></tr>
+    <tr><td>D-Man vs D-Gal</td><td>C2 と C4 両方</td><td>エピマーではなく <b>ジアステレオマー</b></td></tr>
+    <tr><td>D-Glc vs L-Glc</td><td>すべての不斉炭素</td><td><b>鏡像異性体 (エナンチオマー)</b></td></tr>
+  </table>
+
+  <h3>α / β アノマー</h3>
+  <p style="font-size: 13px;">単糖が環化すると C1 (アルドース) や C2 (ケトース) のカルボニル炭素が<b>新たな不斉中心 (アノマー炭素)</b> になり、2 つの立体配置 (α/β) が生じる。水溶液中ではα ↔ β が相互変換 (<b>変旋光</b>)、平衡比率は β-D-Glc 約 64% : α-D-Glc 約 36% (より安定なβが多い、すべてエクアトリアル配置)。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: Glycosidic Bond Builder                               -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-glyco">
+  <h2>🔗 Glycosidic Bond Builder — グリコシド結合ビルダー</h2>
+  <div class="objective"><b>学習目標</b>: 二糖の構造を構成単糖と結合タイプ (α/β、1→4 など) から記述できる。還元末端と非還元末端を判定できる。</div>
+
+  <div class="ctrl">
+    <label>二糖を選択:</label>
+    <select id="glyco-select">
+      <option value="maltose">マルトース (麦芽糖)</option>
+      <option value="cellobiose">セロビオース</option>
+      <option value="lactose">ラクトース (乳糖)</option>
+      <option value="sucrose">スクロース (ショ糖)</option>
+      <option value="trehalose">トレハロース</option>
+      <option value="isomaltose">イソマルトース</option>
+    </select>
+  </div>
+
+  <div class="display-box" id="glyco-display"></div>
+
+  <div class="result-box" id="glyco-info"></div>
+
+  <h3>二糖まとめ</h3>
+  <table class="cmp">
+    <tr><th>二糖</th><th>構成単糖</th><th>結合</th><th>還元性</th><th>由来・特徴</th></tr>
+    <tr><td>マルトース</td><td>Glc + Glc</td><td><span class="pill alpha">α</span>1→4</td><td>あり</td><td>麦芽、デンプン分解物</td></tr>
+    <tr><td>セロビオース</td><td>Glc + Glc</td><td><span class="pill beta">β</span>1→4</td><td>あり</td><td>セルロース分解物</td></tr>
+    <tr><td>ラクトース</td><td>Gal + Glc</td><td><span class="pill beta">β</span>1→4</td><td>あり</td><td>乳汁 (〜7%)、不耐症あり</td></tr>
+    <tr><td>スクロース</td><td>Glc + Fru</td><td><span class="pill alpha">α</span>1↔<span class="pill beta">β</span>2</td><td>なし</td><td>砂糖、両アノマー炭素が結合</td></tr>
+    <tr><td>トレハロース</td><td>Glc + Glc</td><td><span class="pill alpha">α</span>1↔<span class="pill alpha">α</span>1</td><td>なし</td><td>昆虫・菌、保水性 (食品・医薬)</td></tr>
+    <tr><td>イソマルトース</td><td>Glc + Glc</td><td><span class="pill alpha">α</span>1→6</td><td>あり</td><td>アミロペクチン分枝部</td></tr>
+  </table>
+
+  <h3>還元糖と非還元糖</h3>
+  <p style="font-size: 13px;"><b>還元糖</b> = アノマー炭素 (C1 など) がグリコシド結合に使われていない → アルデヒド型と環状型の平衡 → フェーリング反応・ベネジクト反応で陽性。<br><b>非還元糖</b> = 両方のアノマー炭素が結合に使われている (スクロース・トレハロース) → 環状構造のみ → 還元性を示さない。</p>
+
+  <h3>ラクトース不耐症 (臨床)</h3>
+  <p style="font-size: 13px;">ラクターゼ (β-D-ガラクトシダーゼ) 活性低下 → ラクトースが小腸で分解されず結腸へ → 腸内細菌による発酵 → ガス・有機酸発生 → 腹部膨満・下痢。アジア人で頻度高 (~80-90% で活性低下)。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: Polysaccharide Navigator                              -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-poly">
+  <h2>🌾 Polysaccharide Navigator — 多糖構造ナビゲーター</h2>
+  <div class="objective"><b>学習目標</b>: 主要な多糖の構成単糖、結合タイプ、分子構造 (直鎖/分枝)、機能、消化酵素を対応づけられる。</div>
+
+  <div class="ctrl">
+    <label>多糖を選択:</label>
+    <select id="poly-select">
+      <option value="amylose">アミロース</option>
+      <option value="amylopectin">アミロペクチン</option>
+      <option value="glycogen">グリコーゲン</option>
+      <option value="cellulose">セルロース</option>
+      <option value="chitin">キチン</option>
+      <option value="hyaluronate">ヒアルロン酸</option>
+      <option value="heparin">ヘパリン</option>
+    </select>
+  </div>
+
+  <div class="display-box" id="poly-display"></div>
+
+  <div class="result-box" id="poly-info"></div>
+
+  <h3>貯蔵多糖 vs 構造多糖</h3>
+  <table class="cmp">
+    <tr><th>カテゴリ</th><th>例</th><th>特徴</th></tr>
+    <tr><td><b>貯蔵</b></td><td>デンプン (アミロース + アミロペクチン)、グリコーゲン</td><td>α 結合 → ヘリックス構造 → 消化酵素でアクセス可</td></tr>
+    <tr><td><b>構造</b></td><td>セルロース、キチン、ペプチドグリカン</td><td>β 結合 → 直鎖が水素結合で繊維化 → 強度高・消化困難</td></tr>
+    <tr><td><b>細胞外マトリックス</b></td><td>ヒアルロン酸、コンドロイチン硫酸、ヘパラン硫酸</td><td>GAG = [アミノ糖 + ウロン酸] 反復、粘性・弾力性</td></tr>
+  </table>
+
+  <h3>ヨウ素デンプン反応</h3>
+  <p style="font-size: 13px;">アミロース (直鎖、長いらせん) → <b>濃青色</b>。アミロペクチン (分枝、短いらせん) → <b>赤紫色</b>。グリコーゲン → <b>赤褐色</b>。らせん内部に I₃⁻ が取り込まれて発色 (らせんが長いほど短波長吸収 → 青)。</p>
+
+  <h3>消化のおさらい</h3>
+  <p style="font-size: 13px;"><b>唾液・膵液アミラーゼ</b> = α(1→4) を内部から加水分解 → マルトース・限界デキストリン。<br><b>α-グルコシダーゼ + 脱分枝酵素</b> = 残存 α(1→4) と α(1→6) を分解 → グルコース → 小腸吸収。<br><b>セルロース</b> = ヒトはセルラーゼを持たない → 食物繊維として通過。反芻動物・シロアリは共生細菌のセルラーゼで分解。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: Methylation Analysis Calculator                       -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-methyl">
+  <h2>🧮 Methylation Analysis Calculator — メチル化分析計算</h2>
+  <div class="objective"><b>学習目標</b>: アミロペクチンの分枝率を、メチル化分析の生成物分布から定量的に求められる (S44-46 演習問題)。</div>
+
+  <h3>原理</h3>
+  <p style="font-size: 13px;">
+    アミロペクチンを<b>メチル化試薬</b>ですべての遊離 -OH を -OCH₃ に置換 → <b>希酸加水分解</b>で単糖まで分解。<br>
+    各 Glc 残基の位置によって、加水分解後に得られるメチル化グルコースの種類が変わる:
+  </p>
+  <table class="cmp">
+    <tr><th>残基の位置</th><th>加水分解後の生成物</th><th>意味</th></tr>
+    <tr><td>非還元末端</td><td><b>2,3,4,6-テトラ-O-Me-Glc</b></td><td>4 ヵ所メチル化 (1 位はグリコシド側)</td></tr>
+    <tr><td>直鎖内部 (α1→4)</td><td><b>2,3,6-トリ-O-Me-Glc</b></td><td>3 ヵ所メチル化</td></tr>
+    <tr><td><b>分枝点 (α1→4 + α1→6)</b></td><td><b>2,3-ジ-O-Me-Glc</b></td><td>2 ヵ所のみ — 1, 4, 6 位はグリコシド側</td></tr>
+    <tr><td>還元末端</td><td>1,2,3,6-テトラ-O-Me-Glc</td><td>4 ヵ所 (4 位はグリコシド)、量は微量</td></tr>
+  </table>
+
+  <h3>分枝率 = (2,3-ジ-O-Me-Glc のモル数) / (全 Glc のモル数) × 100 (%)</h3>
+
+  <div class="ctrl">
+    <label>① アミロペクチン試料量 (mg):</label>
+    <input type="number" id="methyl-sample" value="258" step="1">
+    <label>② 2,3-ジ-O-Me-Glc 生成量 (mg):</label>
+    <input type="number" id="methyl-product" value="12.4" step="0.1">
+    <button class="primary" id="methyl-calc">計算</button>
+    <button id="methyl-reset">演習値に戻す</button>
+  </div>
+
+  <div class="result-box" id="methyl-result"></div>
+
+  <h3>計算の道筋 (デフォルト値の場合)</h3>
+  <p style="font-size: 13px;">
+    Glc の分子量 = 180 (C₆H₁₂O₆)。試料中の全 Glc モル数 ≈ <b>258 / 162 = 1.59 mmol</b> (脱水縮合で 1 残基あたり -18 → 162 g/mol)。<br>
+    2,3-ジ-O-Me-Glc の分子量 = 180 + 15 × 2 − 2 = <b>208</b> (-H × 2 を -CH₃ × 2 に置換)。生成量から分枝モル数 ≈ <b>12.4 / 208 = 0.0596 mmol</b>。<br>
+    分枝率 = 0.0596 / 1.59 × 100 ≈ <b>3.74 %</b> (= 約 27 残基ごとに 1 分枝、アミロペクチンの典型値 24-30 と整合)。
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: Antibiotic Target                                     -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-abx">
+  <h2>💊 Antibiotic Target — 細胞壁ペプチドグリカンと抗生物質</h2>
+  <div class="objective"><b>学習目標</b>: ペプチドグリカンの構造と、ペニシリン・バンコマイシン等の作用機序を結びつけて説明できる。グラム陽性・陰性菌の細胞壁構造の違いを理解する。</div>
+
+  <h3>ペプチドグリカン構造</h3>
+  <p style="font-size: 13px;">
+    細菌の細胞壁主成分。<b>N-アセチルグルコサミン (GlcNAc) + N-アセチルムラミン酸 (MurNAc)</b> が β(1→4) 結合で交互に並ぶ糖鎖が、<b>テトラペプチド</b>側鎖で架橋された網目構造。<br>
+    グラム陽性菌では <b>ペンタグリシン橋</b>が架橋を強化、グラム陰性菌では薄い層 + 外膜 (LPS) を持つ。
+  </p>
+
+  <div class="ctrl">
+    <label>菌タイプ:</label>
+    <select id="abx-bact">
+      <option value="pos">グラム陽性菌 (黄色ブドウ球菌等)</option>
+      <option value="neg">グラム陰性菌 (大腸菌等)</option>
+    </select>
+    <label>抗生物質:</label>
+    <select id="abx-drug">
+      <option value="penicillin">ペニシリン</option>
+      <option value="vancomycin">バンコマイシン</option>
+      <option value="lysozyme">リゾチーム (酵素)</option>
+    </select>
+  </div>
+
+  <div class="display-box" id="abx-display"></div>
+
+  <div class="result-box" id="abx-info"></div>
+
+  <h3>機序まとめ</h3>
+  <table class="cmp">
+    <tr><th>薬剤</th><th>分子標的</th><th>機序</th><th>有効菌</th></tr>
+    <tr><td>ペニシリン</td><td>PBP (ペニシリン結合タンパク = トランスペプチダーゼ)</td><td>架橋形成のトランスペプチダーゼを共有結合で阻害 → 細胞壁脆弱 → 溶菌</td><td>主に <span class="pill gram_pos">グラム陽性</span>、一部 <span class="pill gram_neg">陰性</span></td></tr>
+    <tr><td>バンコマイシン</td><td>D-Ala-D-Ala 末端</td><td>架橋前駆体に直接結合 → トランスペプチダーゼがアクセス不可 → 細胞壁形成阻害</td><td><span class="pill gram_pos">グラム陽性</span> (MRSA に有効)、陰性は外膜で通過困難</td></tr>
+    <tr><td>リゾチーム</td><td>GlcNAc-MurNAc β(1→4) 結合</td><td>糖鎖を直接加水分解 (生体内防御酵素、涙・唾液)</td><td>主に <span class="pill gram_pos">グラム陽性</span></td></tr>
+  </table>
+
+  <h3>MRSA = Methicillin-Resistant Staphylococcus aureus</h3>
+  <p style="font-size: 13px;">通常の PBP (PBP1-3) の代わりに、ペニシリン耐性の <b>PBP2a (mecA 遺伝子由来)</b> を発現 → β-ラクタム系すべて (メチシリン、オキサシリン等) に耐性。バンコマイシンは D-Ala-D-Ala に直接結合するので有効 (ただし VRSA も近年出現)。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: Quiz                                                  -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-quiz">
+  <h2>📝 復習クイズ (15問)</h2>
+  <div class="objective"><b>使い方</b>: 各問の選択肢をクリック → 「答え合わせ」ボタンで正解と解説を表示。何度でも挑戦可。最後にスコアが集計されます。</div>
+
+  <div id="quiz-list"></div>
+
+  <div class="ctrl" style="margin-top: 20px;">
+    <button class="primary" id="quiz-grade">全問の答え合わせ + スコア集計</button>
+    <button id="quiz-reset">全問リセット</button>
+  </div>
+
+  <div id="quiz-summary"></div>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
+  教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a>
+</footer>
+
+<script>
+// ============================================================
+//  Tab switching
+// ============================================================
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ============================================================
+//  TAB 1: Sugar Stereo Explorer
+// ============================================================
+const SUGAR_DATA = {
+  glc: {
+    name: "D-グルコース", short: "Glc", type: "アルドヘキソース (C6 アルドース)",
+    note: "最重要の単糖。血糖、エネルギー源。<b>β-D-Glc</b> は全 OH/CH₂OH がエクアトリアルで最も安定。Glc 水溶液中は β 64% : α 36% : 開環型 0.01% (= <b>変旋光</b>)。",
+    fischer: ["CHO", "H–C–OH", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"],
+    haworth_alpha_oh: "下",
+    haworth_beta_oh: "上"
+  },
+  man: {
+    name: "D-マンノース", short: "Man", type: "アルドヘキソース (Glc の C2 エピマー)",
+    note: "Glc とは <b>C2 の OH の立体配置のみ異なる</b> (= C2 エピマー)。N-結合型糖鎖、I 細胞病で関与 (リソソーム酵素の Man-6-P タグ)。",
+    fischer: ["CHO", "HO–C–H", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"]
+  },
+  gal: {
+    name: "D-ガラクトース", short: "Gal", type: "アルドヘキソース (Glc の C4 エピマー)",
+    note: "Glc とは <b>C4 の OH の立体配置のみ異なる</b> (= C4 エピマー)。乳糖 (Gal + Glc β1→4) の構成糖。ABO 血液型抗原や糖タンパク質の構成成分。",
+    fischer: ["CHO", "H–C–OH", "HO–C–H", "HO–C–H", "H–C–OH", "CH₂OH"]
+  },
+  fru: {
+    name: "D-フルクトース", short: "Fru", type: "ケトヘキソース (C2 にケトン基)",
+    note: "果実・蜂蜜の主要糖。スクロース構成糖 (Glc-α1↔β2-Fru)。環化すると <b>フラノース (5員環)</b> が主要 (ピラノース型もあり)。",
+    fischer: ["CH₂OH", "C=O", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"]
+  }
+};
+
+function renderSugar() {
+  const sugarKey = document.getElementById('stereo-sugar').value;
+  const form = document.getElementById('stereo-form').value;
+  const data = SUGAR_DATA[sugarKey];
+  const display = document.getElementById('stereo-display');
+  const info = document.getElementById('stereo-info');
+
+  let html = '';
+  if (form === 'fischer') {
+    html = `<div style="font-family: monospace; font-size: 15px; line-height: 1.4;">`;
+    html += `<b>${data.name} (${data.short})</b><br>フィッシャー投影式 (鎖状)<br><br>`;
+    data.fischer.forEach((row, i) => {
+      html += `<div>${row}</div>`;
+    });
+    html += `</div>`;
+  } else {
+    const isAlpha = form === 'haworth_alpha';
+    const anomerLabel = isAlpha ? 'α' : 'β';
+    const anomerColor = isAlpha ? '#92400e' : '#1e40af';
+    const ohPosition = isAlpha ? '下 (axial)' : '上 (equatorial)';
+    html = `<div style="font-size: 14px;">`;
+    html += `<b>${data.name}</b> Haworth 式 <span style="color:${anomerColor}; font-weight: bold;">${anomerLabel}-アノマー</span><br>`;
+    html += `(アノマー OH の位置: <b>${ohPosition}</b>)<br><br>`;
+    html += `<svg viewBox="0 0 320 220" style="background:#fff; max-width: 320px;">
+      <!-- pyranose hexagon outline -->
+      <polygon points="160,40 240,80 240,160 160,200 80,160 80,80" fill="none" stroke="#276749" stroke-width="2.5"/>
+      <!-- O at top-right -->
+      <text x="240" y="78" font-size="18" font-weight="bold" fill="#276749" text-anchor="middle">O</text>
+      <!-- C1 (anomeric) at bottom-right -->
+      <text x="245" y="170" font-size="14" fill="#5a6978">C1</text>
+      <!-- C5 (top-left) -->
+      <text x="60" y="78" font-size="14" fill="#5a6978">C5</text>
+      <!-- CH2OH attached to C5 -->
+      <line x1="80" y1="80" x2="40" y2="40" stroke="#276749" stroke-width="2"/>
+      <text x="15" y="35" font-size="14" font-weight="bold" fill="#276749">CH₂OH</text>
+      <!-- anomeric OH -->
+      <line x1="240" y1="160" x2="270" y2="${isAlpha ? 200 : 130}" stroke="${anomerColor}" stroke-width="2.5"/>
+      <text x="280" y="${isAlpha ? 215 : 130}" font-size="14" font-weight="bold" fill="${anomerColor}">OH (${anomerLabel})</text>
+      <!-- C2 OH (Glc: 下, Man: 上, Gal: 下) -->
+      <text x="245" y="100" font-size="11" fill="#5a6978">${sugarKey === 'man' ? 'OH↑' : 'OH↓'}</text>
+      <text x="60" y="170" font-size="11" fill="#5a6978">${sugarKey === 'gal' ? 'OH↑' : 'OH↓'}</text>
+    </svg>`;
+    html += `</div>`;
+  }
+  display.innerHTML = html;
+  info.innerHTML = `<b>${data.name}</b> (${data.short}) — ${data.type}<br>${data.note}`;
+}
+document.getElementById('stereo-sugar').addEventListener('change', renderSugar);
+document.getElementById('stereo-form').addEventListener('change', renderSugar);
+renderSugar();
+
+// ============================================================
+//  TAB 2: Glycosidic Bond Builder
+// ============================================================
+const DISACC_DATA = {
+  maltose: {
+    name: "マルトース (麦芽糖)", short: "Glc α(1→4) Glc",
+    components: "Glc + Glc",
+    bond: "α(1→4)",
+    reducing: true,
+    note: "<b>麦芽 (大麦発芽物) 由来</b>。デンプン (アミロース・アミロペクチン) を α-アミラーゼで切ったときの主要分解物。<b>還元性あり</b> (右端 Glc の C1 OH が遊離)。",
+    enzyme: "マルターゼ (α-グルコシダーゼ) で小腸刷子縁にて分解 → 2 Glc 吸収"
+  },
+  cellobiose: {
+    name: "セロビオース", short: "Glc β(1→4) Glc",
+    components: "Glc + Glc",
+    bond: "β(1→4)",
+    reducing: true,
+    note: "<b>セルロース分解物</b>。マルトースと構成糖は同じだが結合が <b>β</b> なので β-グルコシダーゼでしか分解できない (ヒトは持たない)。",
+    enzyme: "β-グルコシダーゼ (セロビアーゼ) — ヒトは持たず、反芻動物の共生細菌が分解"
+  },
+  lactose: {
+    name: "ラクトース (乳糖)", short: "Gal β(1→4) Glc",
+    components: "Gal + Glc",
+    bond: "β(1→4)",
+    reducing: true,
+    note: "<b>哺乳類の乳汁中の主要糖質</b> (人乳 ~7%、牛乳 ~4.5%)。<b>還元性あり</b> (Glc 側の C1 OH 遊離)。",
+    enzyme: "ラクターゼ (β-D-ガラクトシダーゼ) — 加齢で活性低下 → <b>ラクトース不耐症</b>"
+  },
+  sucrose: {
+    name: "スクロース (ショ糖)", short: "Glc α(1↔β2) Fru",
+    components: "Glc + Fru",
+    bond: "α1↔β2 (両アノマー炭素同士)",
+    reducing: false,
+    note: "<b>テーブルシュガー、植物中の輸送糖</b>。両方のアノマー炭素 (Glc-C1 と Fru-C2) が結合に使われている → <b>還元性なし</b>。スクラーゼ (転化酵素) で加水分解すると <b>転化糖</b> (Glc + Fru 混合) になり、旋光性が逆転 (+66.5° → -20°)。",
+    enzyme: "スクラーゼ (小腸刷子縁) → Glc + Fru"
+  },
+  trehalose: {
+    name: "トレハロース", short: "Glc α(1↔1α) Glc",
+    components: "Glc + Glc",
+    bond: "α1↔α1 (両アノマー炭素同士)",
+    reducing: false,
+    note: "<b>昆虫の血リンパ糖</b>。菌類 (シイタケ、酵母)、植物 (ヒマワリ種子、イワヒバ) にも。両アノマー炭素が結合 → <b>還元性なし</b>。保水性・タンパク質保護作用 → 食品・化粧品・医薬品の添加物。",
+    enzyme: "トレハラーゼ (ヒト小腸にあり)"
+  },
+  isomaltose: {
+    name: "イソマルトース", short: "Glc α(1→6) Glc",
+    components: "Glc + Glc",
+    bond: "α(1→6)",
+    reducing: true,
+    note: "<b>アミロペクチン・グリコーゲンの分枝部</b>で発生する二糖単位。α(1→6) は α-アミラーゼでは切れず、<b>イソマルターゼ (脱分枝酵素の一部)</b>が必要。",
+    enzyme: "イソマルターゼ (小腸刷子縁、スクラーゼ-イソマルターゼ複合体)"
+  }
+};
+
+function renderDisacc() {
+  const key = document.getElementById('glyco-select').value;
+  const d = DISACC_DATA[key];
+  const display = document.getElementById('glyco-display');
+  const info = document.getElementById('glyco-info');
+
+  let html = `<div style="font-size: 14px; line-height: 1.7;">`;
+  html += `<div style="text-align:center; font-size: 18px; font-weight: bold; color: #276749; margin-bottom: 12px;">${d.name}</div>`;
+  html += `<div style="text-align:center; font-family: monospace; font-size: 16px; margin-bottom: 12px; padding: 12px; background: white; border-radius: 5px;">${d.short}</div>`;
+  // Simple SVG: two hexagons connected
+  html += `<svg viewBox="0 0 400 160" style="background:#fff; max-width: 400px; display: block; margin: 0 auto;">
+    <polygon points="80,40 130,60 130,100 80,120 30,100 30,60" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+    <polygon points="280,40 330,60 330,100 280,120 230,100 230,60" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+    <text x="80" y="85" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">${d.components.split(' + ')[0]}</text>
+    <text x="280" y="85" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">${d.components.split(' + ')[1]}</text>
+    <line x1="130" y1="80" x2="230" y2="80" stroke="#38a169" stroke-width="3"/>
+    <text x="180" y="70" font-size="13" fill="#22543d" text-anchor="middle" font-weight="bold">${d.bond}</text>
+    <text x="180" y="100" font-size="11" fill="#5a6978" text-anchor="middle">グリコシド結合</text>
+  </svg>`;
+  html += `</div>`;
+  display.innerHTML = html;
+
+  const reduceTag = d.reducing
+    ? '<span class="pill base">還元性あり</span>'
+    : '<span class="pill acid">還元性なし (非還元糖)</span>';
+  info.innerHTML = `<b>結合</b>: ${d.bond} ${reduceTag}<br><b>説明</b>: ${d.note}<br><b>消化酵素</b>: ${d.enzyme}`;
+}
+document.getElementById('glyco-select').addEventListener('change', renderDisacc);
+renderDisacc();
+
+// ============================================================
+//  TAB 3: Polysaccharide Navigator
+// ============================================================
+const POLY_DATA = {
+  amylose: {
+    name: "アミロース", category: "貯蔵 (植物)",
+    components: "D-Glc のみ",
+    bond: "α(1→4) のみ — 直鎖",
+    structure: "らせん構造 (6 残基で 1 巻き)",
+    mw: "10〜50 万 Da",
+    function: "デンプンの 20-25%。エネルギー貯蔵。",
+    enzyme: "α-アミラーゼ (唾液・膵液) → マルトース → マルターゼで Glc",
+    iodine: "<b>濃青色</b> (長いらせんに I₃⁻ が取り込まれ吸収)",
+    note: "ヨウ素デンプン反応は <b>らせん構造の検出</b>。アミロースが解離すると消色 (温めると一時的に色が消える)。"
+  },
+  amylopectin: {
+    name: "アミロペクチン", category: "貯蔵 (植物)",
+    components: "D-Glc のみ",
+    bond: "α(1→4) 主鎖 + <b>α(1→6) で分枝</b> (24-30 残基ごと)",
+    structure: "樹枝状 (分枝多い)、らせんは短い",
+    mw: "60〜600 万 Da",
+    function: "デンプンの 75-80%。素早く動員可能 (多数の非還元末端から同時に切り出せる)。",
+    enzyme: "α-アミラーゼ + 脱分枝酵素 (イソマルターゼ等) で両結合を分解",
+    iodine: "赤紫色 (らせんが短いため)",
+    note: "演習問題 (Lec01 S44-46) の対象。メチル化分析で分枝率 ~3.7% (≈ 27 残基に 1 分枝) が定量される。"
+  },
+  glycogen: {
+    name: "グリコーゲン", category: "貯蔵 (動物・菌類)",
+    components: "D-Glc のみ",
+    bond: "α(1→4) 主鎖 + α(1→6) 分枝 — <b>8-12 残基ごと</b> (アミロペクチンより密)",
+    structure: "高度に分枝した球状 (中心に glycogenin)",
+    mw: "数百万 Da、肝で平均 ~10⁸ Da",
+    function: "肝 (5-8%)・筋 (0.5-1%) に貯蔵。<b>肝</b> = 血糖維持、<b>筋</b> = 自分の運動用 (G6Pase なしで血糖に出せない)。",
+    enzyme: "グリコーゲンホスホリラーゼ (加リン酸分解 → G1P) + 脱分枝酵素 → G6P",
+    iodine: "赤褐色",
+    note: "肝経路: G1P → G6P → グルコース (G6Pase で脱リン酸) → 血中。筋経路: G6P → 解糖系 → ピルビン酸 (内部消費)。"
+  },
+  cellulose: {
+    name: "セルロース", category: "構造 (植物細胞壁)",
+    components: "D-Glc のみ",
+    bond: "<b>β(1→4) — 直鎖</b>",
+    structure: "40-50 本の直鎖が水素結合で平行に並び繊維化",
+    mw: "50〜150 万 Da",
+    function: "植物細胞壁の主成分。水不溶。ヒトは消化できない (食物繊維)。",
+    enzyme: "セルラーゼ (反芻動物・シロアリの共生細菌)。ヒトは持たない。",
+    iodine: "発色しない (らせん構造をとらない)",
+    note: "<b>β 結合</b>のためジグザグに伸展 → 隣接鎖と水素結合 → 機械的に強い。同じ Glc でも α/β で全く違う物質に。"
+  },
+  chitin: {
+    name: "キチン", category: "構造 (節足動物・菌類)",
+    components: "<b>N-アセチル-D-グルコサミン (GlcNAc)</b>",
+    bond: "β(1→4) — 直鎖",
+    structure: "セルロースに似た繊維状",
+    mw: "10〜20 万 Da",
+    function: "節足動物の外骨格 (エビ・カニ甲殻)、菌類細胞壁。創傷被覆剤の原料。",
+    enzyme: "キチナーゼ (細菌、植物の防御酵素)",
+    iodine: "発色しない",
+    note: "脱アセチル化すると <b>キトサン</b> = D-グルコサミンの縮合体。化粧品・健康食品。"
+  },
+  hyaluronate: {
+    name: "ヒアルロン酸", category: "細胞外マトリックス (GAG)",
+    components: "<b>[GlcNAc + GlcA] 反復</b>",
+    bond: "β(1→3) GlcA-GlcNAc + β(1→4) GlcNAc-GlcA",
+    structure: "直鎖、極めて高分子 (>10⁶ Da)、保水性大",
+    mw: "10⁵〜10⁷ Da",
+    function: "<b>関節滑液</b> (衝撃吸収)、<b>眼の硝子体液</b>、結合組織。プロテオグリカン集合体の中心。",
+    enzyme: "ヒアルロニダーゼ",
+    iodine: "—",
+    note: "GAG (グリコサミノグリカン) の中で唯一<b>硫酸化されていない</b>。化粧品・関節注射薬・粘弾性手術補助剤として臨床応用。"
+  },
+  heparin: {
+    name: "ヘパリン", category: "細胞外マトリックス (GAG)",
+    components: "[GlcN(硫酸化) + IdoA(L-イズロン酸) or GlcA]",
+    bond: "α/β 混在、高度硫酸化",
+    structure: "短鎖 (3-30 kDa)、強い負電荷",
+    mw: "3,000〜30,000 Da",
+    function: "<b>動脈血管壁マスト細胞顆粒</b>に貯蔵。<b>抗凝固作用</b> (アンチトロンビン III と複合体 → トロンビン・第 Xa 因子を阻害)。",
+    enzyme: "ヘパリナーゼ",
+    iodine: "—",
+    note: "<b>臨床で広く使用される抗凝固薬</b>。低分子量ヘパリン (LMWH; エノキサパリン等) は出血副作用が少なめで在宅治療向き。"
+  }
+};
+
+function renderPoly() {
+  const key = document.getElementById('poly-select').value;
+  const d = POLY_DATA[key];
+  const display = document.getElementById('poly-display');
+  const info = document.getElementById('poly-info');
+
+  let html = `<div style="font-size: 14px;">`;
+  html += `<div style="text-align:center; font-size: 18px; font-weight: bold; color: #276749; margin-bottom: 6px;">${d.name}</div>`;
+  html += `<div style="text-align:center; color: #5a6978; font-size: 12px; margin-bottom: 14px;">${d.category}</div>`;
+  // simple branching/linear schematic
+  const isBranched = d.bond.includes('1→6') || d.bond.includes('分枝');
+  html += `<svg viewBox="0 0 420 100" style="background:#fff; max-width: 420px; display: block; margin: 0 auto;">`;
+  for (let i = 0; i < 7; i++) {
+    const x = 30 + i * 55;
+    html += `<circle cx="${x}" cy="50" r="14" fill="#f0fff4" stroke="#276749" stroke-width="2"/>`;
+    if (i < 6) html += `<line x1="${x+14}" y1="50" x2="${x+41}" y2="50" stroke="#38a169" stroke-width="2"/>`;
+    if (isBranched && (i === 2 || i === 5)) {
+      // add branch
+      html += `<line x1="${x}" y1="64" x2="${x}" y2="80" stroke="#38a169" stroke-width="2"/>`;
+      html += `<circle cx="${x}" cy="92" r="10" fill="#f0fff4" stroke="#276749" stroke-width="2"/>`;
+    }
+  }
+  html += `</svg>`;
+  html += `<div style="text-align:center; font-size: 11px; color: #5a6978; margin-top: 8px;">${isBranched ? '分枝あり (α1→6 等)' : '直鎖'}</div>`;
+  html += `</div>`;
+  display.innerHTML = html;
+
+  info.innerHTML = `
+    <b>構成単糖</b>: ${d.components}<br>
+    <b>結合</b>: ${d.bond}<br>
+    <b>分子量</b>: ${d.mw}<br>
+    <b>機能</b>: ${d.function}<br>
+    <b>消化/分解</b>: ${d.enzyme}<br>
+    <b>ヨウ素反応</b>: ${d.iodine}<br>
+    <b>備考</b>: ${d.note}
+  `;
+}
+document.getElementById('poly-select').addEventListener('change', renderPoly);
+renderPoly();
+
+// ============================================================
+//  TAB 4: Methylation Analysis Calculator
+// ============================================================
+function calcMethyl() {
+  const sample = parseFloat(document.getElementById('methyl-sample').value) || 0;
+  const product = parseFloat(document.getElementById('methyl-product').value) || 0;
+  const result = document.getElementById('methyl-result');
+
+  if (sample <= 0 || product <= 0) {
+    result.innerHTML = '⚠️ 試料量・生成量に正の数値を入れてください。';
+    return;
+  }
+  const MW_Glc_residue = 162;  // 180 - 18 (水脱離)
+  const MW_diMeGlc = 208;       // 180 + 15*2 - 2
+  const totalGlc_mmol = sample / MW_Glc_residue;
+  const branch_mmol = product / MW_diMeGlc;
+  const branchPct = (branch_mmol / totalGlc_mmol) * 100;
+  const residuesPerBranch = totalGlc_mmol / branch_mmol;
+
+  result.innerHTML = `
+    <b>計算結果</b><br>
+    全 Glc 残基: ${sample} mg ÷ 162 g/mol = <b>${totalGlc_mmol.toFixed(3)} mmol</b><br>
+    分枝点数 (2,3-ジ-O-Me-Glc): ${product} mg ÷ 208 g/mol = <b>${branch_mmol.toFixed(4)} mmol</b><br>
+    <b>分枝率 = ${branchPct.toFixed(2)} %</b><br>
+    <b>≈ ${residuesPerBranch.toFixed(1)} 残基ごとに 1 分枝</b><br>
+    <small>※ アミロペクチンの典型値は 3-5% (24-30 残基に 1 分枝)、グリコーゲンは 8-12% (8-12 残基に 1 分枝) でより高頻度に分枝。</small>
+  `;
+}
+document.getElementById('methyl-calc').addEventListener('click', calcMethyl);
+document.getElementById('methyl-reset').addEventListener('click', () => {
+  document.getElementById('methyl-sample').value = 258;
+  document.getElementById('methyl-product').value = 12.4;
+  calcMethyl();
+});
+calcMethyl();
+
+// ============================================================
+//  TAB 5: Antibiotic Target
+// ============================================================
+const ABX_COMBOS = {
+  'pos+penicillin': {
+    title: 'グラム陽性菌 × ペニシリン',
+    text: '✓ 厚いペプチドグリカン層 (20-80 nm) を持ち、ペニシリンが <b>PBP (トランスペプチダーゼ) に共有結合</b> → 架橋形成阻害 → 細胞壁脆弱化 → 浸透圧で溶菌。<br><b>有効</b>。'
+  },
+  'pos+vancomycin': {
+    title: 'グラム陽性菌 × バンコマイシン',
+    text: '✓ ペプチド前駆体の <b>D-Ala-D-Ala 末端に直接結合</b> → トランスペプチダーゼがアクセス不可 → 細胞壁合成阻害。<br><b>MRSA にも有効</b>な切り札的薬剤。'
+  },
+  'pos+lysozyme': {
+    title: 'グラム陽性菌 × リゾチーム',
+    text: '✓ <b>GlcNAc-MurNAc の β(1→4) 結合を直接加水分解</b>。厚いペプチドグリカンが薄くなり溶菌。<br>涙・唾液・卵白に含まれる<b>生体内防御酵素</b>。'
+  },
+  'neg+penicillin': {
+    title: 'グラム陰性菌 × ペニシリン',
+    text: '△ 外膜 (LPS) が透過障壁。ペニシリン G は外膜を通過しにくい。<br>外膜浸透性の高いアンピシリンや、外膜を破壊する併用 (β-ラクタマーゼ阻害薬等) が必要。'
+  },
+  'neg+vancomycin': {
+    title: 'グラム陰性菌 × バンコマイシン',
+    text: '✗ <b>外膜が大型のバンコマイシン分子を通さない</b> → ペプチドグリカンに到達不可。<br>グラム陰性菌には基本的に無効。'
+  },
+  'neg+lysozyme': {
+    title: 'グラム陰性菌 × リゾチーム',
+    text: '△ 外膜が標的の糖鎖を保護 → 通常は無効。<br>外膜を破壊する EDTA や補体と併用すれば作用する。'
+  }
+};
+
+function renderAbx() {
+  const bact = document.getElementById('abx-bact').value;
+  const drug = document.getElementById('abx-drug').value;
+  const combo = ABX_COMBOS[bact + '+' + drug];
+  const display = document.getElementById('abx-display');
+  const info = document.getElementById('abx-info');
+
+  let html = `<div style="font-size: 14px;">`;
+  html += `<svg viewBox="0 0 440 180" style="background:#fff; max-width: 440px; display: block; margin: 0 auto;">`;
+  // outer membrane (only Gram negative)
+  if (bact === 'neg') {
+    html += `<rect x="20" y="20" width="400" height="14" fill="#e0e7ff" stroke="#3730a3" stroke-width="1.5"/>`;
+    html += `<text x="220" y="32" font-size="11" font-weight="bold" fill="#3730a3" text-anchor="middle">外膜 (LPS)</text>`;
+  }
+  // peptidoglycan layer
+  const pgY = bact === 'neg' ? 50 : 30;
+  const pgHeight = bact === 'pos' ? 80 : 20;
+  html += `<rect x="20" y="${pgY}" width="400" height="${pgHeight}" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>`;
+  html += `<text x="220" y="${pgY + pgHeight/2 + 4}" font-size="12" font-weight="bold" fill="#7f1d1d" text-anchor="middle">ペプチドグリカン (${bact === 'pos' ? '厚層 20-80 nm' : '薄層 ~7 nm'})</text>`;
+  // cell membrane
+  const cmY = pgY + pgHeight + 5;
+  html += `<rect x="20" y="${cmY}" width="400" height="14" fill="#d1fae5" stroke="#065f46" stroke-width="1.5"/>`;
+  html += `<text x="220" y="${cmY + 10}" font-size="11" font-weight="bold" fill="#065f46" text-anchor="middle">細胞膜 (リン脂質二重層)</text>`;
+  // drug arrow
+  const drugLabel = drug === 'penicillin' ? '💊 ペニシリン' : drug === 'vancomycin' ? '💊 バンコマイシン' : '🧬 リゾチーム';
+  html += `<text x="220" y="${cmY + 40}" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">${drugLabel}</text>`;
+  html += `</svg>`;
+  html += `</div>`;
+  display.innerHTML = html;
+  info.innerHTML = `<b>${combo.title}</b><br>${combo.text}`;
+}
+document.getElementById('abx-bact').addEventListener('change', renderAbx);
+document.getElementById('abx-drug').addEventListener('change', renderAbx);
+renderAbx();
+
+// ============================================================
+//  TAB 6: Quiz
+// ============================================================
+const QUIZ = [
+  {
+    stem: "次のうち <b>ピリミジン塩基</b>... ではなく、<b>ケト基をもつ単糖 (ケトース)</b> はどれか?",
+    options: ["D-グルコース", "D-ガラクトース", "D-フルクトース", "D-マンノース"],
+    correct: 2,
+    explain: "正解 = 3 (フルクトース)。フルクトースは C2 にケトン基を持つ <b>ケトヘキソース</b>。Glc/Gal/Man は C1 アルデヒド基をもつ <b>アルドヘキソース</b>。"
+  },
+  {
+    stem: "D-グルコースと D-マンノースの関係はどれか?",
+    options: ["エナンチオマー (鏡像異性体)", "C2 エピマー", "C4 エピマー", "構造異性体 (アルドース vs ケトース)"],
+    correct: 1,
+    explain: "正解 = 2。Glc と Man は <b>C2 の OH の立体配置のみ異なる</b> → C2 エピマー。Glc vs Gal が C4 エピマー、Glc vs Fru がアルドース/ケトース異性体。"
+  },
+  {
+    stem: "Haworth 式で <b>α-D-グルコピラノース</b> のアノマー OH (C1) はどの位置にあるか?",
+    options: ["環の上 (CH₂OH と同じ側)", "環の下 (CH₂OH と反対側)", "環の中", "環の外側水平"],
+    correct: 1,
+    explain: "正解 = 2。<b>α-アノマー = アノマー OH が C5 の CH₂OH と反対側 (Haworth 式で下)</b>。β-アノマーは同じ側 (上)。水溶液中では β:α ≈ 64:36 で β がやや多い (全 OH エクアトリアル)。"
+  },
+  {
+    stem: "次の二糖のうち <b>非還元糖</b> (還元性を示さない) はどれか? 2 つ選べ。",
+    options: ["マルトース", "ラクトース", "スクロース", "トレハロース", "セロビオース"],
+    correct: [2, 3],
+    multi: true,
+    explain: "正解 = 3, 4。スクロース (Glc α1↔β2 Fru) と <b>トレハロース (Glc α1↔α1 Glc)</b> は両方のアノマー炭素がグリコシド結合に使われており、開環できないため還元性なし。他の二糖は片方のアノマー炭素が遊離 → 還元性あり。"
+  },
+  {
+    stem: "ラクトースの構造として正しいものは?",
+    options: ["Glc α(1→4) Glc", "Gal β(1→4) Glc", "Glc β(1→4) Gal", "Glc α(1↔β2) Fru"],
+    correct: 1,
+    explain: "正解 = 2。<b>ラクトース = Gal β(1→4) Glc</b>。乳汁中の主要糖質 (人乳 ~7%、牛乳 ~4.5%)。ラクターゼ (β-ガラクトシダーゼ) で加水分解 → Gal + Glc。"
+  },
+  {
+    stem: "ラクトース不耐症の主な原因は?",
+    options: [
+      "ラクトース合成酵素の異常",
+      "ラクターゼ (β-ガラクトシダーゼ) の活性低下",
+      "ラクトースアレルギー (免疫応答)",
+      "腸内細菌の異常増殖"
+    ],
+    correct: 1,
+    explain: "正解 = 2。<b>ラクターゼ活性低下</b>で未消化ラクトースが結腸へ → 腸内細菌による発酵 → ガス・有機酸 → 腹部膨満・下痢。アジア人の 80-90% で成人になると活性低下する (lactase non-persistence)。"
+  },
+  {
+    stem: "アミロペクチンの分枝結合は何か?",
+    options: ["β(1→4)", "α(1→4)", "α(1→6)", "α(1↔β2)"],
+    correct: 2,
+    explain: "正解 = 3。アミロペクチンは主鎖 α(1→4) + <b>分枝 α(1→6)</b> (24-30 残基ごと)。グリコーゲンも同じ結合だが分枝が密 (8-12 残基ごと)。"
+  },
+  {
+    stem: "アミロペクチンを完全メチル化 → 加水分解した時、<b>分枝点</b>由来の生成物はどれか?",
+    options: ["2,3,4,6-テトラ-O-メチル Glc", "2,3,6-トリ-O-メチル Glc", "<b>2,3-ジ-O-メチル Glc</b>", "1,2,3,6-テトラ-O-メチル Glc"],
+    correct: 2,
+    explain: "正解 = 3 (2,3-ジ-O-Me-Glc)。分枝点では 1, 4, 6 位がグリコシド結合 → メチル化されず、加水分解後に -OH に戻る。<b>2, 3 位のみがメチル化された Glc</b> として回収 → 分枝率の定量に使える。"
+  },
+  {
+    stem: "グリコーゲンの分解で、<b>肝</b>と<b>筋</b>の最終運命の主な違いは?",
+    options: [
+      "肝は ATP を産生し、筋は熱を産生する",
+      "肝は血中に Glc を供給でき、筋は内部で解糖系に入る",
+      "肝はピルビン酸を産生し、筋は乳酸を産生する",
+      "違いはなく、両方とも血中 Glc になる"
+    ],
+    correct: 1,
+    explain: "正解 = 2。<b>肝は G6Pase をもつ → G6P → Glc → 血中へ供給</b>。<b>筋は G6Pase を欠く</b> → G6P → 解糖系で内部消費 (自分の運動に使う)。肝が血糖維持を担い、筋は自家用エネルギー貯蔵。"
+  },
+  {
+    stem: "セルロースとデンプンの構造上の主な違いは?",
+    options: [
+      "構成糖が違う (Glc vs Gal)",
+      "結合が違う (β1→4 vs α1→4)",
+      "分子量が違う",
+      "リン酸基の有無"
+    ],
+    correct: 1,
+    explain: "正解 = 2。両者とも D-Glc のみで構成されるが、<b>セルロース = β(1→4)</b>、<b>デンプン = α(1→4)</b>。β 結合はジグザグに伸展し水素結合で繊維化 → 強度高・消化困難。α 結合はらせん構造 → 消化容易。"
+  },
+  {
+    stem: "ペプチドグリカンの構成単位は?",
+    options: [
+      "Glc + GlcA",
+      "GlcNAc + MurNAc (N-アセチルグルコサミン + N-アセチルムラミン酸)",
+      "Glc + Gal",
+      "GlcNAc + IdoA"
+    ],
+    correct: 1,
+    explain: "正解 = 2。細菌細胞壁の主成分。<b>GlcNAc-MurNAc の β(1→4) 二糖が反復</b> + MurNAc から伸びるテトラペプチド側鎖 + ペンタグリシン橋 (グラム陽性) で網目構造を形成。"
+  },
+  {
+    stem: "バンコマイシンの作用機序として正しいものは?",
+    options: [
+      "30S リボソームに結合して翻訳を阻害",
+      "DNA ジャイレースを阻害",
+      "ペプチドグリカン前駆体の D-Ala-D-Ala 末端に結合し、架橋形成を阻害",
+      "葉酸合成を阻害"
+    ],
+    correct: 2,
+    explain: "正解 = 3。<b>バンコマイシン = D-Ala-D-Ala 末端に直接結合</b> → トランスペプチダーゼがアクセス不可 → 細胞壁合成阻害。MRSA にも有効な切り札的グリコペプチド系。グラム陰性菌は外膜で通過困難 → 主にグラム陽性向け。"
+  },
+  {
+    stem: "ヒアルロン酸の特徴として正しいものは?",
+    options: [
+      "硫酸化されているグリコサミノグリカン (GAG)",
+      "硫酸化されていない GAG で、関節滑液・硝子体液の主成分",
+      "セルロースに似た構造で植物細胞壁にある",
+      "細菌の細胞壁多糖"
+    ],
+    correct: 1,
+    explain: "正解 = 2。<b>ヒアルロン酸は唯一の非硫酸化 GAG</b> (他は硫酸化)。[GlcNAc + GlcA] 反復、極高分子量で保水性大。関節滑液・眼の硝子体液・結合組織の主成分。化粧品・関節注射薬として臨床応用。"
+  },
+  {
+    stem: "I 細胞病 (I-cell disease) の原因は?",
+    options: [
+      "ラクターゼ欠損",
+      "リソソーム酵素のマンノース 6-リン酸化酵素の欠損 → 酵素がリソソームに運ばれない",
+      "ヒストン脱アセチル化酵素の異常",
+      "ヘモグロビン α 鎖の欠失"
+    ],
+    correct: 1,
+    explain: "正解 = 2。<b>GlcNAc-1-phosphotransferase の欠損</b>でリソソーム酵素にマンノース 6-リン酸タグが付加されず、本来の輸送先 (リソソーム) に届かず分泌されてしまう → リソソーム内で消化されるべき物質が蓄積 (封入体 = inclusion body) → I 細胞病。リソソーム蓄積症の原型。"
+  },
+  {
+    stem: "ABO 血液型の抗原決定基について正しいものは?",
+    options: [
+      "DNA の特定配列が直接抗原になる",
+      "赤血球膜上の糖鎖末端の構造で決まる (A 型 = GalNAc 付加、B 型 = Gal 付加、O 型 = 付加なし)",
+      "ヘモグロビンのアミノ酸配列で決まる",
+      "白血球の細胞表面マーカーで決まる"
+    ],
+    correct: 1,
+    explain: "正解 = 2。<b>ABO 血液型は赤血球表面の糖鎖修飾の差</b>。O 型 = H 抗原 (基本骨格)、<b>A 型 = H 抗原に GalNAc を付加 (GTA 酵素)</b>、<b>B 型 = H 抗原に Gal を付加 (GTB 酵素)</b>、AB 型 = 両方発現。輸血では A→B 間で凝集反応を起こすため適合検査が必須。"
+  }
+];
+
+const quizListEl = document.getElementById('quiz-list');
+QUIZ.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  card.dataset.qidx = i;
+  const multiTag = q.multi ? '<span class="pill">複数選択</span>' : '<span class="pill">1 つ選択</span>';
+  let html = `<div class="stem">Q${i+1}. ${multiTag} ${q.stem}</div><ul class="options">`;
+  q.options.forEach((opt, j) => {
+    html += `<li data-idx="${j}">${j+1}. ${opt}</li>`;
+  });
+  html += `</ul><div class="quiz-explain">${q.explain}</div>`;
+  card.innerHTML = html;
+  quizListEl.appendChild(card);
+
+  const selected = new Set();
+  const optEls = card.querySelectorAll('ul.options li');
+  optEls.forEach(li => {
+    li.addEventListener('click', () => {
+      if (card.classList.contains('graded')) return;
+      const idx = parseInt(li.dataset.idx);
+      if (q.multi) {
+        if (selected.has(idx)) { selected.delete(idx); li.classList.remove('selected'); }
+        else { selected.add(idx); li.classList.add('selected'); }
+      } else {
+        selected.clear();
+        optEls.forEach(x => x.classList.remove('selected'));
+        selected.add(idx);
+        li.classList.add('selected');
+      }
+    });
+  });
+  card._selected = selected;
+});
+
+document.getElementById('quiz-grade').addEventListener('click', () => {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i];
+    const selected = card._selected;
+    if (selected.size === 0) return;
+    answered++;
+    const correctSet = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
+    if (isCorrect) score++;
+    card.classList.add('graded');
+    card.querySelectorAll('ul.options li').forEach(li => {
+      const idx = parseInt(li.dataset.idx);
+      li.classList.remove('selected');
+      if (correctSet.has(idx)) li.classList.add('correct');
+      else if (selected.has(idx)) li.classList.add('incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.add('shown');
+  });
+  const summary = document.getElementById('quiz-summary');
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)</div>`;
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('quiz-reset').addEventListener('click', () => {
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    card.classList.remove('graded');
+    card._selected.clear();
+    card.querySelectorAll('ul.options li').forEach(li => {
+      li.classList.remove('selected', 'correct', 'incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.remove('shown');
+  });
+  document.getElementById('quiz-summary').innerHTML = '';
+});
+</script>
+
+</body>
+</html>
