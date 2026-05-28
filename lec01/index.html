@@ -472,7 +472,8 @@
 <footer>
   © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
   教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
-  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a><br>
+  <small style="color: #94a3b8;">糖構造図は <a href="https://commons.wikimedia.org/" target="_blank">Wikimedia Commons</a> 提供 (主に Public domain / CC0 / CC BY-SA 3.0/4.0、各画像下のリンクから個別のライセンス・著者を参照可)</small>
 </footer>
 
 <script>
@@ -491,28 +492,35 @@ document.querySelectorAll('.tab-bar button').forEach(btn => {
 // ============================================================
 //  TAB 1: Sugar Stereo Explorer
 // ============================================================
+// 構造図は Wikimedia Commons から (ライセンスは footer 参照)
 const SUGAR_DATA = {
   glc: {
     name: "D-グルコース", short: "Glc", type: "アルドヘキソース (C6 アルドース)",
     note: "最重要の単糖。血糖、エネルギー源。<b>β-D-Glc</b> は全 OH/CH₂OH がエクアトリアルで最も安定。Glc 水溶液中は β 64% : α 36% : 開環型 0.01% (= <b>変旋光</b>)。",
-    fischer: ["CHO", "H–C–OH", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"],
-    haworth_alpha_oh: "下",
-    haworth_beta_oh: "上"
+    img_fischer: "https://upload.wikimedia.org/wikipedia/commons/d/d9/D-glucose_chain_%28Fischer%29.svg",
+    img_alpha: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Alpha-D-Glucopyranose_2.svg",
+    img_beta: "https://upload.wikimedia.org/wikipedia/commons/8/82/Beta-D-Glucopyranose.svg"
   },
   man: {
     name: "D-マンノース", short: "Man", type: "アルドヘキソース (Glc の C2 エピマー)",
     note: "Glc とは <b>C2 の OH の立体配置のみ異なる</b> (= C2 エピマー)。N-結合型糖鎖、I 細胞病で関与 (リソソーム酵素の Man-6-P タグ)。",
-    fischer: ["CHO", "HO–C–H", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"]
+    img_fischer: "https://upload.wikimedia.org/wikipedia/commons/4/45/Mannose.svg",
+    img_alpha: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Alpha-D-Mannopyranose.svg",
+    img_beta: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Beta-D-Mannopyranose.svg"
   },
   gal: {
     name: "D-ガラクトース", short: "Gal", type: "アルドヘキソース (Glc の C4 エピマー)",
     note: "Glc とは <b>C4 の OH の立体配置のみ異なる</b> (= C4 エピマー)。乳糖 (Gal + Glc β1→4) の構成糖。ABO 血液型抗原や糖タンパク質の構成成分。",
-    fischer: ["CHO", "H–C–OH", "HO–C–H", "HO–C–H", "H–C–OH", "CH₂OH"]
+    img_fischer: "https://upload.wikimedia.org/wikipedia/commons/7/7b/DGalactose_Fischer.svg",
+    img_alpha: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Alpha-D-Galactopyranose.svg",
+    img_beta: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Beta-D-Galactopyranose.svg"
   },
   fru: {
     name: "D-フルクトース", short: "Fru", type: "ケトヘキソース (C2 にケトン基)",
     note: "果実・蜂蜜の主要糖。スクロース構成糖 (Glc-α1↔β2-Fru)。環化すると <b>フラノース (5員環)</b> が主要 (ピラノース型もあり)。",
-    fischer: ["CH₂OH", "C=O", "HO–C–H", "H–C–OH", "H–C–OH", "CH₂OH"]
+    img_fischer: "https://upload.wikimedia.org/wikipedia/commons/5/59/D-Fructose-Fischer.PNG",
+    img_alpha: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Alpha-D-Fructofuranose.svg",
+    img_beta: "https://upload.wikimedia.org/wikipedia/commons/9/99/Beta-D-Fructofuranose-with-H.png"
   }
 };
 
@@ -523,44 +531,29 @@ function renderSugar() {
   const display = document.getElementById('stereo-display');
   const info = document.getElementById('stereo-info');
 
-  let html = '';
+  let imgUrl, formLabel, sublabel;
   if (form === 'fischer') {
-    html = `<div style="font-family: monospace; font-size: 15px; line-height: 1.4;">`;
-    html += `<b>${data.name} (${data.short})</b><br>フィッシャー投影式 (鎖状)<br><br>`;
-    data.fischer.forEach((row, i) => {
-      html += `<div>${row}</div>`;
-    });
-    html += `</div>`;
+    imgUrl = data.img_fischer;
+    formLabel = 'フィッシャー投影式 (鎖状)';
+    sublabel = '縦線 = 炭素鎖。横の OH/H の左右で C の立体配置を表す。';
+  } else if (form === 'haworth_alpha') {
+    imgUrl = data.img_alpha;
+    formLabel = 'Haworth 式 — <span style="color:#92400e; font-weight:bold;">α-アノマー</span>';
+    sublabel = 'アノマー OH (C1, アルドース / C2, ケトース) が <b>C5-CH₂OH と反対側 (Haworth で下)</b>。';
   } else {
-    const isAlpha = form === 'haworth_alpha';
-    const anomerLabel = isAlpha ? 'α' : 'β';
-    const anomerColor = isAlpha ? '#92400e' : '#1e40af';
-    const ohPosition = isAlpha ? '下 (axial)' : '上 (equatorial)';
-    html = `<div style="font-size: 14px;">`;
-    html += `<b>${data.name}</b> Haworth 式 <span style="color:${anomerColor}; font-weight: bold;">${anomerLabel}-アノマー</span><br>`;
-    html += `(アノマー OH の位置: <b>${ohPosition}</b>)<br><br>`;
-    html += `<svg viewBox="0 0 320 220" style="background:#fff; max-width: 320px;">
-      <!-- pyranose hexagon outline -->
-      <polygon points="160,40 240,80 240,160 160,200 80,160 80,80" fill="none" stroke="#276749" stroke-width="2.5"/>
-      <!-- O at top-right -->
-      <text x="240" y="78" font-size="18" font-weight="bold" fill="#276749" text-anchor="middle">O</text>
-      <!-- C1 (anomeric) at bottom-right -->
-      <text x="245" y="170" font-size="14" fill="#5a6978">C1</text>
-      <!-- C5 (top-left) -->
-      <text x="60" y="78" font-size="14" fill="#5a6978">C5</text>
-      <!-- CH2OH attached to C5 -->
-      <line x1="80" y1="80" x2="40" y2="40" stroke="#276749" stroke-width="2"/>
-      <text x="15" y="35" font-size="14" font-weight="bold" fill="#276749">CH₂OH</text>
-      <!-- anomeric OH -->
-      <line x1="240" y1="160" x2="270" y2="${isAlpha ? 200 : 130}" stroke="${anomerColor}" stroke-width="2.5"/>
-      <text x="280" y="${isAlpha ? 215 : 130}" font-size="14" font-weight="bold" fill="${anomerColor}">OH (${anomerLabel})</text>
-      <!-- C2 OH (Glc: 下, Man: 上, Gal: 下) -->
-      <text x="245" y="100" font-size="11" fill="#5a6978">${sugarKey === 'man' ? 'OH↑' : 'OH↓'}</text>
-      <text x="60" y="170" font-size="11" fill="#5a6978">${sugarKey === 'gal' ? 'OH↑' : 'OH↓'}</text>
-    </svg>`;
-    html += `</div>`;
+    imgUrl = data.img_beta;
+    formLabel = 'Haworth 式 — <span style="color:#1e40af; font-weight:bold;">β-アノマー</span>';
+    sublabel = 'アノマー OH が <b>C5-CH₂OH と同側 (Haworth で上)</b>。水溶液中で β がやや多い (全 OH エクアトリアル)。';
   }
-  display.innerHTML = html;
+
+  display.innerHTML = `
+    <div style="font-size: 14px;">
+      <div style="font-weight: bold; color: #276749; margin-bottom: 6px;">${data.name} (${data.short}) — ${formLabel}</div>
+      <div style="color: #5a6978; font-size: 12px; margin-bottom: 10px;">${sublabel}</div>
+      <img src="${imgUrl}" alt="${data.name} ${formLabel}" style="max-width: 320px; max-height: 280px; background: white; padding: 12px; border: 1px solid #d7dce5; border-radius: 6px;" loading="lazy">
+      <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">画像出典: <a href="https://commons.wikimedia.org/wiki/${encodeURIComponent('File:' + imgUrl.split('/').pop())}" target="_blank" style="color: #94a3b8;">Wikimedia Commons</a></div>
+    </div>
+  `;
   info.innerHTML = `<b>${data.name}</b> (${data.short}) — ${data.type}<br>${data.note}`;
 }
 document.getElementById('stereo-sugar').addEventListener('change', renderSugar);
