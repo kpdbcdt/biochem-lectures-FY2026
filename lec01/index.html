@@ -481,6 +481,18 @@
   </div>
 
   <div id="quiz-summary"></div>
+
+  <div id="quiz-cert-section" style="display:none; margin-top:16px; padding:16px; background:#f7fafc; border:2px solid #2e8b57; border-radius:8px;">
+    <h4 style="margin:0 0 8px 0; color:#2e8b57;">📜 修了証の発行</h4>
+    <p style="font-size:13px; margin:0 0 10px 0;">学籍番号を入力して修了証 PDF を出力してください。<b>再度試験の事前課題</b>として K-LMS に提出します。</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <input type="text" id="cert-student-id" placeholder="学籍番号（例: 25-1-001）" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; font-size:14px; width:200px;">
+      <button class="primary" id="quiz-pdf" style="background:#2e8b57;">📜 修了証 PDF を出力</button>
+    </div>
+    <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
+  </div>
+
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 合格基準: 全 15 問に回答し <b>12 問以上正解</b>で修了証を発行できます。不合格時はリセットして再挑戦してください。</p>
 </div>
 
 <footer>
@@ -1074,7 +1086,15 @@ document.getElementById('quiz-grade').addEventListener('click', () => {
     card.querySelector('.quiz-explain').classList.add('shown');
   });
   const summary = document.getElementById('quiz-summary');
-  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)</div>`;
+  const certEl = document.getElementById('quiz-cert-section');
+  const passReq = Math.ceil(QUIZ.length * 0.8); // 合格基準 80%
+  const allAnswered = answered === QUIZ.length;
+  const passed = allAnswered && score >= passReq;
+  let tail;
+  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
+  else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
   summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
@@ -1088,6 +1108,88 @@ document.getElementById('quiz-reset').addEventListener('click', () => {
     card.querySelector('.quiz-explain').classList.remove('shown');
   });
   document.getElementById('quiz-summary').innerHTML = '';
+  document.getElementById('quiz-cert-section').style.display = 'none';
+  const _sid = document.getElementById('cert-student-id'); if (_sid) _sid.value = '';
+});
+
+/* ---- 修了証 (Certificate) ---- */
+async function generateVerificationCode(studentId, score, date) {
+  const data = `${studentId}:biochem-lec01:${score}/${QUIZ.length}:${date}:biochem2026`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8).toUpperCase();
+}
+
+document.getElementById('quiz-pdf').addEventListener('click', async () => {
+  const studentId = document.getElementById('cert-student-id').value.trim();
+  if (!studentId) { document.getElementById('cert-error').style.display = 'block'; return; }
+  document.getElementById('cert-error').style.display = 'none';
+  let score = 0; const answers = [];
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i]; const sel = [...(card._selected || [])]; answers[i] = sel;
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    if (sel.length === cs.size && sel.every(x => cs.has(x))) score++;
+  });
+  const total = QUIZ.length;
+  const date = new Date().toLocaleDateString('ja-JP');
+  const datetime = new Date().toLocaleString('ja-JP');
+  const verCode = await generateVerificationCode(studentId, score, date);
+  let qhtml = '';
+  QUIZ.forEach((q, qi) => {
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const sel = new Set(answers[qi] || []);
+    qhtml += `<div class="q"><div class="q-num">問 ${qi + 1}</div><div class="q-stem">${q.stem}</div><ul class="opts">`;
+    q.options.forEach((opt, oi) => {
+      let cls = ''; if (cs.has(oi)) cls = 'correct'; else if (sel.has(oi)) cls = 'wrong';
+      qhtml += `<li class="${cls}"><span class="letter">${oi + 1})</span>${opt}</li>`;
+    });
+    qhtml += `</ul><div class="explain"><span class="explain-label">解説:</span> ${q.explain}</div></div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>生化学 Lec01 復習クイズ修了証</title><style>
+  @page { size: A4; margin: 18mm 15mm; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; color: #1a2633; line-height: 1.6; font-size: 11pt; margin: 0; }
+  .cert-box { border: 3px solid #2e8b57; border-radius: 12px; padding: 30px 40px; margin: 20px auto; max-width: 600px; text-align: center; }
+  .cert-title { color: #22543d; font-size: 22pt; font-weight: 700; margin-bottom: 6px; }
+  .cert-sub { color: #5a6978; font-size: 12pt; margin-bottom: 20px; }
+  .cert-field { margin: 12px 0; font-size: 13pt; }
+  .cert-field .label { color: #5a6978; font-size: 10pt; }
+  .cert-field .value { font-weight: 700; font-size: 16pt; }
+  .cert-score { font-size: 36pt; font-weight: 700; color: #2e8b57; margin: 16px 0; }
+  .cert-code { margin-top: 20px; padding: 10px; background: #f7fafc; border: 1px solid #d7dce5; border-radius: 6px; font-family: monospace; font-size: 14pt; letter-spacing: 2px; }
+  .cert-code .label { font-family: sans-serif; font-size: 9pt; color: #5a6978; letter-spacing: normal; }
+  hr { border: none; border-top: 1px solid #d7dce5; margin: 20px 0; }
+  .q { margin-bottom: 18px; page-break-inside: avoid; border-left: 3px solid #2e8b57; padding-left: 14px; text-align: left; }
+  .q-num { font-weight: 700; color: #2e8b57; font-size: 12pt; }
+  .q-stem { font-weight: 600; margin: 6px 0; font-size: 11pt; }
+  .opts { list-style: none; padding: 0; margin: 6px 0; }
+  .opts li { padding: 4px 8px 4px 30px; position: relative; font-size: 10.5pt; margin: 3px 0; }
+  .opts li .letter { position: absolute; left: 6px; font-weight: 700; color: #5a6978; }
+  .opts li.correct { background: #c6f6d5; border-left: 3px solid #2e8b57; border-radius: 3px; }
+  .opts li.correct::after { content: " \\2713 正解"; color: #22543d; font-weight: 700; font-size: 9pt; }
+  .opts li.wrong { background: #fed7d7; border-left: 3px solid #e09f3e; border-radius: 3px; }
+  .opts li.wrong::after { content: " \\2717 あなたの回答"; color: #d64545; font-weight: 700; font-size: 9pt; }
+  .explain { background: #f7fafc; border-left: 3px solid #2e8b57; padding: 8px 12px; font-size: 10pt; margin-top: 8px; line-height: 1.7; }
+  .explain-label { font-weight: 700; color: #2e8b57; }
+  footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d7dce5; font-size: 9pt; color: #5a6978; text-align: center; }
+  .print-btn { background: #2e8b57; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13pt; cursor: pointer; font-weight: 700; font-family: inherit; position: fixed; top: 20px; right: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  @media print { .print-btn { display: none; } }
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF として保存</button>
+  <div class="cert-box">
+    <div class="cert-title">生化学 復習クイズ修了証</div>
+    <div class="cert-sub">第1回: 糖質</div>
+    <div class="cert-field"><span class="label">学籍番号</span><br><span class="value">${studentId}</span></div>
+    <div class="cert-score">${score} / ${total}</div>
+    <div class="cert-field"><span class="label">合格基準: ${Math.ceil(total * 0.8)}問以上</span></div>
+    <div class="cert-field"><span class="label">出力日時</span><br>${datetime}</div>
+    <div class="cert-code"><span class="label">検証コード</span><br>${verCode}</div>
+  </div>
+  <hr><h2 style="text-align:center; color:#22543d;">問題・回答・解説</h2>
+  ${qhtml}
+  <footer>生化学 FY2026 · 慶應義塾大学薬学部 · 担当: 長谷耕二 / 鈴木功一郎（Interactive Lab: 高橋大輔）<br>検証コード ${verCode} · 学籍番号 ${studentId} · ${datetime}</footer>
+  </body></html>`;
+  const w = window.open('', '_blank');
+  if (!w) { alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
 });
 </script>
 
