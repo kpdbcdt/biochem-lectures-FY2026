@@ -492,7 +492,7 @@
     <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
   </div>
 
-  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 合格基準: 全 15 問に回答し <b>12 問以上正解</b>で修了証を発行できます。不合格時はリセットして再挑戦してください。</p>
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 全 15 問に回答し <b>12 問以上正解</b>で合格。<b>再度試験の受講者</b>は合格後に修了証 PDF を発行し提出します。不合格時はリセットして再挑戦してください。</p>
 </div>
 
 <footer>
@@ -1065,6 +1065,12 @@ QUIZ.forEach((q, i) => {
   card._selected = selected;
 });
 
+// 修了証は再度試験 (143474) のみ: ?retake=1 または referrer が再試コースの時だけ有効
+const IS_RETAKE = (function () {
+  try { return new URLSearchParams(location.search).get('retake') === '1' || /lms\.keio\.jp\/courses\/143474/.test(document.referrer || ''); }
+  catch (e) { return false; }
+})();
+
 document.getElementById('quiz-grade').addEventListener('click', () => {
   let score = 0;
   let answered = 0;
@@ -1091,7 +1097,8 @@ document.getElementById('quiz-grade').addEventListener('click', () => {
   const allAnswered = answered === QUIZ.length;
   const passed = allAnswered && score >= passReq;
   let tail;
-  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  if (passed && IS_RETAKE) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！よくできました。</span>`; certEl.style.display = 'none'; }
   else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
   else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
   summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
