@@ -1083,13 +1083,19 @@ document.getElementById('quiz-grade').addEventListener('click', () => {
     const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
     if (isCorrect) score++;
     card.classList.add('graded');
+    // 再試 (IS_RETAKE) かつ不正解は、修了証の公正性のため正解・解説を隠す。本講義は常に全表示。
+    const hideAnswer = IS_RETAKE && !isCorrect;
     card.querySelectorAll('ul.options li').forEach(li => {
       const idx = parseInt(li.dataset.idx);
       li.classList.remove('selected');
-      if (correctSet.has(idx)) li.classList.add('correct');
-      else if (selected.has(idx)) li.classList.add('incorrect');
+      if (hideAnswer) {
+        if (selected.has(idx)) li.classList.add('incorrect');
+      } else {
+        if (correctSet.has(idx)) li.classList.add('correct');
+        else if (selected.has(idx)) li.classList.add('incorrect');
+      }
     });
-    card.querySelector('.quiz-explain').classList.add('shown');
+    if (!hideAnswer) card.querySelector('.quiz-explain').classList.add('shown');
   });
   const summary = document.getElementById('quiz-summary');
   const certEl = document.getElementById('quiz-cert-section');
