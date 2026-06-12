@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>生化学 Lec 03 — タンパク質の構造 (Interactive Lab)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: #f7f9fc;
+    color: #1a2633;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 22px; }
+  header p { margin: 0; opacity: 0.92; font-size: 13px; }
+  .meta-bar {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a6978;
+  }
+  .meta-bar b { color: #1a2633; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #5a6978;
+    border-radius: 5px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab-bar button:hover { background: #f0fff4; }
+  .tab-bar button.active {
+    background: #276749;
+    color: white;
+    border-color: #276749;
+  }
+  .panel {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 { margin: 0 0 8px 0; font-size: 18px; color: #276749; }
+  .panel h3 { margin: 16px 0 8px 0; font-size: 15px; color: #276749; }
+  .objective {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    margin: 8px 0 14px 0;
+    font-size: 13px;
+    color: #22543d;
+    border-radius: 4px;
+  }
+  .objective b { color: #1a4a3c; }
+  .ctrl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .ctrl label { font-size: 13px; color: #5a6978; font-weight: 500; margin-right: 4px; }
+  .ctrl button, .ctrl select, .ctrl input {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #1a2633;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ctrl button:hover { background: #f0fff4; }
+  .ctrl button.primary {
+    background: #38a169;
+    color: white;
+    border-color: #2f855a;
+  }
+  .ctrl button.primary:hover { background: #2f855a; }
+  .seg {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0;
+  }
+  .seg button {
+    background: white; border: 1px solid #d7dce5; color: #5a6978;
+    border-radius: 6px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .seg button:hover { background: #f0fff4; }
+  .seg button.active { background: #276749; color: white; border-color: #276749; }
+  .display-box {
+    background: #fafbfc;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    min-height: 80px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .display-box.center { text-align: center; }
+  .display-box svg { max-width: 100%; height: auto; }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  table.cmp th, table.cmp td {
+    border: 1px solid #d7dce5;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th { background: #f0fff4; color: #22543d; font-weight: 600; }
+  table.cmp tr:nth-child(even) td { background: #fafbfc; }
+  .pill {
+    display: inline-block;
+    background: #edf2f7;
+    color: #5a6978;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  .pill.l1 { background: #fef3c7; color: #92400e; }   /* 一次 */
+  .pill.l2 { background: #ccfbf1; color: #115e59; }   /* 二次 */
+  .pill.l3 { background: #dbeafe; color: #1e40af; }   /* 三次 */
+  .pill.l4 { background: #ede9fe; color: #5b21b6; }   /* 四次 */
+  .pill.bond { background: #e2e8f0; color: #475569; }
+  .pill.warn { background: #fee2e2; color: #991b1b; }
+  .pill.good { background: #d1fae5; color: #065f46; }
+  .result-box {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .result-box b { color: #22543d; }
+  .formula {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+  }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .tile {
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: #fafbfc;
+    font-size: 12.5px;
+  }
+  .tile:hover { background: #f0fff4; border-color: #38a169; }
+  .tile.sel { background: #c6f6d5; border-color: #276749; }
+  .tile b { font-size: 13.5px; color: #276749; }
+  .steps { display:flex; flex-wrap:wrap; gap:4px; margin: 8px 0; }
+  .steps .step {
+    flex:1; min-width:90px; text-align:center; font-size:11px; padding:6px 4px;
+    border:1px solid #d7dce5; border-radius:6px; background:#fafbfc; color:#94a3b8;
+  }
+  .steps .step.done { background:#f0fff4; color:#276749; border-color:#9ae6b4; }
+  .steps .step.cur { background:#276749; color:white; border-color:#276749; font-weight:700; }
+  .quiz-card {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .quiz-card .stem { font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+  .quiz-card ul.options { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .quiz-card ul.options li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #d7dce5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fafbfc;
+    user-select: none;
+  }
+  .quiz-card ul.options li:hover { background: #f0fff4; }
+  .quiz-card ul.options li.selected { background: #dbeafe; border-color: #2b6cb0; }
+  .quiz-card ul.options li.correct { background: #c6f6d5; border-color: #22543d; color: #22543d; }
+  .quiz-card ul.options li.incorrect { background: #fed7d7; border-color: #9b2c2c; color: #9b2c2c; }
+  .quiz-explain {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: none;
+  }
+  .quiz-explain.shown { display: block; }
+  .quiz-explain b { color: #22543d; }
+  .quiz-summary {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  footer {
+    text-align: center;
+    color: #5a6978;
+    font-size: 12px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid #d7dce5;
+  }
+  footer a { color: #38a169; text-decoration: none; }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header { padding: 18px 20px; }
+    header h1 { font-size: 18px; }
+    .panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧬 生化学 Lec 03 — タンパク質の構造 (Interactive Lab)</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 · 月曜 1 限 · 6/15 · 鈴木功一郎 先生</p>
+</header>
+
+<div class="meta-bar">
+  <b>学修目標 (SBO)</b>: タンパク質の構造 (一次・二次・三次・四次構造) と性質を説明できる<br>
+  <b>使い方</b>: 下のタブを切り替えて 5 つの interactive tools + 復習クイズで学習。何度でも挑戦できます。<br>
+  <b>教科書対応</b>: イラストレイテッド生化学 第8版 2章 (一部 3・4章) / エッセンシャル細胞生物学 第5版 (タンパク質パネル) / ヴォート基礎生化学 第5版 6章
+</div>
+
+<div style="margin: 0 0 14px 0; display:flex; gap:10px; flex-wrap:wrap;">
+  <!-- ※ 暫定リンク: 第3回モジュールにスライド PDF File item が登録されたら ID を差し替える (現在は授業ページ) -->
+  <a href="https://lms.keio.jp/courses/139643/modules/items/5881089" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2b6cb0; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF (K-LMS 第3回)
+  </a>
+</div>
+
+<div class="tab-bar">
+  <button data-tab="hierarchy" class="active">🏛️ 構造の4階層</button>
+  <button data-tab="secondary">🌀 二次構造ギャラリー</button>
+  <button data-tab="motif">🧩 モチーフ図鑑</button>
+  <button data-tab="folding">🧬 折りたたみ &amp; シャペロン</button>
+  <button data-tab="disease">🩺 ミスフォールディング病</button>
+  <button data-tab="quiz">📝 Quiz (15問)</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: Structure Hierarchy Explorer                          -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-hierarchy">
+  <h2>🏛️ 構造の 4 階層エクスプローラー</h2>
+  <div class="objective"><b>学習目標</b>: 一次・二次・三次・四次構造の定義と違いを説明できる。各階層を「安定化する相互作用」とセットで理解する (スライド S09 / S27)。一次構造の進化 (相同性・オルソログ/パラログ) と疾患 (鎌状赤血球) も扱う。</div>
+
+  <div class="seg" id="hier-seg">
+    <button data-k="primary" class="active">一次構造</button>
+    <button data-k="secondary">二次構造</button>
+    <button data-k="tertiary">三次構造</button>
+    <button data-k="quaternary">四次構造</button>
+  </div>
+
+  <div class="display-box center" id="hier-display"></div>
+  <div class="result-box" id="hier-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: Secondary Structure Gallery                           -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-secondary">
+  <h2>🌀 二次構造ギャラリー</h2>
+  <div class="objective"><b>学習目標</b>: αヘリックス・βシート・コラーゲン三重らせんの特徴を説明できる (S16-S21)。いずれも<b>主鎖の水素結合</b>で安定化されることを押さえる。</div>
+
+  <div class="seg" id="sec-seg">
+    <button data-k="helix" class="active">α ヘリックス</button>
+    <button data-k="sheet">β シート</button>
+    <button data-k="collagen">コラーゲン三重らせん</button>
+  </div>
+
+  <div class="display-box center" id="sec-display"></div>
+  <div class="result-box" id="sec-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: Motif Encyclopedia                                    -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-motif">
+  <h2>🧩 モチーフ図鑑 — 超二次構造</h2>
+  <div class="objective"><b>学習目標</b>: 超二次構造 (モチーフ = 二次構造の組み合わせでできる幾何学パターン) を例を挙げて説明できる (S17 / S22 / S23)。何を結合するか (Ca²⁺ / Zn / DNA) で覚える。</div>
+
+  <div class="tile-grid" id="motif-grid" style="margin-bottom:14px;"></div>
+  <div class="display-box center" id="motif-display"></div>
+  <div class="result-box" id="motif-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: Folding & Chaperone                                   -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-folding">
+  <h2>🧬 フォールディング &amp; シャペロン</h2>
+  <div class="objective"><b>学習目標</b>: タンパク質の折りたたみの順序と推進力 (疎水効果) を説明できる (S30)。高次構造を安定化する 4 つの相互作用 (S29)、分子シャペロン・シャペロニンの働き (S31-S33) を理解する。</div>
+
+  <h3>① 折りたたみの流れ (ステップを進めてみよう)</h3>
+  <div class="steps" id="fold-steps"></div>
+  <div class="ctrl">
+    <button id="fold-prev">← 戻る</button>
+    <button class="primary" id="fold-next">次へ →</button>
+    <button id="fold-reset">最初から</button>
+  </div>
+  <div class="display-box center" id="fold-display"></div>
+  <div class="result-box" id="fold-info"></div>
+
+  <h3>② 高次構造を安定化する 4 つの相互作用</h3>
+  <table class="cmp">
+    <tr><th>相互作用</th><th>結合の種類</th><th>ポイント</th></tr>
+    <tr><td><b>ジスルフィド結合 (S-S)</b></td><td><span class="pill bond">共有結合</span></td><td>2 つのシステイン (-SH) が酸化 → シスチン。<b>唯一の共有結合</b>で立体構造を強固に固定 (例: インスリン)</td></tr>
+    <tr><td><b>疎水効果</b></td><td><span class="pill bond">非共有</span></td><td>非極性側鎖が水を避けて内部に集まる。<b>高次構造の決定・安定性に最も大きく寄与</b>・折りたたみの推進力</td></tr>
+    <tr><td><b>水素結合</b></td><td><span class="pill bond">非共有</span></td><td>主鎖 (二次構造) や側鎖 (Ser, Thr など) の間</td></tr>
+    <tr><td><b>イオン性相互作用 (塩橋)</b></td><td><span class="pill bond">非共有</span></td><td>荷電側鎖の間 (Asp/Glu の − ⇄ Lys/Arg の +)</td></tr>
+  </table>
+
+  <h3>③ シャペロン (折りたたみの介添え役)</h3>
+  <div class="seg" id="chap-seg">
+    <button data-k="hsp" class="active">分子シャペロン (Hsp)</button>
+    <button data-k="chaperonin">シャペロニン (GroEL/GroES)</button>
+  </div>
+  <div class="result-box" id="chap-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: Misfolding Disease Map                                -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-disease">
+  <h2>🩺 ミスフォールディング病マップ</h2>
+  <div class="objective"><b>学習目標</b>: タンパク質のミスフォールディングや一次構造の変異で起こる疾患を概説できる (S15 / S34-S36)。「構造異常 → 疾患」の流れを分子レベルで説明する。</div>
+
+  <div class="seg" id="dis-seg">
+    <button data-k="amyloid" class="active">アミロイド病 (アルツハイマー)</button>
+    <button data-k="prion">プリオン病 (TSE)</button>
+    <button data-k="sickle">鎌状赤血球貧血</button>
+  </div>
+
+  <div class="display-box center" id="dis-display"></div>
+  <div class="result-box" id="dis-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: Quiz                                                  -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-quiz">
+  <h2>📝 復習クイズ (15問)</h2>
+  <div class="objective"><b>使い方</b>: 各問の選択肢をクリック → 「答え合わせ」ボタンで正解と解説を表示。何度でも挑戦可。最後にスコアが集計されます。</div>
+
+  <div id="quiz-list"></div>
+
+  <div class="ctrl" style="margin-top: 20px;">
+    <button class="primary" id="quiz-grade">全問の答え合わせ + スコア集計</button>
+    <button id="quiz-reset">全問リセット</button>
+  </div>
+
+  <div id="quiz-summary"></div>
+
+  <div id="quiz-cert-section" style="display:none; margin-top:16px; padding:16px; background:#f7fafc; border:2px solid #2e8b57; border-radius:8px;">
+    <h4 style="margin:0 0 8px 0; color:#2e8b57;">📜 修了証の発行</h4>
+    <p style="font-size:13px; margin:0 0 10px 0;">学籍番号を入力して修了証 PDF を出力してください。<b>再度試験の事前課題</b>として K-LMS に提出します。</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <input type="text" id="cert-student-id" placeholder="学籍番号（例: 25-1-001）" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; font-size:14px; width:200px;">
+      <button class="primary" id="quiz-pdf" style="background:#2e8b57;">📜 修了証 PDF を出力</button>
+    </div>
+    <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
+  </div>
+
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 全 15 問に回答し <b>12 問以上正解</b>で合格。<b>再度試験の受講者</b>は合格後に修了証 PDF を発行し提出します。不合格時はリセットして再挑戦してください。</p>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
+  教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a><br>
+  <small style="color: #94a3b8;">構造はイラストレイテッド生化学 第8版 2章の内容に基づく自作の概念図 (schematic)</small>
+</footer>
+
+<script>
+// ============================================================
+//  Tab switching
+// ============================================================
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// 共通: セグメントボタン群のバインド
+function bindSeg(segId, cb){
+  const seg = document.getElementById(segId);
+  seg.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      cb(b.dataset.k);
+    });
+  });
+}
+
+// ============================================================
+//  TAB 1: Structure Hierarchy
+// ============================================================
+const HIER = {
+  primary: {
+    pill:'<span class="pill l1">一次構造</span>',
+    title:'一次構造 (primary structure)',
+    svg:`<svg viewBox="0 0 380 110" style="max-width:380px;">
+      <text x="20" y="22" font-size="11" fill="#1e40af" font-weight="bold">N末端</text>
+      <text x="320" y="22" font-size="11" fill="#9d174d" font-weight="bold">C末端</text>
+      ${[0,1,2,3,4,5].map(i=>{const x=40+i*55;return `<circle cx="${x}" cy="60" r="16" fill="#fef3c7" stroke="#92400e" stroke-width="2"/><text x="${x}" y="65" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">${['Val','Ala','Gly','Pro','Ser','…'][i]}</text>${i<5?`<line x1="${x+16}" y1="60" x2="${x+39}" y2="60" stroke="#276749" stroke-width="2.5"/>`:''}`}).join('')}
+      <text x="190" y="100" font-size="11" fill="#5a6978" text-anchor="middle">ペプチド結合でつながったアミノ酸配列 (N→C で読む)</text>
+    </svg>`,
+    info:`<b>定義</b>: ポリペプチド鎖の<b>アミノ酸配列そのもの</b>。隣り合うアミノ酸は<b>ペプチド結合 (共有結合)</b> でつながる。慣習で N 末端を左に書き N→C で読む。<br>
+    <b>決定するもの</b>: <b>遺伝子 (DNA) の塩基配列</b>。遺伝暗号 (コドン) で翻訳される (例 UUC→Phe)。ストップコドンは<b>翻訳終結因子 (リリースファクター)</b> が認識。<br>
+    <b>進化との関係</b>: 配列が似たタンパク質を<b>相同タンパク質 (ホモログ)</b> という。
+    <span class="pill good">オルソログ</span>= 種間で同じ働き (例: ヒトと酵母のシトクロム c)、
+    <span class="pill good">パラログ</span>= 種内の遺伝子重複 (例: ヘモグロビン各鎖とミオグロビン)。
+    不変残基 / 保存的置換 (Asp→Glu) / 超可変残基に分かれる。<br>
+    <b>疾患の例</b>: <b>鎌状赤血球貧血</b> = ヘモグロビン β 鎖 6 番目の Glu → Val (たった 1 アミノ酸の変異が高次構造・機能を壊す)。<br>
+    <b>安定化</b>: <span class="pill bond">ペプチド結合 (共有結合)</span>`
+  },
+  secondary: {
+    pill:'<span class="pill l2">二次構造</span>',
+    title:'二次構造 (secondary structure)',
+    svg:`<svg viewBox="0 0 380 120" style="max-width:380px;">
+      <path d="M40,80 Q55,30 70,80 Q85,30 100,80 Q115,30 130,80" fill="none" stroke="#276749" stroke-width="3"/>
+      <text x="85" y="105" font-size="11" fill="#276749" text-anchor="middle" font-weight="bold">α ヘリックス</text>
+      <path d="M210,55 L250,55 L250,75 L290,75 M210,55 L210,75 L250,75 L250,95 L290,95" fill="none" stroke="#1e40af" stroke-width="2.5"/>
+      <text x="265" y="115" font-size="11" fill="#1e40af" text-anchor="middle" font-weight="bold">β シート</text>
+      <text x="190" y="20" font-size="11" fill="#5a6978" text-anchor="middle">局所の規則的な構造 (水素結合で安定化)</text>
+    </svg>`,
+    info:`<b>定義</b>: ポリペプチド鎖の<b>互いに近いアミノ酸</b>で形成される規則的な局所構造。代表は <b>αヘリックス</b>・<b>βシート</b>・βベンド。<br>
+    <b>安定化</b>: <span class="pill bond">主鎖の水素結合</span> (カルボキシ基 -C=O と アミノ基 -N-H の間)。<br>
+    <b>詳しくは</b>: 「🌀 二次構造ギャラリー」タブで αヘリックス・βシート・コラーゲン三重らせんを比較。`
+  },
+  tertiary: {
+    pill:'<span class="pill l3">三次構造</span>',
+    title:'三次構造 (tertiary structure)',
+    svg:`<svg viewBox="0 0 380 130" style="max-width:380px;">
+      <path d="M60,90 C40,40 120,30 110,70 C105,100 160,110 170,70 C180,30 240,40 220,80 C210,110 270,100 260,60" fill="none" stroke="#276749" stroke-width="3"/>
+      <ellipse cx="120" cy="65" rx="55" ry="40" fill="none" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <ellipse cx="225" cy="68" rx="48" ry="38" fill="none" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="120" y="120" font-size="10" fill="#1e40af" text-anchor="middle">ドメイン 1</text>
+      <text x="225" y="122" font-size="10" fill="#1e40af" text-anchor="middle">ドメイン 2</text>
+      <text x="190" y="18" font-size="11" fill="#5a6978" text-anchor="middle">一本の鎖が完全に折りたたまれた立体構造</text>
+    </svg>`,
+    info:`<b>定義</b>: ポリペプチド鎖<b>全体が折りたたまれた立体構造</b>。具体的には「<b>ドメインの折りたたみ</b>」と「<b>ドメインの配置</b>」。<br>
+    <b>ドメイン</b>: 機能と三次元構造の<b>基本単位</b>。モチーフ (超二次構造) の組み合わせでできる。200 残基を超えると 2 つ以上のドメインを持ち、<b>各ドメインは独立して折りたたまれ</b>、それ自体が機能 (例: 補酵素結合) を持つことが多い (例: GAPDH の NAD⁺ 結合ドメイン)。<br>
+    <b>進化</b>: <b>アミノ酸配列より三次構造が保存される</b> (約 200 種のフォールディングで既知構造の半分を説明)。<br>
+    <b>安定化</b>: <span class="pill bond">疎水効果 (寄与最大)</span> <span class="pill bond">水素結合</span> <span class="pill bond">イオン結合</span> <span class="pill bond">ジスルフィド結合 (共有)</span>`
+  },
+  quaternary: {
+    pill:'<span class="pill l4">四次構造</span>',
+    title:'四次構造 (quaternary structure)',
+    svg:`<svg viewBox="0 0 380 130" style="max-width:380px;">
+      <circle cx="150" cy="55" r="30" fill="#ede9fe" stroke="#5b21b6" stroke-width="2"/><text x="150" y="60" font-size="13" font-weight="bold" fill="#5b21b6" text-anchor="middle">α1</text>
+      <circle cx="220" cy="55" r="30" fill="#ddd6fe" stroke="#5b21b6" stroke-width="2"/><text x="220" y="60" font-size="13" font-weight="bold" fill="#5b21b6" text-anchor="middle">α2</text>
+      <circle cx="150" cy="100" r="30" fill="#fce7f3" stroke="#9d174d" stroke-width="2"/><text x="150" y="105" font-size="13" font-weight="bold" fill="#9d174d" text-anchor="middle">β1</text>
+      <circle cx="220" cy="100" r="30" fill="#fbcfe8" stroke="#9d174d" stroke-width="2"/><text x="220" y="105" font-size="13" font-weight="bold" fill="#9d174d" text-anchor="middle">β2</text>
+      <text x="185" y="22" font-size="11" fill="#5a6978" text-anchor="middle">ヘモグロビン = α₂β₂ ヘテロ 4 量体</text>
+    </svg>`,
+    info:`<b>定義</b>: 複数のポリペプチド鎖 (= <b>サブユニット</b>) が会合した<b>空間的配置</b>。サブユニット同士は主に<b>非共有結合</b>で結合。<br>
+    <b>例</b>: ヘモグロビン = <b>α₂β₂ のヘテロ 4 量体</b>。<br>
+    <b>用語</b>: <b>オリゴマー</b>= 2 つ以上のサブユニットからなる全体、<b>プロトマー</b>= 構成サブユニット 1 つずつ。<br>
+    <b>利点</b>: 部品を別々に作って組み立てる方が合成エラーが少なく、酵素では活性部位を持ち寄れて<b>活性の制御がしやすい</b>。`
+  }
+};
+function renderHier(k){
+  const d = HIER[k];
+  document.getElementById('hier-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.pill} ${d.title}</div>${d.svg}`;
+  document.getElementById('hier-info').innerHTML = d.info;
+}
+bindSeg('hier-seg', renderHier);
+renderHier('primary');
+
+// ============================================================
+//  TAB 2: Secondary Structure Gallery
+// ============================================================
+const SEC = {
+  helix: {
+    title:'α ヘリックス',
+    svg:`<svg viewBox="0 0 360 150" style="max-width:360px;">
+      <path d="M60,120 Q90,30 120,120 Q150,30 180,120 Q210,30 240,120 Q270,30 300,120" fill="none" stroke="#276749" stroke-width="4"/>
+      ${[0,1,2,3].map(i=>{const x=90+i*60;return `<line x1="${x}" y1="48" x2="${x}" y2="118" stroke="#9d174d" stroke-width="1" stroke-dasharray="3 3"/>`}).join('')}
+      <text x="180" y="20" font-size="11" fill="#9d174d" text-anchor="middle">点線 = 主鎖の水素結合 (i ⇄ i+4)</text>
+      <text x="180" y="142" font-size="11" fill="#276749" text-anchor="middle" font-weight="bold">右巻きらせん · 1回転 3.6 残基</text>
+    </svg>`,
+    info:`<b>特徴</b>: 一本の鎖が作る<b>右巻きのらせん</b>。<b>1 回転あたり 3.6 アミノ酸残基</b>。主鎖の C=O と N-H の<b>水素結合</b>で安定化 (おおよそ i と i+4 の残基間)。<br>
+    <b>壊しやすいアミノ酸</b>:
+    <span class="pill warn">プロリン</span> (N-H がなく曲がる)、
+    <span class="pill warn">荷電アミノ酸 Glu/Asp</span> (静電反発・イオン結合)、
+    <span class="pill warn">かさばった側鎖 Trp</span>。<br>
+    <b>関連</b>: αケラチン・ミオシンは αヘリックスが束ねた<b>コイルドコイル</b> (→ モチーフ図鑑)。`
+  },
+  sheet: {
+    title:'β シート (β ひだ状シート)',
+    svg:`<svg viewBox="0 0 360 150" style="max-width:360px;">
+      <path d="M40,50 L90,40 L140,50 L190,40 L240,50 L290,40 L320,48" fill="none" stroke="#1e40af" stroke-width="3"/>
+      <path d="M40,100 L90,90 L140,100 L190,90 L240,100 L290,90 L320,98" fill="none" stroke="#1e40af" stroke-width="3"/>
+      ${[90,190,290].map(x=>`<line x1="${x}" y1="42" x2="${x}" y2="90" stroke="#9d174d" stroke-width="1" stroke-dasharray="3 3"/>`).join('')}
+      <text x="180" y="125" font-size="11" fill="#9d174d" text-anchor="middle">点線 = ストランド間の水素結合 (主鎖に垂直)</text>
+      <text x="335" y="50" font-size="10" fill="#1e40af">β鎖</text>
+      <text x="180" y="20" font-size="11" fill="#1e40af" text-anchor="middle" font-weight="bold">伸びきった β ストランドが並ぶ</text>
+    </svg>`,
+    info:`<b>特徴</b>: 横に整列した<b>2 本以上の βストランド</b> (完全に伸びきった鎖) からなる。α 炭素がシート平面の上下に交互に出るため<b>ひだ状</b>になる。<br>
+    <b>安定化</b>: <b>ストランド間の主鎖の水素結合</b> (鎖に垂直方向)。<br>
+    <b>2 種類</b>: <span class="pill">逆平行</span> と <span class="pill">平行</span>。<br>
+    <b>関連</b>: βシートが樽状に閉じた<b>βバレル</b> (例: レチノール結合タンパク質) → モチーフ図鑑。`
+  },
+  collagen: {
+    title:'コラーゲン三重らせん',
+    svg:`<svg viewBox="0 0 360 150" style="max-width:360px;">
+      <path d="M30,55 Q90,40 150,55 Q210,70 270,55 Q300,48 330,55" fill="none" stroke="#276749" stroke-width="3"/>
+      <path d="M30,75 Q90,90 150,75 Q210,60 270,75 Q300,82 330,75" fill="none" stroke="#38a169" stroke-width="3"/>
+      <path d="M30,65 Q90,65 150,90 Q210,65 270,65 Q300,65 330,65" fill="none" stroke="#9ae6b4" stroke-width="3"/>
+      <text x="180" y="25" font-size="11" fill="#276749" text-anchor="middle" font-weight="bold">3 本のポリペプチドが右巻きにねじれる</text>
+      <text x="180" y="115" font-size="11" fill="#5a6978" text-anchor="middle">反復配列 -Gly-Pro-Hyp- (Gly が約 1/3)</text>
+    </svg>`,
+    info:`<b>コラーゲン</b>: 脊椎動物で<b>最も多い</b>タンパク質 (ヒト全タンパク質の 30%)。骨・歯・軟骨・皮膚・血管などの結合組織。<b>1 分子は 3 本</b>のポリペプチドからなる。<br>
+    <b>配列</b>: <b>-Gly-X-Y- (多くは -Gly-Pro-Hyp-)</b> の反復で、<b>Gly が約 1/3</b>、15〜30% が Pro と 4-ヒドロキシプロリン (Hyp)。<br>
+    <b>三重らせん</b>: Pro は N-H がなく αヘリックスを作れない → <b>1 回転 3 残基の左巻きヘリックス</b>。これが <b>3 本集まって右巻きにねじれて</b>三本らせんに。<br>
+    <b>臨床</b>: Pro→Hyp 変換 (プロリルヒドロキシラーゼ) には<b>ビタミン C</b> が必要 → <span class="pill warn">欠乏で壊血病</span>。`
+  }
+};
+function renderSec(k){
+  const d = SEC[k];
+  document.getElementById('sec-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('sec-info').innerHTML = d.info;
+}
+bindSeg('sec-seg', renderSec);
+renderSec('helix');
+
+// ============================================================
+//  TAB 3: Motif Encyclopedia
+// ============================================================
+const MOTIF = {
+  coiledcoil: { name:'コイルドコイル', binds:'—', svg:`<svg viewBox="0 0 320 120" style="max-width:320px;">
+      <path d="M40,60 Q70,25 100,60 Q130,95 160,60 Q190,25 220,60 Q250,95 280,60" fill="none" stroke="#276749" stroke-width="3.5"/>
+      <path d="M40,60 Q70,95 100,60 Q130,25 160,60 Q190,95 220,60 Q250,25 280,60" fill="none" stroke="#38a169" stroke-width="3.5"/>
+      <text x="160" y="110" font-size="11" fill="#276749" text-anchor="middle">2〜3 本の αヘリックスが巻き付く</text></svg>`,
+    info:`<b>構成</b>: 2〜3 本の αヘリックスが、疎水性側鎖 (a・d 位) を内向きに集めて相互に巻き付いた超二次構造。<br><b>例</b>: 皮膚の<b>αケラチン</b>、筋肉の<b>ミオシン</b>。` },
+  betabarrel: { name:'β バレル', binds:'(分子の輸送・収納)', svg:`<svg viewBox="0 0 320 120" style="max-width:320px;">
+      <ellipse cx="160" cy="60" rx="70" ry="40" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+      ${[0,1,2,3,4,5,6,7].map(i=>{const a=i/8*Math.PI*2;const x=160+Math.cos(a)*70;return `<line x1="${x}" y1="${60-38}" x2="${x}" y2="${60+38}" stroke="#1e40af" stroke-width="2"/>`}).join('')}
+      <text x="160" y="112" font-size="11" fill="#1e40af" text-anchor="middle">βシートが樽状に閉じる</text></svg>`,
+    info:`<b>構成</b>: 大きな βシートが<b>樽 (バレル) 状</b>に閉じた構造。β鎖と αヘリックスが混じった <b>α/βバレル</b> もある。<br><b>例</b>: <b>レチノール結合タンパク質</b> (8 本の逆平行 β鎖)、<b>トリオースリン酸イソメラーゼ</b> (α/βバレル)。` },
+  efhand: { name:'E-F ハンド', binds:'Ca²⁺', svg:`<svg viewBox="0 0 320 120" style="max-width:320px;">
+      <path d="M50,90 Q70,40 90,90" fill="none" stroke="#276749" stroke-width="4"/>
+      <path d="M230,90 Q250,40 270,90" fill="none" stroke="#276749" stroke-width="4"/>
+      <path d="M90,90 Q160,110 230,90" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+      <circle cx="160" cy="100" r="13" fill="#fef3c7" stroke="#92400e" stroke-width="2"/><text x="160" y="104" font-size="10" font-weight="bold" fill="#92400e" text-anchor="middle">Ca²⁺</text>
+      <text x="160" y="35" font-size="11" fill="#276749" text-anchor="middle">ヘリックス・ターン・ヘリックス</text></svg>`,
+    info:`<b>構成</b>: 垂直になった 2 つの αヘリックス + リンカー (ヘリックス・ターン・ヘリックス)。<br><b>結合</b>: リンカー部位で <b>Ca²⁺</b> を結合 (カルシウム結合タンパク質)。` },
+  leucinezipper: { name:'ロイシンジッパー', binds:'DNA (転写因子)', svg:`<svg viewBox="0 0 320 120" style="max-width:320px;">
+      <line x1="120" y1="20" x2="120" y2="100" stroke="#276749" stroke-width="4"/>
+      <line x1="200" y1="20" x2="200" y2="100" stroke="#38a169" stroke-width="4"/>
+      ${[30,52,74,96].map(y=>`<line x1="120" y1="${y}" x2="200" y2="${y}" stroke="#9d174d" stroke-width="2"/><text x="160" y="${y-3}" font-size="9" fill="#9d174d" text-anchor="middle">Leu</text>`).join('')}
+      <text x="160" y="115" font-size="11" fill="#276749" text-anchor="middle">7 残基ごとの Leu で 2 本を束ねる</text></svg>`,
+    info:`<b>構成</b>: <b>7 残基ごとにロイシン</b>が並び、その疎水的な噛み合わせで 2 本の αヘリックスを束ねる (ジッパーを閉める働き)。<br><b>機能</b>: <b>DNA 結合性の転写因子</b>に多い。` },
+  zincfinger: { name:'ジンクフィンガー', binds:'Zn → DNA', svg:`<svg viewBox="0 0 320 120" style="max-width:320px;">
+      <path d="M70,95 Q90,45 110,95" fill="none" stroke="#276749" stroke-width="4"/>
+      <path d="M180,40 L210,40 L210,60 L240,60" fill="none" stroke="#1e40af" stroke-width="3"/>
+      <circle cx="150" cy="75" r="14" fill="#ede9fe" stroke="#5b21b6" stroke-width="2"/><text x="150" y="79" font-size="11" font-weight="bold" fill="#5b21b6" text-anchor="middle">Zn</text>
+      <line x1="110" y1="80" x2="138" y2="76" stroke="#5b21b6" stroke-width="1.5"/><line x1="180" y1="55" x2="162" y2="70" stroke="#5b21b6" stroke-width="1.5"/>
+      <text x="160" y="112" font-size="11" fill="#5b21b6" text-anchor="middle">αヘリックスと βシートを Zn が架橋</text></svg>`,
+    info:`<b>構成</b>: αヘリックスと逆平行 βシートが<b>亜鉛 (Zn) を介して</b>結合した α/β 亜鉛結合モチーフ。<br><b>機能</b>: <b>DNA 結合タンパク質</b> (転写因子) に多い。` }
+};
+const MOTIF_ORDER = ['coiledcoil','betabarrel','efhand','leucinezipper','zincfinger'];
+let motifSel = 'coiledcoil';
+function renderMotifGrid(){
+  const grid = document.getElementById('motif-grid');
+  grid.innerHTML = '';
+  MOTIF_ORDER.forEach(k=>{
+    const m = MOTIF[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===motifSel?' sel':'');
+    t.innerHTML = `<b>${m.name}</b><br><span style="color:#5a6978;">結合: ${m.binds}</span>`;
+    t.addEventListener('click', ()=>{ motifSel=k; renderMotifGrid(); renderMotifDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderMotifDetail(){
+  const m = MOTIF[motifSel];
+  document.getElementById('motif-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${m.name}</div>${m.svg}`;
+  document.getElementById('motif-info').innerHTML = m.info;
+}
+renderMotifGrid(); renderMotifDetail();
+
+// ============================================================
+//  TAB 4: Folding & Chaperone
+// ============================================================
+const FOLD = [
+  { label:'未折りたたみ', t:'0 ms',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;"><path d="M20,45 L60,30 L100,55 L140,28 L180,58 L220,30 L260,55 L300,32 L340,48" fill="none" stroke="#94a3b8" stroke-width="3"/></svg>`,
+    info:'合成直後の<b>伸びたポリペプチド鎖</b>。翻訳と同時に折りたたみが始まる。' },
+  { label:'二次構造形成', t:'5〜1000 ms',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;"><path d="M30,55 Q50,20 70,55 Q90,20 110,55" fill="none" stroke="#276749" stroke-width="3"/><path d="M170,40 L210,40 L210,60 L250,60" fill="none" stroke="#1e40af" stroke-width="3"/><path d="M110,55 Q140,70 170,40" stroke="#94a3b8" stroke-width="2" fill="none"/><path d="M250,60 Q290,40 330,55" stroke="#94a3b8" stroke-width="2" fill="none"/></svg>`,
+    info:'まず<b>局所的な二次構造 (αヘリックス・βシート)</b> が急速に形成される。' },
+  { label:'疎水コア形成 (三次)', t:'',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;"><path d="M120,55 C100,20 180,15 175,45 C170,75 220,80 230,45 C238,18 280,28 265,55" fill="none" stroke="#276749" stroke-width="3"/><circle cx="190" cy="48" r="22" fill="#fef3c7" opacity="0.6"/><text x="190" y="52" font-size="10" fill="#92400e" text-anchor="middle">疎水コア</text></svg>`,
+    info:'<b>疎水効果</b>が推進力。非極性側鎖が内部に集まり、一次構造で離れた残基が立体的に近づく → <b>三次構造</b>。水分子が内部から排除される。' },
+  { label:'四次構造の会合', t:'',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;"><circle cx="150" cy="45" r="24" fill="#ede9fe" stroke="#5b21b6" stroke-width="2"/><circle cx="210" cy="45" r="24" fill="#fce7f3" stroke="#9d174d" stroke-width="2"/></svg>`,
+    info:'複数のサブユニットが<b>非共有結合</b>で会合し<b>四次構造</b>に (必要なタンパク質のみ)。' },
+  { label:'球状タンパク質', t:'完成',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;"><circle cx="180" cy="45" r="32" fill="#c6f6d5" stroke="#276749" stroke-width="2.5"/><text x="180" y="50" font-size="11" fill="#276749" text-anchor="middle" font-weight="bold">native</text></svg>`,
+    info:'最も安定な<b>ネイティブ (天然) 構造</b> = コンパクトな<b>球状タンパク質 (globular protein)</b>。これで機能を発揮できる。' }
+];
+let foldStep = 0;
+function renderFold(){
+  const steps = document.getElementById('fold-steps');
+  steps.innerHTML = FOLD.map((s,i)=>`<div class="step ${i<foldStep?'done':''} ${i===foldStep?'cur':''}">${i+1}. ${s.label}${s.t?'<br><span style="font-size:9px;">'+s.t+'</span>':''}</div>`).join('');
+  const d = FOLD[foldStep];
+  document.getElementById('fold-display').innerHTML = d.svg;
+  document.getElementById('fold-info').innerHTML =
+    `<b>ステップ ${foldStep+1} / ${FOLD.length}: ${d.label}</b><br>${d.info}` +
+    (foldStep===FOLD.length-1 ? '<br><br>📌 折りたたみは<b>ランダムではなく</b>物理化学の法則に従い、エネルギー・エントロピーが下がる方向に決まった順序で進む (レヴィンタールのパラドックスの答え)。' : '');
+}
+document.getElementById('fold-next').addEventListener('click', ()=>{ if(foldStep<FOLD.length-1){foldStep++; renderFold();} });
+document.getElementById('fold-prev').addEventListener('click', ()=>{ if(foldStep>0){foldStep--; renderFold();} });
+document.getElementById('fold-reset').addEventListener('click', ()=>{ foldStep=0; renderFold(); });
+renderFold();
+
+const CHAP = {
+  hsp: `<b>分子シャペロン (Hsp = 熱ショックタンパク質)</b><br>
+    合成中のポリペプチド鎖に結合して正しい (ネイティブな) 折りたたみを助け、誤った/変性したタンパク質を<b>巻き戻す</b>。高温で発現が増えるため Hsp と呼ばれ、多くは<b>活性に ATP が必要</b>。<br>
+    ・<b>Hsp70</b>: 原核・真核で高度に保存。コシャペロン <b>Hsp40</b> と共同で新生鎖や変性タンパク質を介添え。<br>
+    ・<b>Hsp90</b>: シグナル伝達タンパク質の折りたたみ後期を助ける。ストレス下では全タンパク質の 6% にも。<br>
+    <small>※「変性」= ペプチド結合を切らずに二次・三次構造を壊すこと (例: 熱変性)。</small>`,
+  chaperonin: `<b>シャペロニン (GroEL / GroES)</b><br>
+    多数のサブユニットが集まった<b>かご形の複合体</b>。変性タンパク質をかごの中に取り込み、隔離された空間で折りたたむ。<br>
+    ・大腸菌では <b>GroEL (かご, Hsp60 相当)</b> + <b>GroES (フタ, Hsp10 相当)</b>。<br>
+    ・<b>ATP 依存</b>のサイクル: GroES が結合 → 内部空間でタンパク質が巻き戻る → 7 個の ATP 加水分解で相互作用が弱まり、折りたたまれたタンパク質を遊離。`
+};
+function renderChap(k){ document.getElementById('chap-info').innerHTML = CHAP[k]; }
+bindSeg('chap-seg', renderChap);
+renderChap('hsp');
+
+// ============================================================
+//  TAB 5: Misfolding Disease Map
+// ============================================================
+const DIS = {
+  amyloid: { title:'アミロイド病 (アルツハイマー病)',
+    svg:`<svg viewBox="0 0 360 110" style="max-width:360px;">
+      <path d="M30,55 Q50,25 70,55" fill="none" stroke="#276749" stroke-width="3"/>
+      <text x="50" y="80" font-size="10" fill="#276749" text-anchor="middle">可溶性 (正常)</text>
+      <text x="155" y="58" font-size="18" fill="#9d174d">→</text>
+      <path d="M210,40 L235,40 L235,55 L260,55 L260,40 L285,40 L285,55 L310,55" fill="none" stroke="#9d174d" stroke-width="3"/>
+      <path d="M210,70 L235,70 L235,85 L260,85 L260,70 L285,70 L285,85 L310,85" fill="none" stroke="#9d174d" stroke-width="3"/>
+      <text x="260" y="103" font-size="10" fill="#9d174d" text-anchor="middle">βシート性の不溶性繊維 (アミロイド)</text></svg>`,
+    info:`<b>機構</b>: 通常は可溶性のタンパク質が、<b>βシートからなる不溶性の繊維 (アミロイド)</b> を作って蓄積。少なくとも 35 の疾患で知られる (パーキンソン病・ハンチントン病など)。<br>
+    <b>アルツハイマー病</b>: 高齢で発症し認知機能低下・人格変化。2 大病理は<br>
+    ① <b>アミロイド斑 (老人斑)</b> = <b>アミロイド β (Aβ) 繊維</b> (多数の水素結合で極めて安定、ほぼ壊れない)<br>
+    ② <b>神経原繊維変化</b> = <b>タウタンパク質</b>の異常。`
+  },
+  prion: { title:'プリオン病 (TSE)',
+    svg:`<svg viewBox="0 0 360 110" style="max-width:360px;">
+      <path d="M40,55 Q60,25 80,55 Q100,25 120,55" fill="none" stroke="#276749" stroke-width="3.5"/>
+      <text x="80" y="80" font-size="10" fill="#276749" text-anchor="middle">PrP&#7580; (正常 · αヘリックス)</text>
+      <text x="165" y="58" font-size="18" fill="#9d174d">→</text>
+      <path d="M210,42 L235,42 L235,58 L260,58 L260,42 L285,42 L285,58 L310,58" fill="none" stroke="#9d174d" stroke-width="3.5"/>
+      <text x="260" y="80" font-size="10" fill="#9d174d" text-anchor="middle">PrP&#7480;&#7580; (感染型 · βシート)</text></svg>`,
+    info:`<b>機構</b>: 変異プリオン <b>PrPˢᶜ</b> が凝集して不溶性繊維を作り神経変性。構造変化は <b>N 末側の αヘリックス → βシート</b>。<br>
+    <b>増え方</b>: 感染型 PrPˢᶜ が正常型 <b>PrPᶜ を感染型に変換</b>し、核酸を介さず<b>指数関数的</b>に増える。<br>
+    <b>疾患</b>: クロイツフェルト・ヤコブ病 (CJD, ヒト)、<b>BSE / 狂牛病</b> (ウシ)、スクレイピー (ヒツジ)。脳がスポンジ状になる<b>伝達性海綿状脳症 (TSE)</b>。<span class="pill warn">治療法なし・致死的</span>`
+  },
+  sickle: { title:'鎌状赤血球貧血 (一次構造の変異)',
+    svg:`<svg viewBox="0 0 360 110" style="max-width:360px;">
+      <ellipse cx="80" cy="55" rx="34" ry="22" fill="#fee2e2" stroke="#9d174d" stroke-width="2"/>
+      <ellipse cx="80" cy="55" rx="16" ry="9" fill="#fff" stroke="#9d174d" stroke-width="1.2"/>
+      <text x="80" y="92" font-size="10" fill="#276749" text-anchor="middle">正常 (円板状)</text>
+      <text x="165" y="58" font-size="18" fill="#9d174d">→</text>
+      <path d="M250,35 Q300,45 285,75 Q255,72 250,75 Q235,55 250,35 Z" fill="#fecaca" stroke="#9d174d" stroke-width="2"/>
+      <text x="270" y="95" font-size="10" fill="#9d174d" text-anchor="middle">鎌状</text></svg>`,
+    info:`<b>機構</b>: ヘモグロビン A の <b>β 鎖 6 番目の グルタミン酸 (極性) → バリン (非極性)</b> への置換 (一次構造のたった 1 アミノ酸変異)。非極性化により<b>不溶性の繊維</b>を作り赤血球が鎌状に変形。<br>
+    <b>遺伝</b>: <span class="pill warn">ホモ接合体</span>= 未治療では成人前に死亡することが多い。<span class="pill good">ヘテロ接合体</span>= 約 60% が正常で無症状のことも多く、<b>マラリア感染に有利</b>。<br>
+    <b>位置づけ</b>: 「一次構造の変異 → 高次構造・機能の破綻 → 疾患」の典型例 (S15)。`
+  }
+};
+function renderDis(k){
+  const d = DIS[k];
+  document.getElementById('dis-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('dis-info').innerHTML = d.info;
+}
+bindSeg('dis-seg', renderDis);
+renderDis('amyloid');
+
+// ============================================================
+//  TAB 6: Quiz
+// ============================================================
+const QUIZ = [
+  {
+    stem: "タンパク質の構造階層のうち、「<b>ドメインの折りたたみと配置</b>」で決まるのはどれか?",
+    options: ["一次構造", "二次構造", "三次構造", "四次構造"],
+    correct: 2,
+    explain: "正解 = 3 (三次構造)。一本のポリペプチド鎖が完全に折りたたまれた立体構造で、ドメイン (機能と立体構造の基本単位) の折りたたみと配置で決まる。四次構造は複数サブユニットの空間配置。"
+  },
+  {
+    stem: "α ヘリックスの特徴として正しいものはどれか?",
+    options: ["右巻きで 1 回転あたり約 3.6 残基、主鎖の水素結合で安定", "左巻きで 1 回転 3 残基", "2 本以上のストランドが並んでひだ状になる", "複数のサブユニットが会合した構造"],
+    correct: 0,
+    explain: "正解 = 1。αヘリックスは<b>右巻き</b>で<b>1 回転 3.6 残基</b>、主鎖 C=O と N-H の水素結合 (i, i+4) で安定化。左巻き 3 残基はコラーゲンの 1 本鎖、ひだ状は βシート。"
+  },
+  {
+    stem: "α ヘリックスを<b>最も壊しやすい (形成できない)</b> アミノ酸はどれか?",
+    options: ["アラニン", "ロイシン", "セリン", "プロリン"],
+    correct: 3,
+    explain: "正解 = 4 (プロリン)。ペプチド結合したプロリンは N-H を持たず主鎖が曲がるため αヘリックスを壊す。荷電アミノ酸 (Glu/Asp) やかさばった Trp も形成を阻害する。"
+  },
+  {
+    stem: "β シートについて正しいものはどれか?",
+    options: ["1 本の鎖が右巻きにらせんを巻く", "βストランドが主鎖間の水素結合で並びひだ状になる", "ジスルフィド結合だけで安定化される", "Gly が全体の約 1/3 を占める"],
+    correct: 1,
+    explain: "正解 = 2。βシートは伸びきった βストランドが横に並び、<b>主鎖間の水素結合 (鎖に垂直)</b> で安定化。逆平行と平行がある。Gly が 1/3 はコラーゲンの特徴。"
+  },
+  {
+    stem: "コラーゲンの三重らせんに関する記述で正しいものはどれか?",
+    options: ["主に αヘリックスが 3 本平行に並ぶ", "システインが豊富でジスルフィド結合が主体", "βバレル構造をとる", "-Gly-Pro-Hyp- の反復をもつ 3 本鎖が右巻きにねじれる"],
+    correct: 3,
+    explain: "正解 = 4。コラーゲンは <b>-Gly-X-Y- (多くは -Gly-Pro-Hyp-)</b> 反復で Gly が約 1/3。Pro が左巻きヘリックスを作り、3 本が右巻きにねじれて三重らせんになる。"
+  },
+  {
+    stem: "コラーゲンのヒドロキシプロリン (Hyp) 合成に必要で、欠乏すると<b>壊血病</b>になるビタミンはどれか?",
+    options: ["ビタミン C", "ビタミン K", "ビタミン B12", "ビタミン D"],
+    correct: 0,
+    explain: "正解 = 1 (ビタミン C)。プロリルヒドロキシラーゼが Pro → Hyp を触媒し、活性にビタミン C が必要。欠乏で正しいコラーゲンが作れず<b>壊血病</b>。なお γ-カルボキシグルタミン酸 (血液凝固) はビタミン K (混同注意)。"
+  },
+  {
+    stem: "<b>Ca²⁺</b> を結合する超二次構造 (モチーフ) はどれか?",
+    options: ["ロイシンジッパー", "β バレル", "E-F ハンド", "ジンクフィンガー"],
+    correct: 2,
+    explain: "正解 = 3 (E-F ハンド)。垂直になった 2 つの αヘリックス (ヘリックス・ターン・ヘリックス) のリンカー部位で Ca²⁺ を結合する。ジンクフィンガーは Zn、ロイシンジッパーは DNA 結合。"
+  },
+  {
+    stem: "ドメインに関する記述として正しいものはどれか?",
+    options: ["アミノ酸 1 個分の最小単位である", "二次構造をまったく含まない", "四次構造のサブユニットと同義である", "機能と三次元構造の基本単位で、モチーフの組み合わせからなる"],
+    correct: 3,
+    explain: "正解 = 4。ドメインは機能と立体構造の基本単位で、モチーフ (超二次構造) の組み合わせからなる。200 残基を超えると複数のドメインを持ち、各ドメインは独立して折りたたまれる。"
+  },
+  {
+    stem: "タンパク質の高次構造を安定化する相互作用のうち、<b>唯一の共有結合</b>はどれか?",
+    options: ["疎水効果", "ジスルフィド結合", "水素結合", "イオン結合 (塩橋)"],
+    correct: 1,
+    explain: "正解 = 2 (ジスルフィド結合)。2 つのシステイン (-SH) が酸化されてできる S-S 結合で、唯一の共有結合。他の 3 つは非共有結合。なお安定化への寄与が最大なのは疎水効果。"
+  },
+  {
+    stem: "タンパク質の折りたたみ (フォールディング) の<b>主要な推進力</b>はどれか?",
+    options: ["疎水効果", "ジスルフィド結合", "ペプチド結合", "静電的反発"],
+    correct: 0,
+    explain: "正解 = 1 (疎水効果)。非極性側鎖が水を避けて内部に集まることが折りたたみの主要な推進力。まず二次構造が速く (5〜1000 ms) 形成され、続いて三次・四次構造ができ、球状タンパク質になる。"
+  },
+  {
+    stem: "分子シャペロンに関する記述として正しいものはどれか?",
+    options: ["ペプチド結合を切って配列を組み替える", "活性に ATP は不要である", "正しい折りたたみを助け、誤った折りたたみを巻き戻す", "タンパク質の一次構造を変える"],
+    correct: 2,
+    explain: "正解 = 3。分子シャペロン (Hsp) は正しい折りたたみを助け、誤った/変性したタンパク質を巻き戻す。多くは<b>ATP 依存</b>。一次構造 (配列) は変えない。"
+  },
+  {
+    stem: "大腸菌の<b>かご形シャペロニン</b>を構成するのはどれか?",
+    options: ["Hsp70 と Hsp40", "アミロイド β とタウ", "プロテアーゼとインヒビター", "GroEL と GroES"],
+    correct: 3,
+    explain: "正解 = 4。大腸菌のシャペロニンは <b>GroEL (かご, Hsp60 相当) と GroES (フタ, Hsp10 相当)</b>。ATP 依存のサイクルで隔離空間に変性タンパク質を取り込み折りたたむ。"
+  },
+  {
+    stem: "ヘモグロビンの四次構造として正しいものはどれか?",
+    options: ["単一のポリペプチド鎖からなる", "α₂β₂ のヘテロ 4 量体", "β バレル構造", "3 本鎖の三重らせん"],
+    correct: 1,
+    explain: "正解 = 2。ヘモグロビンは α 鎖 2 本 + β 鎖 2 本の <b>α₂β₂ ヘテロ 4 量体</b>。サブユニット同士は非共有結合で会合し、活性 (酸素結合) の協同的な制御が可能になる。"
+  },
+  {
+    stem: "プリオン病 (TSE) で起こるタンパク質の<b>構造変化</b>はどれか?",
+    options: ["β シート → α ヘリックス", "ジスルフィド結合の増加", "α ヘリックス → β シート", "糖鎖の付加"],
+    correct: 2,
+    explain: "正解 = 3。正常プリオン PrPᶜ の N 末側 <b>αヘリックスが βシートに置き換わって</b> 感染型 PrPˢᶜ になる。感染型が正常型を次々に変換し指数関数的に増える。CJD・BSE・スクレイピーの原因。"
+  },
+  {
+    stem: "鎌状赤血球貧血の分子的原因として正しいものはどれか?",
+    options: ["β 鎖 6 番目のグルタミン酸 → バリンへの置換", "α 鎖全体の欠失", "ジスルフィド結合の切断", "ヒスチジン残基のリン酸化"],
+    correct: 0,
+    explain: "正解 = 1。ヘモグロビン β 鎖 6 番目の Glu (極性) → Val (非極性) への 1 アミノ酸置換。非極性化で不溶性繊維を作り赤血球が鎌状に。ヘテロ接合体はマラリア抵抗性で有利。"
+  }
+];
+
+// クイズ描画
+const quizList = document.getElementById('quiz-list');
+QUIZ.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  let optsHtml = '';
+  q.options.forEach((opt, oi) => { optsHtml += `<li data-idx="${oi}">${opt}</li>`; });
+  card.innerHTML = `<div class="stem">問 ${i + 1}. ${q.stem}</div><ul class="options">${optsHtml}</ul><div class="quiz-explain"><b>解説:</b> ${q.explain}</div>`;
+  quizList.appendChild(card);
+  const selected = new Set();
+  card.querySelectorAll('ul.options li').forEach(li => {
+    li.addEventListener('click', () => {
+      if (card.classList.contains('graded')) return;
+      const idx = parseInt(li.dataset.idx);
+      const multi = Array.isArray(q.correct);
+      if (!multi) { selected.clear(); card.querySelectorAll('ul.options li').forEach(x => x.classList.remove('selected')); }
+      if (selected.has(idx)) { selected.delete(idx); li.classList.remove('selected'); }
+      else { selected.add(idx); li.classList.add('selected'); }
+    });
+  });
+  card._selected = selected;
+});
+
+// 修了証は再度試験 (143474) のみ: ?retake=1 または referrer が再試コースの時だけ有効
+const IS_RETAKE = (function () {
+  try { return new URLSearchParams(location.search).get('retake') === '1' || /lms\.keio\.jp\/courses\/143474/.test(document.referrer || ''); }
+  catch (e) { return false; }
+})();
+
+document.getElementById('quiz-grade').addEventListener('click', () => {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i];
+    const selected = card._selected;
+    if (selected.size === 0) return;
+    answered++;
+    const correctSet = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
+    if (isCorrect) score++;
+    card.classList.add('graded');
+    // 再試 (IS_RETAKE) かつ不正解は、修了証の公正性のため正解・解説を隠す。本講義は常に全表示。
+    const hideAnswer = IS_RETAKE && !isCorrect;
+    card.querySelectorAll('ul.options li').forEach(li => {
+      const idx = parseInt(li.dataset.idx);
+      li.classList.remove('selected');
+      if (hideAnswer) {
+        if (selected.has(idx)) li.classList.add('incorrect');
+      } else {
+        if (correctSet.has(idx)) li.classList.add('correct');
+        else if (selected.has(idx)) li.classList.add('incorrect');
+      }
+    });
+    if (!hideAnswer) card.querySelector('.quiz-explain').classList.add('shown');
+  });
+  const summary = document.getElementById('quiz-summary');
+  const certEl = document.getElementById('quiz-cert-section');
+  const passReq = Math.ceil(QUIZ.length * 0.8); // 合格基準 80%
+  const allAnswered = answered === QUIZ.length;
+  const passed = allAnswered && score >= passReq;
+  let tail;
+  if (passed && IS_RETAKE) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！よくできました。</span>`; certEl.style.display = 'none'; }
+  else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
+  else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('quiz-reset').addEventListener('click', () => {
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    card.classList.remove('graded');
+    card._selected.clear();
+    card.querySelectorAll('ul.options li').forEach(li => {
+      li.classList.remove('selected', 'correct', 'incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.remove('shown');
+  });
+  document.getElementById('quiz-summary').innerHTML = '';
+  document.getElementById('quiz-cert-section').style.display = 'none';
+  const _sid = document.getElementById('cert-student-id'); if (_sid) _sid.value = '';
+});
+
+/* ---- 修了証 (Certificate) ---- */
+async function generateVerificationCode(studentId, score, date) {
+  const data = `${studentId}:biochem-lec03:${score}/${QUIZ.length}:${date}:biochem2026`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8).toUpperCase();
+}
+
+document.getElementById('quiz-pdf').addEventListener('click', async () => {
+  const studentId = document.getElementById('cert-student-id').value.trim();
+  if (!studentId) { document.getElementById('cert-error').style.display = 'block'; return; }
+  document.getElementById('cert-error').style.display = 'none';
+  let score = 0; const answers = [];
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i]; const sel = [...(card._selected || [])]; answers[i] = sel;
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    if (sel.length === cs.size && sel.every(x => cs.has(x))) score++;
+  });
+  const total = QUIZ.length;
+  const date = new Date().toLocaleDateString('ja-JP');
+  const datetime = new Date().toLocaleString('ja-JP');
+  const verCode = await generateVerificationCode(studentId, score, date);
+  let qhtml = '';
+  QUIZ.forEach((q, qi) => {
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const sel = new Set(answers[qi] || []);
+    qhtml += `<div class="q"><div class="q-num">問 ${qi + 1}</div><div class="q-stem">${q.stem}</div><ul class="opts">`;
+    q.options.forEach((opt, oi) => {
+      let cls = ''; if (cs.has(oi)) cls = 'correct'; else if (sel.has(oi)) cls = 'wrong';
+      qhtml += `<li class="${cls}"><span class="letter">${oi + 1})</span>${opt}</li>`;
+    });
+    qhtml += `</ul><div class="explain"><span class="explain-label">解説:</span> ${q.explain}</div></div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>生化学 Lec03 復習クイズ修了証</title><style>
+  @page { size: A4; margin: 18mm 15mm; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; color: #1a2633; line-height: 1.6; font-size: 11pt; margin: 0; }
+  .cert-box { border: 3px solid #2e8b57; border-radius: 12px; padding: 30px 40px; margin: 20px auto; max-width: 600px; text-align: center; }
+  .cert-title { color: #22543d; font-size: 22pt; font-weight: 700; margin-bottom: 6px; }
+  .cert-sub { color: #5a6978; font-size: 12pt; margin-bottom: 20px; }
+  .cert-field { margin: 12px 0; font-size: 13pt; }
+  .cert-field .label { color: #5a6978; font-size: 10pt; }
+  .cert-field .value { font-weight: 700; font-size: 16pt; }
+  .cert-score { font-size: 36pt; font-weight: 700; color: #2e8b57; margin: 16px 0; }
+  .cert-code { margin-top: 20px; padding: 10px; background: #f7fafc; border: 1px solid #d7dce5; border-radius: 6px; font-family: monospace; font-size: 14pt; letter-spacing: 2px; }
+  .cert-code .label { font-family: sans-serif; font-size: 9pt; color: #5a6978; letter-spacing: normal; }
+  hr { border: none; border-top: 1px solid #d7dce5; margin: 20px 0; }
+  .q { margin-bottom: 18px; page-break-inside: avoid; border-left: 3px solid #2e8b57; padding-left: 14px; text-align: left; }
+  .q-num { font-weight: 700; color: #2e8b57; font-size: 12pt; }
+  .q-stem { font-weight: 600; margin: 6px 0; font-size: 11pt; }
+  .opts { list-style: none; padding: 0; margin: 6px 0; }
+  .opts li { padding: 4px 8px 4px 30px; position: relative; font-size: 10.5pt; margin: 3px 0; }
+  .opts li .letter { position: absolute; left: 6px; font-weight: 700; color: #5a6978; }
+  .opts li.correct { background: #c6f6d5; border-left: 3px solid #2e8b57; border-radius: 3px; }
+  .opts li.correct::after { content: " \\2713 正解"; color: #22543d; font-weight: 700; font-size: 9pt; }
+  .opts li.wrong { background: #fed7d7; border-left: 3px solid #e09f3e; border-radius: 3px; }
+  .opts li.wrong::after { content: " \\2717 あなたの回答"; color: #d64545; font-weight: 700; font-size: 9pt; }
+  .explain { background: #f7fafc; border-left: 3px solid #2e8b57; padding: 8px 12px; font-size: 10pt; margin-top: 8px; line-height: 1.7; }
+  .explain-label { font-weight: 700; color: #2e8b57; }
+  footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d7dce5; font-size: 9pt; color: #5a6978; text-align: center; }
+  .print-btn { background: #2e8b57; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13pt; cursor: pointer; font-weight: 700; font-family: inherit; position: fixed; top: 20px; right: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  @media print { .print-btn { display: none; } }
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF として保存</button>
+  <div class="cert-box">
+    <div class="cert-title">生化学 復習クイズ修了証</div>
+    <div class="cert-sub">第3回: タンパク質の構造</div>
+    <div class="cert-field"><span class="label">学籍番号</span><br><span class="value">${studentId}</span></div>
+    <div class="cert-score">${score} / ${total}</div>
+    <div class="cert-field"><span class="label">合格基準: ${Math.ceil(total * 0.8)}問以上</span></div>
+    <div class="cert-field"><span class="label">出力日時</span><br>${datetime}</div>
+    <div class="cert-code"><span class="label">検証コード</span><br>${verCode}</div>
+  </div>
+  <hr><h2 style="text-align:center; color:#22543d;">問題・回答・解説</h2>
+  ${qhtml}
+  <footer>生化学 FY2026 · 慶應義塾大学薬学部 · 担当: 長谷耕二 / 鈴木功一郎（Interactive Lab: 高橋大輔）<br>検証コード ${verCode} · 学籍番号 ${studentId} · ${datetime}</footer>
+  </body></html>`;
+  // Blob URL 方式: about:blank への document.write は一部ブラウザで印刷時に白紙になるため blob: URL で開く。
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) { alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); URL.revokeObjectURL(url); return; }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+});
+</script>
+
+</body>
+</html>
