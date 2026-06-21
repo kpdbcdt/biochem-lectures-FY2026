@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>生化学 Lec 04 — タンパク質の成熟 (Interactive Lab)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: #f7f9fc;
+    color: #1a2633;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 22px; }
+  header p { margin: 0; opacity: 0.92; font-size: 13px; }
+  .meta-bar {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a6978;
+  }
+  .meta-bar b { color: #1a2633; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #5a6978;
+    border-radius: 5px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab-bar button:hover { background: #f0fff4; }
+  .tab-bar button.active {
+    background: #276749;
+    color: white;
+    border-color: #276749;
+  }
+  .panel {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 { margin: 0 0 8px 0; font-size: 18px; color: #276749; }
+  .panel h3 { margin: 16px 0 8px 0; font-size: 15px; color: #276749; }
+  .objective {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    margin: 8px 0 14px 0;
+    font-size: 13px;
+    color: #22543d;
+    border-radius: 4px;
+  }
+  .objective b { color: #1a4a3c; }
+  .ctrl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .ctrl label { font-size: 13px; color: #5a6978; font-weight: 500; margin-right: 4px; }
+  .ctrl button, .ctrl select, .ctrl input {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #1a2633;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ctrl button:hover { background: #f0fff4; }
+  .ctrl button.primary {
+    background: #38a169;
+    color: white;
+    border-color: #2f855a;
+  }
+  .ctrl button.primary:hover { background: #2f855a; }
+  .seg {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0;
+  }
+  .seg button {
+    background: white; border: 1px solid #d7dce5; color: #5a6978;
+    border-radius: 6px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .seg button:hover { background: #f0fff4; }
+  .seg button.active { background: #276749; color: white; border-color: #276749; }
+  .display-box {
+    background: #fafbfc;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    min-height: 80px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .display-box.center { text-align: center; }
+  .display-box svg { max-width: 100%; height: auto; }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  table.cmp th, table.cmp td {
+    border: 1px solid #d7dce5;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th { background: #f0fff4; color: #22543d; font-weight: 600; }
+  table.cmp tr:nth-child(even) td { background: #fafbfc; }
+  .pill {
+    display: inline-block;
+    background: #edf2f7;
+    color: #5a6978;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  .pill.nuc { background: #dbeafe; color: #1e40af; }
+  .pill.mem { background: #fef3c7; color: #92400e; }
+  .pill.ves { background: #ccfbf1; color: #115e59; }
+  .pill.bond { background: #e2e8f0; color: #475569; }
+  .pill.warn { background: #fee2e2; color: #991b1b; }
+  .pill.good { background: #d1fae5; color: #065f46; }
+  .result-box {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .result-box b { color: #22543d; }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .tile {
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: #fafbfc;
+    font-size: 12.5px;
+  }
+  .tile:hover { background: #f0fff4; border-color: #38a169; }
+  .tile.sel { background: #c6f6d5; border-color: #276749; }
+  .tile b { font-size: 13.5px; color: #276749; }
+  .steps { display:flex; flex-wrap:wrap; gap:4px; margin: 8px 0; }
+  .steps .step {
+    flex:1; min-width:90px; text-align:center; font-size:11px; padding:6px 4px;
+    border:1px solid #d7dce5; border-radius:6px; background:#fafbfc; color:#94a3b8;
+  }
+  .steps .step.done { background:#f0fff4; color:#276749; border-color:#9ae6b4; }
+  .steps .step.cur { background:#276749; color:white; border-color:#276749; font-weight:700; }
+  .quiz-card {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .quiz-card .stem { font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+  .quiz-card ul.options { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .quiz-card ul.options li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #d7dce5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fafbfc;
+    user-select: none;
+  }
+  .quiz-card ul.options li:hover { background: #f0fff4; }
+  .quiz-card ul.options li.selected { background: #dbeafe; border-color: #2b6cb0; }
+  .quiz-card ul.options li.correct { background: #c6f6d5; border-color: #22543d; color: #22543d; }
+  .quiz-card ul.options li.incorrect { background: #fed7d7; border-color: #9b2c2c; color: #9b2c2c; }
+  .quiz-explain {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: none;
+  }
+  .quiz-explain.shown { display: block; }
+  .quiz-explain b { color: #22543d; }
+  .quiz-summary {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  footer {
+    text-align: center;
+    color: #5a6978;
+    font-size: 12px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid #d7dce5;
+  }
+  footer a { color: #38a169; text-decoration: none; }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header { padding: 18px 20px; }
+    header h1 { font-size: 18px; }
+    .panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧬 生化学 Lec 04 — タンパク質の成熟 (Interactive Lab)</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 · 月曜 1 限 · 6/22 · 鈴木功一郎 先生</p>
+</header>
+
+<div class="meta-bar">
+  <b>学修目標 (SBO)</b>: タンパク質の翻訳後の成熟過程 (細胞小器官間の輸送・翻訳後修飾) について説明できる<br>
+  <b>使い方</b>: 下のタブを切り替えて 5 つの interactive tools + 復習クイズで学習。何度でも挑戦できます。<br>
+  <b>教科書対応</b>: エッセンシャル細胞生物学 第5版 第15章 (細胞内区画とタンパク質の選別)
+</div>
+
+<div style="margin: 0 0 14px 0; display:flex; gap:10px; flex-wrap:wrap;">
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6173708" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2b6cb0; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF
+  </a>
+  <a href="https://lms.keio.jp/courses/143474/modules/items/6173709" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2c7a7b; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF (再度試験)
+  </a>
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6173713" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#805ad5; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📝 出席アンケート (6/26締切)
+  </a>
+  <!-- TODO(高橋): NotebookLM ノートブック作成後、lec03 と同形式で 📓 NotebookLM ボタンを追加
+       <a href="https://notebooklm.google.com/notebook/XXXX" ... style="...background:#2e8b57;...">📓 NotebookLM</a> -->
+  <p style="font-size:11px; color:#64748b; margin:6px 0 0 0; flex-basis:100%;">※「講義スライド PDF」と「講義スライド PDF (再度試験)」は<strong>全く同一</strong>です。本講義の受講者は通常版、<strong>再度試験の受講者は (再度試験) 版</strong>をお開きください。</p>
+</div>
+
+<div class="tab-bar">
+  <button data-tab="routes" class="active">🚚 3 つの輸送経路</button>
+  <button data-tab="signal">🏷️ シグナル配列デコーダー</button>
+  <button data-tab="er">🧫 小胞体への輸送</button>
+  <button data-tab="vesicle">🚪 小胞輸送 &amp; SNARE</button>
+  <button data-tab="ptm">🔧 翻訳後修飾マップ</button>
+  <button data-tab="quiz">📝 Quiz (15問)</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: 3 transport routes                                    -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-routes">
+  <h2>🚚 タンパク質を細胞小器官へ運ぶ 3 つの方法</h2>
+  <div class="objective"><b>学習目標</b>: 新生タンパク質が正しい区画へ選別輸送される 3 つの経路を区別できる (S07)。<b>「畳んだまま運ぶか／ほどいて運ぶか」</b>が経路を見分けるカギ。</div>
+
+  <div class="seg" id="route-seg">
+    <button data-k="nuclear" class="active">核膜孔を通る輸送</button>
+    <button data-k="membrane">膜を通る輸送 (ミトコンドリア)</button>
+    <button data-k="vesicle">小胞による輸送</button>
+  </div>
+
+  <div class="display-box center" id="route-display"></div>
+  <div class="result-box" id="route-info"></div>
+
+  <h3>3 経路の比較</h3>
+  <table class="cmp">
+    <tr><th>経路</th><th>主な行き先</th><th>構造</th><th>目印 (シグナル)</th><th>装置</th></tr>
+    <tr><td><span class="pill nuc">核膜孔</span></td><td>核</td><td><b>畳んだまま</b>通過</td><td>核局在化シグナル (NLS)</td><td>核搬入受容体・核膜孔</td></tr>
+    <tr><td><span class="pill mem">膜透過</span></td><td>ミトコンドリア・(葉緑体)</td><td><b>ほどいて</b>運ぶ</td><td>ミトコンドリア移行シグナル</td><td>タンパク質転送装置 (トランスロケータ)</td></tr>
+    <tr><td><span class="pill ves">小胞</span></td><td>ER→ゴルジ→細胞膜・リソソーム・分泌</td><td>膜で包んで運ぶ</td><td>ER シグナル配列ほか</td><td>被覆小胞 (クラスリン/COP)</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: Signal sequence decoder                               -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-signal">
+  <h2>🏷️ シグナル配列デコーダー — タンパク質の「宛名」</h2>
+  <div class="objective"><b>学習目標</b>: シグナル配列が行き先を決めることを説明できる (S08)。シグナル配列は <b>15〜60 個のアミノ酸</b>で、<b>配列そのものより疎水性・電荷をもつアミノ酸の「位置」</b>が重要。クリックして各宛名ラベルを確認しよう。</div>
+
+  <div class="tile-grid" id="signal-grid" style="margin-bottom:14px;"></div>
+  <div class="display-box" id="signal-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: ER import                                             -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-er">
+  <h2>🧫 小胞体 (ER) へのタンパク質輸送</h2>
+  <div class="objective"><b>学習目標</b>: 遊離リボソームと膜結合リボソームの違い、SRP による共翻訳輸送、シグナルペプチダーゼによる切断、膜タンパク質の作られ方、ER の品質管理と UPR を説明できる (S15-S22)。</div>
+
+  <h3>① 水溶性タンパク質の共翻訳輸送 (ステップを進めてみよう)</h3>
+  <div class="steps" id="er-steps"></div>
+  <div class="ctrl">
+    <button id="er-prev">← 戻る</button>
+    <button class="primary" id="er-next">次へ →</button>
+    <button id="er-reset">最初から</button>
+  </div>
+  <div class="result-box" id="er-info"></div>
+
+  <h3>② 膜への入り方 (タンパク質のトポロジー)</h3>
+  <div class="seg" id="topo-seg">
+    <button data-k="soluble" class="active">水溶性 (内腔へ)</button>
+    <button data-k="single">1 回膜貫通</button>
+    <button data-k="multi">複数回膜貫通</button>
+  </div>
+  <div class="result-box" id="topo-info"></div>
+
+  <h3>③ ER の品質管理と UPR (小胞体ストレス応答)</h3>
+  <table class="cmp">
+    <tr><th>仕組み</th><th>内容</th></tr>
+    <tr><td><b>品質管理</b></td><td>正しく折りたためないタンパク質には ER 内の<b>シャペロン</b>が結合して引き止め、折りたたみを介添え。それでもダメならサイトゾルへ搬出し<b>プロテアソーム</b>で分解。正しく折りたためたものだけが ER から搬出される。</td></tr>
+    <tr><td><b>UPR</b></td><td>誤った折りたたみを ER 膜のセンサーが感知して起動。①シャペロンなど品質管理タンパク質を増やす ②<b>タンパク質合成を抑制</b>して ER の負荷を減らす ③それでも対処できなければ<b>アポトーシス</b>を誘導。<br><span class="pill warn">臨床</span> インスリン抵抗性の糖尿病ではインスリン分泌が増え続け、限界に達すると分泌細胞が死ぬ。</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: Vesicular transport & SNARE                           -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-vesicle">
+  <h2>🚪 小胞輸送 &amp; SNARE</h2>
+  <div class="objective"><b>学習目標</b>: 被覆小胞による出芽、Rab と SNARE による標的の認識・融合、構成性／調節性エキソサイトーシスを説明できる (S25-S31)。</div>
+
+  <div class="seg" id="ves-seg">
+    <button data-k="coat" class="active">被覆小胞</button>
+    <button data-k="budding">出芽の仕組み</button>
+    <button data-k="snare">係留と SNARE</button>
+    <button data-k="exo">エキソサイトーシス</button>
+  </div>
+  <div class="display-box center" id="ves-display"></div>
+  <div class="result-box" id="ves-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: Post-translational modification map                   -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-ptm">
+  <h2>🔧 翻訳後修飾マップ</h2>
+  <div class="objective"><b>学習目標</b>: 主な翻訳後修飾を「<b>修飾を受ける残基</b>」「場所」「役割」とセットで説明できる (S23-S24 / S32-S36)。ヒトの遺伝子は約 2 万個だが、翻訳後修飾などでタンパク質の種類は 100 万以上に多様化する。クリックして確認しよう。</div>
+
+  <div class="tile-grid" id="ptm-grid" style="margin-bottom:14px;"></div>
+  <div class="display-box" id="ptm-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: Quiz                                                  -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-quiz">
+  <h2>📝 復習クイズ (15問)</h2>
+  <div class="objective"><b>使い方</b>: 各問の選択肢をクリック → 「答え合わせ」ボタンで正解と解説を表示。何度でも挑戦可。最後にスコアが集計されます。</div>
+
+  <div id="quiz-list"></div>
+
+  <div class="ctrl" style="margin-top: 20px;">
+    <button class="primary" id="quiz-grade">全問の答え合わせ + スコア集計</button>
+    <button id="quiz-reset">全問リセット</button>
+  </div>
+
+  <div id="quiz-summary"></div>
+
+  <div id="quiz-cert-section" style="display:none; margin-top:16px; padding:16px; background:#f7fafc; border:2px solid #2e8b57; border-radius:8px;">
+    <h4 style="margin:0 0 8px 0; color:#2e8b57;">📜 修了証の発行</h4>
+    <p style="font-size:13px; margin:0 0 10px 0;">学籍番号を入力して修了証 PDF を出力してください。<b>再度試験の事前課題</b>として K-LMS に提出します。</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <input type="text" id="cert-student-id" placeholder="学籍番号（例: 25-1-001）" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; font-size:14px; width:200px;">
+      <button class="primary" id="quiz-pdf" style="background:#2e8b57;">📜 修了証 PDF を出力</button>
+    </div>
+    <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
+  </div>
+
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 全 15 問に回答し <b>12 問以上正解</b>で合格。<b>再度試験の受講者</b>は合格後に修了証 PDF を発行し提出します。不合格時はリセットして再挑戦してください。</p>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
+  教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a><br>
+  <small style="color: #94a3b8;">エッセンシャル細胞生物学 第5版 第15章の内容に基づく自作の概念図 (schematic)</small>
+</footer>
+
+<script>
+// ============================================================
+//  Tab switching
+// ============================================================
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// 共通: セグメントボタン群のバインド
+function bindSeg(segId, cb){
+  const seg = document.getElementById(segId);
+  seg.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      cb(b.dataset.k);
+    });
+  });
+}
+
+// ============================================================
+//  TAB 1: 3 transport routes
+// ============================================================
+const ROUTES = {
+  nuclear: {
+    title:'核膜孔を通る輸送',
+    svg:`<svg viewBox="0 0 360 130" style="max-width:360px;">
+      <rect x="20" y="20" width="320" height="90" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+      <line x1="180" y1="20" x2="180" y2="110" stroke="#1e40af" stroke-width="6"/>
+      <rect x="172" y="55" width="16" height="20" fill="#fff" stroke="#1e40af" stroke-width="1.5"/>
+      <circle cx="90" cy="65" r="16" fill="#c6f6d5" stroke="#276749" stroke-width="2"/>
+      <text x="90" y="69" font-size="9" fill="#276749" text-anchor="middle">畳んだまま</text>
+      <text x="60" y="100" font-size="10" fill="#5a6978">細胞質</text>
+      <text x="250" y="100" font-size="10" fill="#5a6978">核の内側</text>
+      <text x="180" y="14" font-size="10" fill="#1e40af" text-anchor="middle">核膜孔 (選択的ゲート)</text>
+    </svg>`,
+    info:`<b>核膜孔を通る輸送</b><br>
+    ・核膜孔が<b>選択的なゲート</b>として働く。小分子は拡散で自由に通れるが、巨大分子は<b>核局在化シグナル (NLS)</b> を持つものだけが通過できる。<br>
+    ・タンパク質は<b>高次構造を保ったまま (畳んだまま)</b> 核膜孔を通過する点が他経路と大きく異なる。<br>
+    ・積み荷の NLS が<b>核搬入受容体</b>に認識されて運ばれる。<br>
+    ・例: <b>NFAT</b> は細胞内 Ca²⁺ 上昇 → カルモジュリン依存的に核へ移行する転写因子。`
+  },
+  membrane: {
+    title:'膜を通る輸送 (ミトコンドリアなど)',
+    svg:`<svg viewBox="0 0 360 130" style="max-width:360px;">
+      <ellipse cx="250" cy="65" rx="90" ry="48" fill="#fffbeb" stroke="#92400e" stroke-width="2"/>
+      <ellipse cx="250" cy="65" rx="68" ry="34" fill="none" stroke="#92400e" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <path d="M40,55 L70,70 L100,55 L130,70" fill="none" stroke="#94a3b8" stroke-width="3"/>
+      <text x="70" y="95" font-size="9" fill="#5a6978" text-anchor="middle">ほどいた鎖</text>
+      <rect x="156" y="55" width="10" height="20" fill="#fff" stroke="#92400e" stroke-width="1.5"/>
+      <text x="250" y="69" font-size="9" fill="#92400e" text-anchor="middle">外膜+内膜を通過</text>
+    </svg>`,
+    info:`<b>膜を通る輸送</b><br>
+    ・タンパク質<b>転送装置 (トランスロケータ)</b> を用いる。<br>
+    ・核移行とは異なり、<b>一度立体構造をほどいた状態</b>で運ばれる。<br>
+    ・ミトコンドリアには外膜と内膜があり、輸送されるタンパク質は<b>両方を通過</b>する必要がある。<br>
+    ・<b>ミトコンドリア移行シグナル</b>が目印 (葉緑体も同様の仕組み)。`
+  },
+  vesicle: {
+    title:'小胞による輸送',
+    svg:`<svg viewBox="0 0 360 130" style="max-width:360px;">
+      <rect x="20" y="40" width="70" height="50" rx="6" fill="#ccfbf1" stroke="#115e59" stroke-width="2"/>
+      <text x="55" y="68" font-size="10" fill="#115e59" text-anchor="middle">ER</text>
+      <circle cx="160" cy="65" r="18" fill="#fff" stroke="#115e59" stroke-width="2"/>
+      <text x="160" y="69" font-size="9" fill="#115e59" text-anchor="middle">小胞</text>
+      <rect x="240" y="40" width="90" height="50" rx="6" fill="#a7f3d0" stroke="#115e59" stroke-width="2"/>
+      <text x="285" y="68" font-size="10" fill="#115e59" text-anchor="middle">ゴルジ体</text>
+      <path d="M92,65 L138,65" stroke="#115e59" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M182,65 L236,65" stroke="#115e59" stroke-width="2" marker-end="url(#ar)"/>
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#115e59"/></marker></defs>
+    </svg>`,
+    info:`<b>小胞による輸送</b><br>
+    ・<b>膜で包まれた輸送小胞</b>でタンパク質を運ぶ。<br>
+    ・経路: <b>ER → ゴルジ体 → 細胞膜・リソソーム・細胞外 (分泌)</b>。<br>
+    ・ゴルジ体ではタンパク質が修飾され、別の区画へ送るための<b>選別</b>が行われる。<br>
+    ・詳しくは「🚪 小胞輸送 &amp; SNARE」タブへ。`
+  }
+};
+function renderRoute(k){
+  const d = ROUTES[k];
+  document.getElementById('route-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('route-info').innerHTML = d.info;
+}
+bindSeg('route-seg', renderRoute);
+renderRoute('nuclear');
+
+// ============================================================
+//  TAB 2: Signal sequence decoder
+// ============================================================
+const SIGNAL = {
+  er:   { name:'ER シグナル配列', dest:'小胞体 → 分泌・細胞膜・ゴルジ・リソソーム',
+    info:`<b>ER シグナル配列</b><br>行き先: <b>小胞体 (ER)</b>。そこからゴルジ体を経て分泌・細胞膜・リソソームへ。<br>特徴: ふつう<b>N 末端</b>にある<b>疎水性アミノ酸が連続した部分</b>。<b>SRP (シグナル認識粒子)</b> が認識し、翻訳と同時に ER へ送られる (共翻訳輸送)。` },
+  nls:  { name:'核局在化シグナル (NLS)', dest:'核',
+    info:`<b>核局在化シグナル (NLS)</b><br>行き先: <b>核</b>。<br>特徴: <b>塩基性アミノ酸 (正電荷)</b> に富む。<b>核搬入受容体</b>が認識し、タンパク質は<b>高次構造を保ったまま</b>核膜孔を通過する。` },
+  mito: { name:'ミトコンドリア移行シグナル', dest:'ミトコンドリア',
+    info:`<b>ミトコンドリア移行シグナル</b><br>行き先: <b>ミトコンドリア</b> (葉緑体も類似)。<br>特徴: 多くは<b>N 末端</b>にあり、正電荷と疎水性が交互に並ぶ。タンパク質は<b>立体構造をほどいて</b>転送装置で外膜・内膜を通過する。` },
+  none: { name:'シグナルなし', dest:'サイトゾル (細胞質) に留まる',
+    info:`<b>シグナルなし</b><br>行き先: <b>サイトゾル (細胞質)</b> に留まる。<br>特徴: 行き先を示すシグナルを持たないタンパク質は、<b>遊離リボソーム</b>で合成され細胞質で働く (核・ミトコンドリア行きのものは合成後にシグナルで運ばれる)。` }
+};
+const SIGNAL_ORDER = ['er','nls','mito','none'];
+let signalSel = 'er';
+function renderSignalGrid(){
+  const grid = document.getElementById('signal-grid');
+  grid.innerHTML = '';
+  SIGNAL_ORDER.forEach(k=>{
+    const s = SIGNAL[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===signalSel?' sel':'');
+    t.innerHTML = `<b>${s.name}</b><br><span style="color:#5a6978;">→ ${s.dest}</span>`;
+    t.addEventListener('click', ()=>{ signalSel=k; renderSignalGrid(); renderSignalDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderSignalDetail(){ document.getElementById('signal-info').innerHTML = SIGNAL[signalSel].info; }
+renderSignalGrid(); renderSignalDetail();
+
+// ============================================================
+//  TAB 3: ER import (stepper + topology + QC table[static])
+// ============================================================
+const ERSTEP = [
+  { label:'翻訳開始', info:'すべてのタンパク質の翻訳は<b>サイトゾルの (遊離) リボソーム</b>で始まる。' },
+  { label:'SRP が ER シグナルを認識', info:'新生鎖の <b>N 末端の ER シグナル配列</b>を <b>SRP (シグナル認識粒子)</b> が認識して翻訳を一時停止。リボソームを ER 膜の <b>SRP 受容体</b>へ誘導する (→ ここで膜結合リボソームになる)。' },
+  { label:'転送チャネルを通って ER 内腔へ', info:'翻訳が再開し、<b>合成と同時に</b>タンパク質が<b>転送チャネル</b>を通り抜けて ER 内腔へ入る (<b>共翻訳輸送</b>)。' },
+  { label:'シグナルペプチダーゼが切断', info:'<b>シグナルペプチダーゼ</b>がシグナル配列を切断して取り除く。' },
+  { label:'ER 内腔で折りたたみ', info:'水溶性タンパク質として ER 内腔で折りたたまれる (シャペロンが介添え)。続いてジスルフィド結合形成や糖鎖付加などの修飾を受ける。' }
+];
+let erStep = 0;
+function renderER(){
+  const steps = document.getElementById('er-steps');
+  steps.innerHTML = ERSTEP.map((s,i)=>`<div class="step ${i<erStep?'done':''} ${i===erStep?'cur':''}">${i+1}. ${s.label}</div>`).join('');
+  const d = ERSTEP[erStep];
+  document.getElementById('er-info').innerHTML = `<b>ステップ ${erStep+1} / ${ERSTEP.length}: ${d.label}</b><br>${d.info}`;
+}
+document.getElementById('er-next').addEventListener('click', ()=>{ if(erStep<ERSTEP.length-1){erStep++; renderER();} });
+document.getElementById('er-prev').addEventListener('click', ()=>{ if(erStep>0){erStep--; renderER();} });
+document.getElementById('er-reset').addEventListener('click', ()=>{ erStep=0; renderER(); });
+renderER();
+
+const TOPO = {
+  soluble: `<b>水溶性タンパク質</b><br>輸送開始配列 (シグナル配列) によって ER 内部へ入り、<b>シグナルペプチダーゼで切断</b>されると鎖全体が ER 内腔へ送り込まれ、<b>水溶性タンパク質</b>として折りたたまれる。`,
+  single:  `<b>1 回膜貫通タンパク質</b><br><b>疎水性の輸送開始配列</b>で ER 内部へ入り始めるが、途中の<b>疎水性の輸送停止配列</b>が膜にとどまって移行が止まる。シグナル配列が切断され、停止配列が膜貫通部分として残ることで<b>膜を 1 回貫通</b>する。`,
+  multi:   `<b>複数回膜貫通タンパク質</b><br>タンパク質内部の<b>輸送開始配列と輸送停止配列が交互</b>に並ぶ。これらは<b>切断されずにそのまま残り</b>、膜を<b>複数回貫通</b>する膜タンパク質ができる。`
+};
+function renderTopo(k){ document.getElementById('topo-info').innerHTML = TOPO[k]; }
+bindSeg('topo-seg', renderTopo);
+renderTopo('soluble');
+
+// ============================================================
+//  TAB 4: Vesicular transport & SNARE
+// ============================================================
+const VES = {
+  coat: { title:'被覆小胞',
+    svg:`<svg viewBox="0 0 320 110" style="max-width:320px;">
+      <circle cx="160" cy="60" r="34" fill="#fff" stroke="#115e59" stroke-width="2"/>
+      ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>{const a=i/12*Math.PI*2;const x=160+Math.cos(a)*34;const y=60+Math.sin(a)*34;return `<circle cx="${x}" cy="${y}" r="5" fill="#a7f3d0" stroke="#115e59" stroke-width="1.5"/>`}).join('')}
+      <text x="160" y="64" font-size="10" fill="#115e59" text-anchor="middle">被覆</text></svg>`,
+    info:`<b>被覆小胞</b><br>・輸送小胞がちぎれて飛び出す (<b>出芽</b>) には、膜の周りを覆う<b>被覆タンパク質</b>が必要。<br>・被覆の役割: ①膜を出芽できる形にする ②輸送する分子 (積み荷) を取り込む。<br>・<b>クラスリン被覆小胞</b>: ゴルジ体→細胞膜、細胞膜→エンドソーム。<br>・<b>COP 被覆小胞</b>: ER ↔ ゴルジ体。` },
+  budding: { title:'クラスリン被覆小胞の出芽',
+    svg:`<svg viewBox="0 0 320 110" style="max-width:320px;">
+      <line x1="20" y1="40" x2="300" y2="40" stroke="#115e59" stroke-width="3"/>
+      <path d="M120,40 Q160,95 200,40" fill="#fff" stroke="#115e59" stroke-width="2"/>
+      ${[0,1,2,3,4].map(i=>{const x=125+i*18;return `<circle cx="${x}" cy="${70-Math.abs(i-2)*8}" r="4" fill="#a7f3d0" stroke="#115e59"/>`}).join('')}
+      <circle cx="160" cy="70" r="6" fill="#fde68a" stroke="#92400e"/>
+      <text x="160" y="105" font-size="9" fill="#5a6978" text-anchor="middle">積み荷を選んで取り込む</text></svg>`,
+    info:`<b>出芽の仕組み (クラスリン被覆小胞)</b><br>① <b>積み荷受容体</b>が積み荷の<b>輸送シグナル</b>を識別する。<br>② <b>アダプチン</b>が積み荷受容体を認識し、反対側でクラスリン分子と結合する。<br>③ <b>クラスリン</b>がかご状に集合してピットを形成 → 出芽 → 被覆が外れる。<br>※ 積み荷だけを<b>選択的に</b>輸送できるのがポイント。` },
+  snare: { title:'係留タンパク質と SNARE',
+    svg:`<svg viewBox="0 0 320 110" style="max-width:320px;">
+      <circle cx="90" cy="45" r="26" fill="#fff" stroke="#115e59" stroke-width="2"/>
+      <text x="90" y="49" font-size="9" fill="#115e59" text-anchor="middle">小胞</text>
+      <line x1="116" y1="55" x2="150" y2="70" stroke="#9d174d" stroke-width="2.5"/>
+      <text x="120" y="40" font-size="8" fill="#9d174d">v-SNARE</text>
+      <line x1="180" y1="90" x2="300" y2="90" stroke="#115e59" stroke-width="3"/>
+      <line x1="170" y1="70" x2="155" y2="86" stroke="#1e40af" stroke-width="2.5"/>
+      <text x="200" y="82" font-size="8" fill="#1e40af">t-SNARE</text>
+      <text x="240" y="105" font-size="9" fill="#5a6978" text-anchor="middle">標的膜</text></svg>`,
+    info:`<b>係留と融合 (なぜ間違えないか)</b><br>・各輸送小胞は表面に <b>Rab タンパク質</b>を独特の組み合わせで持ち、これが輸送先の膜を識別する分子標識になる。<br>・Rab は輸送先の膜上の<b>係留タンパク質</b>によって捕捉される。<br>・接着と融合には膜貫通タンパク質ファミリーの <b>SNARE</b> も必要。小胞側が <b>v-SNARE</b>、標的側が <b>t-SNARE</b> で、<b>対になって結合</b>することで正しい相手だけと融合する。` },
+  exo: { title:'エキソサイトーシス',
+    svg:`<svg viewBox="0 0 320 110" style="max-width:320px;">
+      <line x1="20" y1="70" x2="300" y2="70" stroke="#115e59" stroke-width="3"/>
+      <circle cx="100" cy="45" r="18" fill="#fff" stroke="#115e59" stroke-width="2"/>
+      <text x="100" y="30" font-size="8" fill="#5a6978" text-anchor="middle">構成性</text>
+      <circle cx="220" cy="45" r="18" fill="#fde68a" stroke="#92400e" stroke-width="2"/>
+      <text x="220" y="30" font-size="8" fill="#92400e" text-anchor="middle">調節性 (蓄積)</text></svg>`,
+    info:`<b>エキソサイトーシス (分泌)</b><br>・<b>構成性</b>: すべての真核細胞に備わり、水溶性タンパク質の分泌や細胞膜への供給を常時行う。<br>・<b>調節性</b>: 分泌細胞 (ホルモン・粘液・消化酵素などを分泌) <b>のみ</b>に存在。分泌小胞にためておき、<b>刺激に応じて</b>放出する。<br>・例: 膵 β 細胞の<b>インスリン</b>は調節性分泌小胞に高濃度で蓄えられ、刺激で放出される。` }
+};
+function renderVes(k){
+  const d = VES[k];
+  document.getElementById('ves-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('ves-info').innerHTML = d.info;
+}
+bindSeg('ves-seg', renderVes);
+renderVes('coat');
+
+// ============================================================
+//  TAB 5: Post-translational modification map
+// ============================================================
+const PTM = {
+  nglyco: { name:'N 型糖鎖付加', res:'Asn (Asn-X-Ser/Thr)',
+    info:`<b>N 型グリコシル化 (N 型糖鎖付加)</b><br>修飾を受ける残基: <b>アスパラギン (Asn)</b> の側鎖 NH₂ 基 (配列 Asn-X-Ser/Thr)。<br>場所: <b>小胞体</b>。<br>役割: あらかじめ脂質の土台<b>ドリコール</b>の上で作られた<b>14 個の糖からなる分岐オリゴ糖が一括で転移</b>され糖タンパク質になる。` },
+  oglyco: { name:'O 型糖鎖付加', res:'Ser / Thr',
+    info:`<b>O 型グリコシル化 (O 型糖鎖付加)</b><br>修飾を受ける残基: <b>セリン・トレオニン</b>の側鎖のヒドロキシル基。<br>場所: 主に<b>ゴルジ体</b>。<br>役割: N 型と異なり<b>糖が 1 つずつ</b>付加される。粘液の主成分<b>ムチン</b>では糖鎖が分子量の 50% を占め、粘性・保水・分解耐性に寄与。` },
+  phos: { name:'リン酸化', res:'Ser / Thr / Tyr',
+    info:`<b>リン酸化</b><br>修飾を受ける残基: <b>セリン・トレオニン・チロシン</b>。<br>役割: <b>活性のスイッチ ON/OFF</b> や<b>シグナル伝達</b>を動かす。可逆的 (キナーゼで付加、ホスファターゼで除去)。例: 転写因子のリン酸化が細胞内情報伝達を制御。` },
+  acetyl: { name:'アセチル化', res:'Lys',
+    info:`<b>アセチル化</b><br>修飾を受ける残基: <b>リシン (Lys)</b>。<br>役割: <b>遺伝子発現の制御</b>。塩基性タンパク質<b>ヒストン</b>の Lys がアセチル化されると正電荷が失われ、DNA との巻きつきが緩んで<b>転写が活発な部位の目印</b>になる。` },
+  methyl: { name:'メチル化', res:'Lys / Arg',
+    info:`<b>メチル化</b><br>修飾を受ける残基: <b>リシン・アルギニン</b>。<br>役割: <b>遺伝子発現の制御</b> (ヒストン修飾など)。` },
+  ubiq: { name:'ユビキチン化', res:'主に Lys',
+    info:`<b>ユビキチン化</b><br>修飾を受ける残基: <b>主にリシン (Lys)</b>。<br>役割: <b>プロテアソームによる分解の目印</b>。不要・不良なタンパク質に付けられる (詳しくは第5回)。` },
+  ss: { name:'ジスルフィド結合', res:'Cys',
+    info:`<b>ジスルフィド結合</b><br>修飾を受ける残基: <b>システイン (Cys)</b>。<br>場所: <b>小胞体内腔</b>の酵素により 1 対のシステイン側鎖が<b>酸化</b>されて生じる。<br>役割: 分泌・膜タンパク質の<b>構造を安定化</b>。サイトゾルは<b>還元的</b>な環境なのでジスルフィド結合は形成されない。` }
+};
+const PTM_ORDER = ['nglyco','oglyco','phos','acetyl','methyl','ubiq','ss'];
+let ptmSel = 'nglyco';
+function renderPtmGrid(){
+  const grid = document.getElementById('ptm-grid');
+  grid.innerHTML = '';
+  PTM_ORDER.forEach(k=>{
+    const m = PTM[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===ptmSel?' sel':'');
+    t.innerHTML = `<b>${m.name}</b><br><span style="color:#5a6978;">残基: ${m.res}</span>`;
+    t.addEventListener('click', ()=>{ ptmSel=k; renderPtmGrid(); renderPtmDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderPtmDetail(){ document.getElementById('ptm-info').innerHTML = PTM[ptmSel].info; }
+renderPtmGrid(); renderPtmDetail();
+
+// ============================================================
+//  TAB 6: Quiz
+// ============================================================
+const QUIZ = [
+  {
+    stem: "翻訳されたばかりのタンパク質が「一人前」になる成熟過程に<b>含まれない</b>ものはどれか?",
+    options: ["正しい立体構造を作る (折りたたみ)", "正しい細胞小器官へ輸送される", "翻訳後修飾を受ける", "mRNA がスプライシングを受ける"],
+    correct: 3,
+    explain: "正解 = 4。スプライシングは翻訳<b>前</b>の mRNA プロセシングで、タンパク質の成熟過程ではない。成熟 = ①折りたたみ ②正しい区画への輸送 ③翻訳後修飾。"
+  },
+  {
+    stem: "細胞小器官へタンパク質を輸送する 3 つの方法に<b>含まれない</b>ものはどれか?",
+    options: ["核膜孔を通る輸送", "膜を通る (転送装置による) 輸送", "小胞による輸送", "ペプチド結合による輸送"],
+    correct: 3,
+    explain: "正解 = 4。輸送の 3 経路は「核膜孔」「膜透過 (転送装置)」「小胞」。ペプチド結合はアミノ酸同士をつなぐ結合で輸送方法ではない。"
+  },
+  {
+    stem: "タンパク質の<b>核移行 (核への輸送)</b> の特徴として正しいものはどれか?",
+    options: ["高次構造を保ったまま核膜孔を通過する", "立体構造を完全にほどいてから運ばれる", "シグナルは不要で拡散のみで入る", "クラスリン被覆小胞に包まれて運ばれる"],
+    correct: 0,
+    explain: "正解 = 1。核移行では<b>核局在化シグナル (NLS)</b> を核搬入受容体が認識し、タンパク質は<b>畳んだまま</b>核膜孔を通過する。ほどいて運ぶのはミトコンドリア。"
+  },
+  {
+    stem: "<b>ミトコンドリア</b>へ輸送されるタンパク質の特徴として正しいものはどれか?",
+    options: ["折りたたまれた状態のまま運ばれる", "一度立体構造をほどいた状態で運ばれる", "核膜孔を通って入る", "SNARE によって融合して入る"],
+    correct: 1,
+    explain: "正解 = 2。ミトコンドリアへの輸送は転送装置を用い、タンパク質は<b>立体構造をほどいて</b>外膜・内膜の両方を通過する。畳んだまま運ぶ核移行と対照的。"
+  },
+  {
+    stem: "シグナル配列 (シグナルペプチド) に関する記述として正しいものはどれか?",
+    options: ["通常 500 アミノ酸以上の長い配列である", "アミノ酸配列そのものより、疎水性・電荷をもつアミノ酸の「位置」が重要", "すべて C 末端に存在する", "糖鎖でできている"],
+    correct: 1,
+    explain: "正解 = 2。シグナル配列は 15〜60 アミノ酸程度で、<b>配列そのものより疎水性アミノ酸・荷電アミノ酸の位置</b>が輸送先の決定に重要と考えられている。"
+  },
+  {
+    stem: "遊離リボソームと膜結合リボソームの違いとして正しいものはどれか?",
+    options: ["両者はまったく別の種類のリボソームである", "膜結合リボソームは ER 移行シグナルをもつタンパク質の mRNA を翻訳する", "遊離リボソームは核の内部だけにある", "膜結合リボソームはミトコンドリアを合成する"],
+    correct: 1,
+    explain: "正解 = 2。同じリボソームだが、<b>ER 移行シグナルをもつ</b>タンパク質の mRNA は ER 表面 (膜結合リボソーム) で翻訳され、シグナルを持たないもの (細胞質・核・ミトコンドリア行き) は遊離リボソームで翻訳される。"
+  },
+  {
+    stem: "ER に運ばれるタンパク質の翻訳・輸送の特徴として正しいものはどれか?",
+    options: ["翻訳が完全に終わってから ER へ運ばれる", "翻訳が進むと同時に膜を通り抜けて ER に入る (共翻訳輸送)", "いったん分解されてから運ばれる", "逆転写を伴って運ばれる"],
+    correct: 1,
+    explain: "正解 = 2。サイトゾルの <b>SRP (シグナル認識粒子)</b> が ER シグナル配列を認識し、リボソームを ER 膜へ誘導。タンパク質は<b>翻訳と同時に</b>転送チャネルを通って ER に入る (共翻訳輸送)。"
+  },
+  {
+    stem: "ER に入った水溶性タンパク質の<b>シグナル配列を切断</b>する酵素はどれか?",
+    options: ["シグナルペプチダーゼ", "プロテアソーム", "DNA ポリメラーゼ", "シャペロニン"],
+    correct: 0,
+    explain: "正解 = 1。ER 内部へ送り込まれた後、<b>シグナルペプチダーゼ</b>がシグナル配列を切断し、成熟タンパク質となる。"
+  },
+  {
+    stem: "<b>1 回膜貫通タンパク質</b>が作られる仕組みで、膜への固定に関わる配列の組み合わせはどれか?",
+    options: ["輸送開始配列のみ", "輸送開始配列と輸送停止配列", "核局在化シグナルのみ", "ポリ A 配列"],
+    correct: 1,
+    explain: "正解 = 2。疎水性の<b>輸送開始配列</b>で ER 内部へ入り始め、疎水性の<b>輸送停止配列</b>が膜にとどまることで、膜を 1 回貫通するタンパク質ができる。"
+  },
+  {
+    stem: "小胞体におけるタンパク質の<b>品質管理</b>について正しいものはどれか?",
+    options: ["正しく折りたためたものだけが搬出され、不良品はサイトゾルでプロテアソーム分解される", "誤って折りたたまれてもそのまま分泌される", "シャペロンは正常なタンパク質にしか結合しない", "品質管理は核内で行われる"],
+    correct: 0,
+    explain: "正解 = 1。誤った折りたたみにはシャペロンが結合して引き止め介添えし、それでもダメならサイトゾルへ搬出して<b>プロテアソーム</b>で分解。正しく折りたためたものだけが ER から搬出される。"
+  },
+  {
+    stem: "ER ストレス時に起こる UPR (小胞体ストレス応答) の働きとして<b>誤っている</b>ものはどれか?",
+    options: ["シャペロンなど品質管理タンパク質を増やす", "タンパク質合成を抑制して ER の負荷を減らす", "対処できなければアポトーシスを誘導する", "タンパク質合成を促進して ER の負荷を増やす"],
+    correct: 3,
+    explain: "正解 = 4 (誤り)。UPR はむしろ<b>タンパク質合成を抑制</b>して ER の負荷を減らす。①シャペロン増産 ②合成抑制 ③対処不能ならアポトーシス、が UPR の働き。"
+  },
+  {
+    stem: "小胞体内腔で形成され、分泌・膜タンパク質の構造を安定化する<b>共有結合性</b>の翻訳後修飾はどれか?",
+    options: ["ジスルフィド結合", "リン酸化", "アセチル化", "メチル化"],
+    correct: 0,
+    explain: "正解 = 1。<b>ジスルフィド結合</b>は ER 内腔 (酸化的環境) で 1 対のシステイン側鎖が酸化されてできる共有結合。サイトゾルは還元的なので形成されない。"
+  },
+  {
+    stem: "<b>N 型糖鎖付加 (N-グリコシル化)</b> について正しいものはどれか?",
+    options: ["糖が 1 個ずつセリンに付加される", "ドリコール上で作られた 14 個の糖からなる分岐オリゴ糖がアスパラギン (Asn-X-Ser/Thr) に転移される", "核内で起こる", "ジスルフィド結合の一種である"],
+    correct: 1,
+    explain: "正解 = 2。N 型糖鎖付加では、脂質の土台<b>ドリコール</b>上で作られた<b>14 糖の分岐オリゴ糖が一括で</b>アスパラギン側鎖へ転移される (小胞体)。糖を 1 個ずつ付けるのは O 型 (主にゴルジ体)。"
+  },
+  {
+    stem: "輸送小胞が「正しい目的地」を見分けて融合する仕組みとして正しいものはどれか?",
+    options: ["小胞がそれぞれ違う色をしていて目的地が色で見分ける", "小胞表面の Rab と標的膜の係留タンパク質、さらに v-SNARE と t-SNARE の対合で見分ける", "重力で自然に沈んで届く", "どの膜ともランダムに融合する"],
+    correct: 1,
+    explain: "正解 = 2。各小胞は <b>Rab</b> の組み合わせで標識され、標的膜の<b>係留タンパク質</b>に捕捉される。さらに小胞の <b>v-SNARE</b> と標的の <b>t-SNARE</b> が対になって結合することで、正しい相手とだけ融合する。"
+  },
+  {
+    stem: "翻訳後修飾の<b>リン酸化</b>について正しいものはどれか?",
+    options: ["主にアスパラギン酸残基に起こる", "セリン・トレオニン・チロシン残基に起こり、活性の ON/OFF やシグナル伝達を担う", "一度付くと外せない不可逆的な修飾である", "タンパク質に糖を付加する反応である"],
+    correct: 1,
+    explain: "正解 = 2。リン酸化は<b>セリン・トレオニン・チロシン</b>に起こり、<b>活性スイッチの ON/OFF やシグナル伝達</b>を制御する。キナーゼで付加・ホスファターゼで除去できる可逆的修飾。"
+  }
+];
+
+// クイズ描画
+const quizList = document.getElementById('quiz-list');
+QUIZ.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  let optsHtml = '';
+  q.options.forEach((opt, oi) => { optsHtml += `<li data-idx="${oi}">${opt}</li>`; });
+  card.innerHTML = `<div class="stem">問 ${i + 1}. ${q.stem}</div><ul class="options">${optsHtml}</ul><div class="quiz-explain"><b>解説:</b> ${q.explain}</div>`;
+  quizList.appendChild(card);
+  const selected = new Set();
+  card.querySelectorAll('ul.options li').forEach(li => {
+    li.addEventListener('click', () => {
+      if (card.classList.contains('graded')) return;
+      const idx = parseInt(li.dataset.idx);
+      const multi = Array.isArray(q.correct);
+      if (!multi) { selected.clear(); card.querySelectorAll('ul.options li').forEach(x => x.classList.remove('selected')); }
+      if (selected.has(idx)) { selected.delete(idx); li.classList.remove('selected'); }
+      else { selected.add(idx); li.classList.add('selected'); }
+    });
+  });
+  card._selected = selected;
+});
+
+// 修了証は再度試験 (143474) のみ: ?retake=1 または referrer が再試コースの時だけ有効
+const IS_RETAKE = (function () {
+  try { return new URLSearchParams(location.search).get('retake') === '1' || /lms\.keio\.jp\/courses\/143474/.test(document.referrer || ''); }
+  catch (e) { return false; }
+})();
+
+document.getElementById('quiz-grade').addEventListener('click', () => {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i];
+    const selected = card._selected;
+    if (selected.size === 0) return;
+    answered++;
+    const correctSet = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
+    if (isCorrect) score++;
+    card.classList.add('graded');
+    // 再試 (IS_RETAKE) かつ不正解は、修了証の公正性のため正解・解説を隠す。本講義は常に全表示。
+    const hideAnswer = IS_RETAKE && !isCorrect;
+    card.querySelectorAll('ul.options li').forEach(li => {
+      const idx = parseInt(li.dataset.idx);
+      li.classList.remove('selected');
+      if (hideAnswer) {
+        if (selected.has(idx)) li.classList.add('incorrect');
+      } else {
+        if (correctSet.has(idx)) li.classList.add('correct');
+        else if (selected.has(idx)) li.classList.add('incorrect');
+      }
+    });
+    if (!hideAnswer) card.querySelector('.quiz-explain').classList.add('shown');
+  });
+  const summary = document.getElementById('quiz-summary');
+  const certEl = document.getElementById('quiz-cert-section');
+  const passReq = Math.ceil(QUIZ.length * 0.8); // 合格基準 80%
+  const allAnswered = answered === QUIZ.length;
+  const passed = allAnswered && score >= passReq;
+  let tail;
+  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
+  else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('quiz-reset').addEventListener('click', () => {
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    card.classList.remove('graded');
+    card._selected.clear();
+    card.querySelectorAll('ul.options li').forEach(li => {
+      li.classList.remove('selected', 'correct', 'incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.remove('shown');
+  });
+  document.getElementById('quiz-summary').innerHTML = '';
+  document.getElementById('quiz-cert-section').style.display = 'none';
+  const _sid = document.getElementById('cert-student-id'); if (_sid) _sid.value = '';
+});
+
+/* ---- 修了証 (Certificate) ---- */
+async function generateVerificationCode(studentId, score, date) {
+  const data = `${studentId}:biochem-lec04:${score}/${QUIZ.length}:${date}:biochem2026`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8).toUpperCase();
+}
+
+document.getElementById('quiz-pdf').addEventListener('click', async () => {
+  const studentId = document.getElementById('cert-student-id').value.trim();
+  if (!studentId) { document.getElementById('cert-error').style.display = 'block'; return; }
+  document.getElementById('cert-error').style.display = 'none';
+  let score = 0; const answers = [];
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i]; const sel = [...(card._selected || [])]; answers[i] = sel;
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    if (sel.length === cs.size && sel.every(x => cs.has(x))) score++;
+  });
+  const total = QUIZ.length;
+  const date = new Date().toLocaleDateString('ja-JP');
+  const datetime = new Date().toLocaleString('ja-JP');
+  const verCode = await generateVerificationCode(studentId, score, date);
+  let qhtml = '';
+  QUIZ.forEach((q, qi) => {
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const sel = new Set(answers[qi] || []);
+    qhtml += `<div class="q"><div class="q-num">問 ${qi + 1}</div><div class="q-stem">${q.stem}</div><ul class="opts">`;
+    q.options.forEach((opt, oi) => {
+      let cls = ''; if (cs.has(oi)) cls = 'correct'; else if (sel.has(oi)) cls = 'wrong';
+      qhtml += `<li class="${cls}"><span class="letter">${oi + 1})</span>${opt}</li>`;
+    });
+    qhtml += `</ul><div class="explain"><span class="explain-label">解説:</span> ${q.explain}</div></div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>生化学 Lec04 復習クイズ修了証</title><style>
+  @page { size: A4; margin: 18mm 15mm; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; color: #1a2633; line-height: 1.6; font-size: 11pt; margin: 0; }
+  .cert-box { border: 3px solid #2e8b57; border-radius: 12px; padding: 30px 40px; margin: 20px auto; max-width: 600px; text-align: center; }
+  .cert-title { color: #22543d; font-size: 22pt; font-weight: 700; margin-bottom: 6px; }
+  .cert-sub { color: #5a6978; font-size: 12pt; margin-bottom: 20px; }
+  .cert-field { margin: 12px 0; font-size: 13pt; }
+  .cert-field .label { color: #5a6978; font-size: 10pt; }
+  .cert-field .value { font-weight: 700; font-size: 16pt; }
+  .cert-score { font-size: 36pt; font-weight: 700; color: #2e8b57; margin: 16px 0; }
+  .cert-code { margin-top: 20px; padding: 10px; background: #f7fafc; border: 1px solid #d7dce5; border-radius: 6px; font-family: monospace; font-size: 14pt; letter-spacing: 2px; }
+  .cert-code .label { font-family: sans-serif; font-size: 9pt; color: #5a6978; letter-spacing: normal; }
+  hr { border: none; border-top: 1px solid #d7dce5; margin: 20px 0; }
+  .q { margin-bottom: 18px; page-break-inside: avoid; border-left: 3px solid #2e8b57; padding-left: 14px; text-align: left; }
+  .q-num { font-weight: 700; color: #2e8b57; font-size: 12pt; }
+  .q-stem { font-weight: 600; margin: 6px 0; font-size: 11pt; }
+  .opts { list-style: none; padding: 0; margin: 6px 0; }
+  .opts li { padding: 4px 8px 4px 30px; position: relative; font-size: 10.5pt; margin: 3px 0; }
+  .opts li .letter { position: absolute; left: 6px; font-weight: 700; color: #5a6978; }
+  .opts li.correct { background: #c6f6d5; border-left: 3px solid #2e8b57; border-radius: 3px; }
+  .opts li.correct::after { content: " \\2713 正解"; color: #22543d; font-weight: 700; font-size: 9pt; }
+  .opts li.wrong { background: #fed7d7; border-left: 3px solid #e09f3e; border-radius: 3px; }
+  .opts li.wrong::after { content: " \\2717 あなたの回答"; color: #d64545; font-weight: 700; font-size: 9pt; }
+  .explain { background: #f7fafc; border-left: 3px solid #2e8b57; padding: 8px 12px; font-size: 10pt; margin-top: 8px; line-height: 1.7; }
+  .explain-label { font-weight: 700; color: #2e8b57; }
+  footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d7dce5; font-size: 9pt; color: #5a6978; text-align: center; }
+  .print-btn { background: #2e8b57; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13pt; cursor: pointer; font-weight: 700; font-family: inherit; position: fixed; top: 20px; right: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  @media print { .print-btn { display: none; } }
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF として保存</button>
+  <div class="cert-box">
+    <div class="cert-title">生化学 復習クイズ修了証</div>
+    <div class="cert-sub">第4回: タンパク質の成熟</div>
+    <div class="cert-field"><span class="label">学籍番号</span><br><span class="value">${studentId}</span></div>
+    <div class="cert-score">${score} / ${total}</div>
+    <div class="cert-field"><span class="label">合格基準: ${Math.ceil(total * 0.8)}問以上</span></div>
+    <div class="cert-field"><span class="label">出力日時</span><br>${datetime}</div>
+    <div class="cert-code"><span class="label">検証コード</span><br>${verCode}</div>
+  </div>
+  <hr><h2 style="text-align:center; color:#22543d;">問題・回答・解説</h2>
+  ${qhtml}
+  <footer>生化学 FY2026 · 慶應義塾大学薬学部 · 担当: 長谷耕二 / 鈴木功一郎（Interactive Lab: 高橋大輔）<br>検証コード ${verCode} · 学籍番号 ${studentId} · ${datetime}</footer>
+  </body></html>`;
+  // Blob URL 方式: about:blank への document.write は一部ブラウザで印刷時に白紙になるため blob: URL で開く。
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) { alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); URL.revokeObjectURL(url); return; }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+});
+</script>
+
+</body>
+</html>
