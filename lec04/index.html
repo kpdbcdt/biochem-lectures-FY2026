@@ -274,8 +274,10 @@
      style="display:inline-flex; align-items:center; gap:8px; background:#805ad5; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
     📝 出席アンケート (6/26締切)
   </a>
-  <!-- TODO(高橋): NotebookLM ノートブック作成後、lec03 と同形式で 📓 NotebookLM ボタンを追加
-       <a href="https://notebooklm.google.com/notebook/XXXX" ... style="...background:#2e8b57;...">📓 NotebookLM</a> -->
+  <a href="https://notebooklm.google.com/notebook/9c698ced-c910-407a-bf6d-27ee354e5c44" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2e8b57; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📓 NotebookLM
+  </a>
   <p style="font-size:11px; color:#64748b; margin:6px 0 0 0; flex-basis:100%;">※「講義スライド PDF」と「講義スライド PDF (再度試験)」は<strong>全く同一</strong>です。本講義の受講者は通常版、<strong>再度試験の受講者は (再度試験) 版</strong>をお開きください。</p>
 </div>
 
@@ -521,7 +523,7 @@ const SIGNAL = {
   nls:  { name:'核局在化シグナル (NLS)', dest:'核',
     info:`<b>核局在化シグナル (NLS)</b><br>行き先: <b>核</b>。<br>特徴: <b>塩基性アミノ酸 (正電荷)</b> に富む。<b>核搬入受容体</b>が認識し、タンパク質は<b>高次構造を保ったまま</b>核膜孔を通過する。` },
   mito: { name:'ミトコンドリア移行シグナル', dest:'ミトコンドリア',
-    info:`<b>ミトコンドリア移行シグナル</b><br>行き先: <b>ミトコンドリア</b> (葉緑体も類似)。<br>特徴: 多くは<b>N 末端</b>にあり、正電荷と疎水性が交互に並ぶ。タンパク質は<b>立体構造をほどいて</b>転送装置で外膜・内膜を通過する。` },
+    info:`<b>ミトコンドリア移行シグナル</b><br>行き先: <b>ミトコンドリア</b> (葉緑体も類似)。<br>特徴: 多くは<b>N 末端</b>にあり、正電荷をもつアミノ酸を含む。タンパク質は<b>立体構造をほどいて</b>転送装置で外膜・内膜を通過する。` },
   none: { name:'シグナルなし', dest:'サイトゾル (細胞質) に留まる',
     info:`<b>シグナルなし</b><br>行き先: <b>サイトゾル (細胞質)</b> に留まる。<br>特徴: 行き先を示すシグナルを持たないタンパク質は、<b>遊離リボソーム</b>で合成され細胞質で働く (核・ミトコンドリア行きのものは合成後にシグナルで運ばれる)。` }
 };
