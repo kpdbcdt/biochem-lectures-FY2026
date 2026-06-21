@@ -1116,8 +1116,7 @@ document.getElementById('quiz-grade').addEventListener('click', () => {
   const allAnswered = answered === QUIZ.length;
   const passed = allAnswered && score >= passReq;
   let tail;
-  if (passed && IS_RETAKE) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
-  else if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！よくできました。</span>`; certEl.style.display = 'none'; }
+  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
   else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
   else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
   summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
