@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>生化学 Lec 06 — タンパク質の機能 2 (Interactive Lab)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: #f7f9fc;
+    color: #1a2633;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 22px; }
+  header p { margin: 0; opacity: 0.92; font-size: 13px; }
+  .meta-bar {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a6978;
+  }
+  .meta-bar b { color: #1a2633; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #5a6978;
+    border-radius: 5px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab-bar button:hover { background: #f0fff4; }
+  .tab-bar button.active {
+    background: #276749;
+    color: white;
+    border-color: #276749;
+  }
+  .panel {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 { margin: 0 0 8px 0; font-size: 18px; color: #276749; }
+  .panel h3 { margin: 16px 0 8px 0; font-size: 15px; color: #276749; }
+  .objective {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    margin: 8px 0 14px 0;
+    font-size: 13px;
+    color: #22543d;
+    border-radius: 4px;
+  }
+  .objective b { color: #1a4a3c; }
+  .ctrl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .ctrl label { font-size: 13px; color: #5a6978; font-weight: 500; margin-right: 4px; }
+  .ctrl button, .ctrl select, .ctrl input {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #1a2633;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ctrl button:hover { background: #f0fff4; }
+  .ctrl button.primary {
+    background: #38a169;
+    color: white;
+    border-color: #2f855a;
+  }
+  .ctrl button.primary:hover { background: #2f855a; }
+  .seg {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0;
+  }
+  .seg button {
+    background: white; border: 1px solid #d7dce5; color: #5a6978;
+    border-radius: 6px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .seg button:hover { background: #f0fff4; }
+  .seg button.active { background: #276749; color: white; border-color: #276749; }
+  .display-box {
+    background: #fafbfc;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    min-height: 80px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .display-box.center { text-align: center; }
+  .display-box svg { max-width: 100%; height: auto; }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  table.cmp th, table.cmp td {
+    border: 1px solid #d7dce5;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th { background: #f0fff4; color: #22543d; font-weight: 600; }
+  table.cmp tr:nth-child(even) td { background: #fafbfc; }
+  .pill {
+    display: inline-block;
+    background: #edf2f7;
+    color: #5a6978;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  .pill.lyso { background: #fef3c7; color: #92400e; }
+  .pill.prote { background: #dbeafe; color: #1e40af; }
+  .pill.func { background: #ccfbf1; color: #115e59; }
+  .pill.bond { background: #e2e8f0; color: #475569; }
+  .pill.warn { background: #fee2e2; color: #991b1b; }
+  .pill.good { background: #d1fae5; color: #065f46; }
+  .result-box {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .result-box b { color: #22543d; }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .tile {
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: #fafbfc;
+    font-size: 12.5px;
+  }
+  .tile:hover { background: #f0fff4; border-color: #38a169; }
+  .tile.sel { background: #c6f6d5; border-color: #276749; }
+  .tile b { font-size: 13.5px; color: #276749; }
+  .steps { display:flex; flex-wrap:wrap; gap:4px; margin: 8px 0; }
+  .steps .step {
+    flex:1; min-width:90px; text-align:center; font-size:11px; padding:6px 4px;
+    border:1px solid #d7dce5; border-radius:6px; background:#fafbfc; color:#94a3b8;
+  }
+  .steps .step.done { background:#f0fff4; color:#276749; border-color:#9ae6b4; }
+  .steps .step.cur { background:#276749; color:white; border-color:#276749; font-weight:700; }
+  .quiz-card {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .quiz-card .stem { font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+  .quiz-card ul.options { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .quiz-card ul.options li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #d7dce5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fafbfc;
+    user-select: none;
+  }
+  .quiz-card ul.options li:hover { background: #f0fff4; }
+  .quiz-card ul.options li.selected { background: #dbeafe; border-color: #2b6cb0; }
+  .quiz-card ul.options li.correct { background: #c6f6d5; border-color: #22543d; color: #22543d; }
+  .quiz-card ul.options li.incorrect { background: #fed7d7; border-color: #9b2c2c; color: #9b2c2c; }
+  .quiz-explain {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: none;
+  }
+  .quiz-explain.shown { display: block; }
+  .quiz-explain b { color: #22543d; }
+  .quiz-summary {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  footer {
+    text-align: center;
+    color: #5a6978;
+    font-size: 12px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid #d7dce5;
+  }
+  footer a { color: #38a169; text-decoration: none; }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header { padding: 18px 20px; }
+    header h1 { font-size: 18px; }
+    .panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧪 生化学 Lec 06 — タンパク質の機能 2 (Interactive Lab)</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 · 月曜 1 限 · 7/6 · 長谷耕二 先生</p>
+</header>
+
+<div class="meta-bar">
+  <b>学修目標 (SBO)</b>: 膜輸送体の種類、構造、機能を説明できる。血漿リポタンパク質の種類、構造、機能を説明できる。<br>
+  <b>使い方</b>: 下のタブを切り替えて 5 つの interactive tools + 復習クイズで学習。何度でも挑戦できます。<br>
+  <b>教科書対応</b>: エッセンシャル細胞生物学 第5版 第 4 章・第 12 章 / 参考: ヴォート基礎生化学 第5版 10章
+</div>
+
+<div style="margin: 0 0 14px 0; display:flex; gap:10px; flex-wrap:wrap;">
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6179912" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2b6cb0; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF
+  </a>
+  <a href="https://lms.keio.jp/courses/143474/modules/items/6179916" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2c7a7b; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF (再度試験)
+  </a>
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6179914" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#805ad5; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📝 出席アンケート (7/10締切)
+  </a>
+  <p style="font-size:11px; color:#64748b; margin:6px 0 0 0; flex-basis:100%;">※「講義スライド PDF」と「講義スライド PDF (再度試験)」は<strong>全く同一</strong>です。本講義の受講者は通常版、<strong>再度試験の受講者は (再度試験) 版</strong>をお開きください。</p>
+</div>
+
+<div class="tab-bar">
+  <button data-tab="lipo" class="active">🩸 血漿リポタンパク質</button>
+  <button data-tab="transport">🧪 膜輸送の3方式</button>
+  <button data-tab="carrier">🔀 単輸送・共輸送・対向輸送</button>
+  <button data-tab="pump">⚙️ Na⁺,K⁺-ATPase ポンプ</button>
+  <button data-tab="gut">💧 腸管吸収とコレラ</button>
+  <button data-tab="quiz">📝 Quiz (15問)</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: Plasma lipoproteins                                   -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-lipo">
+  <h2>🩸 血漿リポタンパク質</h2>
+  <div class="objective"><b>学習目標</b>: 血漿リポタンパク質を4つ挙げ、それぞれの密度・大きさ・構成成分・役割を説明できる (S04-S07)。</div>
+
+  <div class="display-box center">
+    <svg viewBox="0 0 380 165" style="max-width:400px;">
+      <line x1="30" y1="132" x2="355" y2="132" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#axArrow)"/>
+      <defs><marker id="axArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#94a3b8"/></marker></defs>
+      <text x="192" y="155" font-size="11" fill="#5a6978" text-anchor="middle">密度 (低 → 高)　／　粒子径 (大 → 小)</text>
+      <circle cx="72" cy="90" r="34" fill="#fef3c7" stroke="#92400e" stroke-width="2"/>
+      <text x="72" y="94" font-size="10" fill="#92400e" text-anchor="middle">キロミクロン</text>
+      <text x="72" y="132" font-size="9" fill="#5a6978" text-anchor="middle">&lt;0.95 g/cm³</text>
+      <circle cx="160" cy="98" r="24" fill="#fde68a" stroke="#92400e" stroke-width="2"/>
+      <text x="160" y="100" font-size="9.5" fill="#7c2d12" text-anchor="middle">VLDL</text>
+      <text x="160" y="132" font-size="9" fill="#5a6978" text-anchor="middle">0.98 g/cm³</text>
+      <circle cx="238" cy="104" r="16" fill="#fecaca" stroke="#9b2c2c" stroke-width="2"/>
+      <text x="238" y="107" font-size="9" fill="#7f1d1d" text-anchor="middle">LDL</text>
+      <text x="238" y="132" font-size="9" fill="#5a6978" text-anchor="middle">1.04 g/cm³</text>
+      <circle cx="300" cy="110" r="9" fill="#bfdbfe" stroke="#1e40af" stroke-width="2"/>
+      <text x="300" y="132" font-size="9" fill="#5a6978" text-anchor="middle">1.2 g/cm³</text>
+      <text x="300" y="98" font-size="9" fill="#1e40af" text-anchor="middle">HDL</text>
+    </svg>
+    <div style="font-size:11px; color:#718096;">密度が上がるほど粒子は小さく、タンパク質の割合が増える（脂質の割合は減る）</div>
+  </div>
+
+  <div class="seg" id="lipo-seg">
+    <button data-k="chylo" class="active">キロミクロン</button>
+    <button data-k="vldl">VLDL</button>
+    <button data-k="ldl">LDL</button>
+    <button data-k="hdl">HDL</button>
+    <button data-k="apo">アポリポタンパク質</button>
+  </div>
+
+  <div class="result-box" id="lipo-info"></div>
+
+  <h3>4種の比較まとめ</h3>
+  <table class="cmp">
+    <tr><th></th><th>密度</th><th>直径</th><th>主な役割</th></tr>
+    <tr><td><b>キロミクロン</b></td><td>&lt; 0.95 g/cm³（超低密度）</td><td>〜1000 nm 以下（最大）</td><td>食事由来 TG・コレステロールエステルを小腸から筋肉・脂肪組織へ</td></tr>
+    <tr><td><b>VLDL</b></td><td>0.98 g/cm³</td><td>30〜90 nm</td><td>肝臓合成、脂質を各組織へ運搬</td></tr>
+    <tr><td><b>LDL</b></td><td>1.04 g/cm³</td><td>20 nm</td><td>コレステロール・コレステロールエステルを組織へ運ぶ主要運搬体（LDL受容体→エンドサイトーシス）</td></tr>
+    <tr><td><b>HDL</b></td><td>1.2 g/cm³（高密度）</td><td>9 nm（最小）</td><td>タンパク質豊富。末梢からコレステロールを回収し肝臓へ運搬（肝臓のみ胆汁酸に代謝・排出可能）</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: 3 modes of membrane transport + ionophores             -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-transport">
+  <h2>🧪 膜輸送の3方式とイオノフォア</h2>
+  <div class="objective"><b>学習目標</b>: なぜ膜輸送タンパク質が必要かを説明し、単純拡散・受動的仲介輸送・能動輸送の違い、イオノフォアの2種類 (キャリア型・チャネル型) を説明できる (S08-S18)。</div>
+
+  <div class="seg" id="tr-seg">
+    <button data-k="why" class="active">なぜ必要？</button>
+    <button data-k="simple">単純拡散</button>
+    <button data-k="passive">受動的仲介輸送</button>
+    <button data-k="active">能動輸送</button>
+    <button data-k="carrier-iono">キャリア型イオノフォア</button>
+    <button data-k="channel-iono">チャネル型イオノフォア</button>
+  </div>
+
+  <div class="display-box center" id="tr-display"></div>
+  <div class="result-box" id="tr-info"></div>
+
+  <h3>3方式の比較</h3>
+  <table class="cmp">
+    <tr><th></th><th>膜タンパクの必要性</th><th>特異性</th><th>駆動力</th><th>ATP</th></tr>
+    <tr><td><b>単純拡散</b></td><td>不要</td><td>非特異的</td><td>濃度勾配</td><td>不要</td></tr>
+    <tr><td><b>受動的仲介輸送</b><br>（キャリア型・チャネル型）</td><td>必要</td><td>特異的</td><td>濃度勾配</td><td>不要</td></tr>
+    <tr><td><b>能動輸送</b></td><td>必要</td><td>特異的</td><td>濃度勾配に<b>逆らう</b></td><td><b>必要</b>（ATP加水分解）</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: Uniport / symport / antiport                          -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-carrier">
+  <h2>🔀 単輸送・共輸送・対向輸送</h2>
+  <div class="objective"><b>学習目標</b>: 単輸送・共輸送・対向輸送の違いを、代表例 (GLUT1, GLUT2, SGLT1, Na⁺,K⁺-ATPase, CFTR) とともに説明できる (S19-S24)。</div>
+
+  <div class="tile-grid" id="carrier-grid" style="margin-bottom:14px;"></div>
+  <div class="display-box" id="carrier-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: Na+,K+-ATPase pump cycle                               -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-pump">
+  <h2>⚙️ Na⁺,K⁺-ATPase ポンプサイクル</h2>
+  <div class="objective"><b>学習目標</b>: Na⁺,K⁺-ATPase が ATP 加水分解のエネルギーで Na⁺/K⁺ を対向輸送する仕組みと、強心配糖体 (ジギタリン・ウワバイン) の薬理機序を説明できる (S25-S28)。</div>
+
+  <h3>① ポンプサイクル (ステップを進めてみよう)</h3>
+  <div class="steps" id="pump-steps"></div>
+  <div class="ctrl">
+    <button id="pump-prev">← 戻る</button>
+    <button class="primary" id="pump-next">次へ →</button>
+    <button id="pump-reset">最初から</button>
+  </div>
+  <div class="result-box" id="pump-info"></div>
+
+  <h3>② 強心配糖体とイオンポンプ</h3>
+  <table class="cmp">
+    <tr><th>薬剤</th><th>由来</th><th>作用機序</th></tr>
+    <tr><td><b>ジギタリン・ジギトキシン</b></td><td>ジギタリスの葉</td><td>Na⁺,K⁺-ATPase の細胞外部位に結合し<b>酵素活性を阻害</b> → 鬱血性心不全の治療に使用</td></tr>
+    <tr><td><b>ウワバイン</b></td><td>ソマリ族の矢毒</td><td>同上の機序（強心配糖体）</td></tr>
+  </table>
+  <div class="result-box">
+    <b>薬理機序の流れ</b>：Na⁺,K⁺-ATPase 阻害 → 細胞内に Na⁺ が貯留 → Na⁺/Ca²⁺ 対向輸送が促進 → 筋細胞内へ Ca²⁺ が蓄積 → <b>心筋収縮が促進</b>される。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: Intestinal glucose absorption + cholera                -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-gut">
+  <h2>💧 小腸のグルコース吸収・アクアポリン・コレラ</h2>
+  <div class="objective"><b>学習目標</b>: 小腸上皮での3種の輸送体（SGLT1・GLUT2・Na⁺,K⁺-ATPase）の協調によるグルコース吸収、アクアポリンの働き、そしてコレラ経口補水療法にグルコースを加える理由を説明できる (S29-S34)。</div>
+
+  <div class="seg" id="gut-seg">
+    <button data-k="harmony" class="active">3輸送体のハーモニー</button>
+    <button data-k="aqp">アクアポリン</button>
+    <button data-k="cholera">コレラと経口補水療法</button>
+  </div>
+
+  <div class="display-box center" id="gut-display"></div>
+  <div class="result-box" id="gut-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: Quiz                                                  -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-quiz">
+  <h2>📝 復習クイズ (15問)</h2>
+  <div class="objective"><b>使い方</b>: 各問の選択肢をクリック → 「答え合わせ」ボタンで正解と解説を表示。何度でも挑戦可。最後にスコアが集計されます。</div>
+
+  <div id="quiz-list"></div>
+
+  <div class="ctrl" style="margin-top: 20px;">
+    <button class="primary" id="quiz-grade">全問の答え合わせ + スコア集計</button>
+    <button id="quiz-reset">全問リセット</button>
+  </div>
+
+  <div id="quiz-summary"></div>
+
+  <div id="quiz-cert-section" style="display:none; margin-top:16px; padding:16px; background:#f7fafc; border:2px solid #2e8b57; border-radius:8px;">
+    <h4 style="margin:0 0 8px 0; color:#2e8b57;">📜 修了証の発行</h4>
+    <p style="font-size:13px; margin:0 0 10px 0;">学籍番号を入力して修了証 PDF を出力してください。<b>再度試験の事前課題</b>として K-LMS に提出します。</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <input type="text" id="cert-student-id" placeholder="学籍番号（例: 25-1-001）" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; font-size:14px; width:200px;">
+      <button class="primary" id="quiz-pdf" style="background:#2e8b57;">📜 修了証 PDF を出力</button>
+    </div>
+    <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
+  </div>
+
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 全 15 問に回答し <b>12 問以上正解</b>で合格。<b>再度試験の受講者</b>は合格後に修了証 PDF を発行し提出します。不合格時はリセットして再挑戦してください。</p>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
+  教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a><br>
+  <small style="color: #94a3b8;">エッセンシャル細胞生物学 第5版 4章・12章の内容に基づく自作の概念図 (schematic)</small>
+</footer>
+
+<script>
+// ============================================================
+//  Tab switching
+// ============================================================
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// 共通: セグメントボタン群のバインド
+function bindSeg(segId, cb){
+  const seg = document.getElementById(segId);
+  seg.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      cb(b.dataset.k);
+    });
+  });
+}
+
+// ============================================================
+//  TAB 1: Plasma lipoproteins
+// ============================================================
+const LIPO = {
+  chylo: `<b>キロミクロン</b><br>
+    ・血漿リポタンパク質の中で<b>最も密度が低く（&lt; 0.95 g/cm³）、最も大きい</b>（直径 1000 nm 以下）。<br>
+    ・<b>食事由来</b>のトリアシルグリセロール (TG) やコレステロールエステルを<b>小腸から筋肉・脂肪組織へ</b>運搬する。<br>
+    ・運搬後は<b>キロミクロンレムナント</b>となり、肝臓に取り込まれて分解される。`,
+  vldl: `<b>VLDL (very low-density lipoprotein)</b><br>
+    ・超低密度リポタンパク質（0.98 g/cm³、直径 30〜90 nm）。<br>
+    ・<b>肝臓で合成</b>され、脂質を様々な組織に運搬する。`,
+  ldl: `<b>LDL (low-density lipoprotein)</b><br>
+    ・低密度リポタンパク質（1.04 g/cm³、直径 20 nm）。<br>
+    ・コレステロールやコレステロールエステルを組織に運ぶ<b>主要な運搬体</b>。<br>
+    ・<b>LDL受容体</b>と結合した後、<b>エンドサイトーシス</b>によって細胞内に取り込まれる（受容体は細胞膜へ再利用）。`,
+  hdl: `<b>HDL (high-density lipoprotein)</b><br>
+    ・高密度リポタンパク質（1.2 g/cm³、直径 9 nm）。肝臓や小腸で合成され、<b>タンパク質が豊富</b>。<br>
+    ・細胞膜からコレステロールを、VLDL・LDL などからコレステロールエステルを取り除き、<b>肝臓に運搬</b>する（コレステロール逆転送）。<br>
+    ・肝臓は過剰なコレステロールを<b>胆汁酸に代謝して排出できる唯一の臓器</b>。`,
+  apo: `<b>アポリポタンパク質</b><br>
+    ・リポタンパク質の<b>タンパク質成分</b>。<b>肝臓で合成</b>され、<b>A, B, C, D, E の5種類</b>が存在する。<br>
+    ・表面の荷電残基・極性残基により脂質粒子が血中に溶けることを可能にする。<br>
+    ・血流を介して一つの組織から他の組織へ脂質分子（TG・リン脂質・コレステロール）を輸送する仲立ちをする。`
+};
+function renderLipo(k){ document.getElementById('lipo-info').innerHTML = LIPO[k]; }
+bindSeg('lipo-seg', renderLipo);
+renderLipo('chylo');
+
+// ============================================================
+//  TAB 2: 3 transport modes + ionophores
+// ============================================================
+const TR = {
+  why: {
+    title:'なぜ膜輸送タンパク質が必要か',
+    svg:`<svg viewBox="0 0 360 100" style="max-width:360px;">
+      <rect x="20" y="20" width="10" height="60" fill="#c6f6d5"/>
+      <rect x="330" y="20" width="10" height="60" fill="#bfdbfe"/>
+      <line x1="60" y1="20" x2="60" y2="80" stroke="#276749" stroke-width="3"/>
+      <line x1="300" y1="20" x2="300" y2="80" stroke="#276749" stroke-width="3"/>
+      <text x="30" y="14" font-size="9" fill="#276749" text-anchor="middle">細胞内</text>
+      <text x="330" y="14" font-size="9" fill="#1e40af" text-anchor="middle">細胞外</text>
+      <text x="180" y="45" font-size="10" fill="#5a6978" text-anchor="middle">脂質二重層は</text>
+      <text x="180" y="60" font-size="10" fill="#5a6978" text-anchor="middle">イオン・極性物質を通さない</text>
+    </svg>`,
+    info:`<b>膜輸送タンパク質が必要な理由</b><br>
+    ・生体膜（脂質二重層）は<b>イオンや極性物質を透過しない</b>ため、これらの輸送には<b>膜輸送タンパク質の仲介</b>が必要。<br>
+    ・低分子量疎水性分子は膜を通りやすいが、イオン・比較的高分子量の極性分子は通りにくい。<br>
+    ・細胞内には様々な溶質が詰まっており、<b>浸透圧</b>によって水が細胞内に流入しようとする→ 動物細胞はポンプでイオンをくみ出し（全ATPの30%を Na⁺ くみ出しに消費）、植物細胞は細胞壁で、アメーバなど原生動物は<b>収縮胞</b>で膨張を防ぐ。<br>
+    ・典型的な哺乳類細胞では<b>細胞内に K⁺、細胞外に Na⁺</b>が多い。`
+  },
+  simple: {
+    title:'単純拡散（非仲介輸送）',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <circle cx="90" cy="45" r="5" fill="#38a169"/><circle cx="270" cy="45" r="5" fill="#38a169" opacity="0.4"/>
+      <path d="M100,45 L260,45" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#a2)"/>
+      <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#94a3b8"/></marker></defs>
+      <text x="180" y="25" font-size="9" fill="#5a6978" text-anchor="middle">脂質二重層を直接通過</text>
+    </svg>`,
+    info:`<b>単純拡散</b><br>
+    ・<b>膜タンパク質を必要としない</b>。<br>
+    ・駆動力は<b>濃度勾配</b>のみ。<br>
+    ・<b>非特異的</b>（小さく脂溶性の分子ほど通りやすい）。`
+  },
+  passive: {
+    title:'受動的仲介輸送（促進拡散）',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <rect x="165" y="10" width="30" height="70" rx="8" fill="#c6f6d5" stroke="#276749" stroke-width="2"/>
+      <text x="180" y="45" font-size="8" fill="#276749" text-anchor="middle">輸送体</text>
+      <path d="M100,45 L260,45" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#a3)"/>
+      <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#94a3b8"/></marker></defs>
+    </svg>`,
+    info:`<b>受動的仲介輸送（促進拡散）</b><br>
+    ・<b>膜タンパク質（キャリア型・チャネル形成型）が必要</b>。<br>
+    ・駆動力は<b>濃度勾配</b>（ATP不要）。<br>
+    ・<b>特異的</b>な物質のみを輸送する。`
+  },
+  active: {
+    title:'能動輸送',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <rect x="165" y="10" width="30" height="70" rx="8" fill="#bfdbfe" stroke="#1e40af" stroke-width="2"/>
+      <text x="180" y="45" font-size="8" fill="#1e40af" text-anchor="middle">ポンプ</text>
+      <path d="M260,45 L100,45" stroke="#c53030" stroke-width="1.5" marker-end="url(#a4)"/>
+      <text x="180" y="25" font-size="9" fill="#c53030" text-anchor="middle">濃度勾配に逆らう</text>
+      <text x="180" y="70" font-size="9" fill="#5a6978" text-anchor="middle">ATP →ADP+Pi</text>
+      <defs><marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#c53030"/></marker></defs>
+    </svg>`,
+    info:`<b>能動輸送</b><br>
+    ・<b>膜タンパク質が必要</b>で<b>特異的</b>。<br>
+    ・駆動力は<b>ATPの加水分解</b>。濃度勾配に<b>逆らって</b>輸送できる点が受動輸送と異なる。<br>
+    例：Na⁺,K⁺-ATPase（詳細は「⚙️ Na⁺,K⁺-ATPase ポンプ」タブへ）。`
+  },
+  'carrier-iono': {
+    title:'キャリア型イオノフォア：バリノマイシン',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <circle cx="180" cy="30" r="10" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
+      <text x="180" y="34" font-size="8" fill="#92400e" text-anchor="middle">K⁺</text>
+      <path d="M180,40 L180,60" stroke="#92400e" stroke-width="2" stroke-dasharray="2 2" marker-end="url(#a5)"/>
+      <circle cx="180" cy="66" r="10" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
+      <text x="180" y="70" font-size="8" fill="#92400e" text-anchor="middle">K⁺</text>
+      <defs><marker id="a5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#92400e"/></marker></defs>
+    </svg>`,
+    info:`<b>キャリア型イオノフォア（例：バリノマイシン）</b><br>
+    ・特定のイオンと選択的に結合して<b>膜を拡散</b>し、反対側でイオンを解離する。<br>
+    ・4つの化合物の組み合わせが3つ連なり<b>環状構造</b>を取る。側鎖の疎水性領域が外側に突き出し脂質二重膜への溶解を促す。<br>
+    ・<b>K⁺</b>はバリノマイシンの内部にピタリとはまるが、<b>Na⁺やLi⁺は小さすぎてはまらない</b>（選択性）。<br>
+    ・輸送は<b>両方向性</b>（内⇔外）。毎秒10⁴個のK⁺を輸送。<br>
+    ・イオノフォアの多くは<b>細菌が産生する抗生物質</b>で、イオンの膜透過性を高める脂溶性の有機分子。`
+  },
+  'channel-iono': {
+    title:'チャネル型イオノフォア：KcsA（K⁺チャネル）',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <rect x="165" y="10" width="30" height="70" fill="white" stroke="#1e40af" stroke-width="2"/>
+      <circle cx="180" cy="25" r="6" fill="#93c5fd"/>
+      <circle cx="180" cy="45" r="6" fill="#93c5fd"/>
+      <circle cx="180" cy="65" r="6" fill="#93c5fd"/>
+      <text x="180" y="8" font-size="8" fill="#1e40af" text-anchor="middle">中空の孔</text>
+    </svg>`,
+    info:`<b>チャネル型イオノフォア（例：KcsA K⁺チャネル）</b><br>
+    ・膜を貫通する<b>チャネル（通路・孔）</b>を形成し、特定のイオンがそこを通って拡散する。輸送は<b>両方向性</b>。<br>
+    ・KcsA は<b>放線菌のK⁺チャネル</b>。158残基の膜貫通タンパク質で<b>ホモ四量体</b>としてチャネルを形成し、中空構造がK⁺イオンを通す。<br>
+    ・バリノマイシンより<b>10,000倍速く</b>K⁺を輸送。イオン選択性が高く、Na⁺に比べてK⁺を<b>10,000倍以上</b>通しやすい。<br>
+    ・全ての細胞にはNa⁺, K⁺, Cl⁻などを効率よく通す特異的イオンチャネルが存在し、浸透圧の維持・シグナル伝達・神経刺激伝達などに必須。`
+  }
+};
+function renderTr(k){
+  const d = TR[k];
+  document.getElementById('tr-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('tr-info').innerHTML = d.info;
+}
+bindSeg('tr-seg', renderTr);
+renderTr('why');
+
+// ============================================================
+//  TAB 3: Uniport / symport / antiport gallery
+// ============================================================
+const CARRIER = {
+  uniport: { name:'単輸送 (Uniport)', tag:'GLUT1・GLUT2',
+    info:`<b>単輸送 (Uniport)</b><br>1種類の分子のみが移動する輸送様式。受動輸送・能動輸送どちらにも存在しうる。<br><br>
+    <b>例1: GLUT1</b>（赤血球に発現）— グルコーストランスポーターは2つのコンフォメーションをとり、濃度勾配に従って<b>両方向性</b>にグルコースを輸送する。<br>
+    <b>例2: GLUT2</b>（肝臓）— 食後は血液グルコース濃度が高いため肝細胞内へ輸送、空腹時は糖新生で肝細胞内グルコース濃度が高まり細胞外へ輸送。<b>電荷を持たない溶質</b>の輸送方向は<b>濃度勾配のみ</b>で決まる。<br>
+    <b>例3: CFTR</b> — ABCトランスポーターの一つでCl⁻イオンチャネル（単輸送）。コレラ毒素はこのチャネルを活性化し、腸管腔の浸透圧を上げて水を流出させ、激しい下痢を誘発する。` },
+  symport: { name:'共輸送 (Symport)', tag:'SGLT1',
+    info:`<b>共輸送 (Symport)</b><br>2種類の分子が<b>同じ方向</b>に同時に移動する共役輸送。<br><br>
+    <b>例: グルコース-Na⁺共輸送体 (SGLT1)</b> — Na⁺,K⁺-ATPaseの働きにより細胞内のNa⁺濃度は低く保たれ、膜の内外に電気化学的勾配が生じている。チャネルが開くとNa⁺は細胞内へ流入し、<b>このエネルギーを使ってグルコースを濃度勾配に逆らって取り込む</b>。<br>
+    詳細は「💧 腸管吸収とコレラ」タブへ。` },
+  antiport: { name:'対向輸送 (Antiport)', tag:'Na⁺,K⁺-ATPase',
+    info:`<b>対向輸送 (Antiport)</b><br>2種類の分子が<b>逆方向</b>に同時に移動する共役輸送。<br><br>
+    <b>例: Na⁺,K⁺-ATPase（Na⁺-K⁺ポンプ）</b> — 能動輸送であり、ATP加水分解のエネルギーを使うATP駆動ポンプ（ATP分解酵素でもある）。Na⁺を電気化学的勾配・濃度勾配に逆らって細胞外へ輸送し、その際にK⁺を細胞内に引き込む。<br>
+    詳細は「⚙️ Na⁺,K⁺-ATPase ポンプ」タブへ。` },
+  charge: { name:'荷電溶質の輸送方向を決める因子', tag:'膜電位',
+    info:`<b>電荷を持つ溶質の受動的仲介輸送</b><br>
+    ・細胞内は負の荷電分子が優位で細胞膜の内側はマイナス、外側はプラスに荷電している（＝<b>膜電位</b>）。<br>
+    ・輸送の方向を決める因子は<b>2つ</b>：①<b>濃度勾配</b>、②<b>膜電位（電気化学的勾配）</b>。<br>
+    ・膜電位と濃度勾配が<b>同方向</b>に働く時は駆動力が高い（例：Na⁺イオンは流入しやすい）。<br>
+    ・膜電位と濃度勾配が<b>反対方向</b>に働く時は電気勾配が駆動力を弱める（例：K⁺イオンは流出しにくい）。<br>
+    ・一方、<b>電荷を持たない溶質</b>（グルコースなど）の輸送方向は<b>濃度勾配のみ</b>で決まる。` }
+};
+const CARRIER_ORDER = ['uniport','symport','antiport','charge'];
+let carrierSel = 'uniport';
+function renderCarrierGrid(){
+  const grid = document.getElementById('carrier-grid');
+  grid.innerHTML = '';
+  CARRIER_ORDER.forEach(k=>{
+    const m = CARRIER[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===carrierSel?' sel':'');
+    t.innerHTML = `<b>${m.name}</b><br><span style="color:#5a6978;">${m.tag}</span>`;
+    t.addEventListener('click', ()=>{ carrierSel=k; renderCarrierGrid(); renderCarrierDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderCarrierDetail(){ document.getElementById('carrier-info').innerHTML = CARRIER[carrierSel].info; }
+renderCarrierGrid(); renderCarrierDetail();
+
+// ============================================================
+//  TAB 4: Na+,K+-ATPase pump cycle (stepper)
+// ============================================================
+const PUMP = [
+  { label:'Na⁺の結合', info:'細胞内側で<b>Na⁺がポンプに結合</b>する。' },
+  { label:'ポンプのリン酸化', info:'ATPが加水分解され、ポンプに<b>高エネルギーのリン酸基</b>が結合する（リン酸化）。' },
+  { label:'構造変化 → Na⁺放出', info:'リン酸化によりポンプの<b>構造が変化</b>し、細胞外側へ<b>Na⁺が放出</b>される。' },
+  { label:'K⁺の結合', info:'細胞外側で<b>K⁺がポンプに結合</b>する。' },
+  { label:'ポンプの脱リン酸化', info:'ポンプが<b>脱リン酸化</b>される。' },
+  { label:'構造復帰 → K⁺放出', info:'ポンプの構造が<b>元に戻り</b>、細胞内側へ<b>K⁺が放出</b>されて1サイクル終了。' }
+];
+let pumpStep = 0;
+function renderPump(){
+  document.getElementById('pump-steps').innerHTML =
+    PUMP.map((s,i)=>`<div class="step ${i<pumpStep?'done':''} ${i===pumpStep?'cur':''}">${i+1}. ${s.label}</div>`).join('');
+  const d = PUMP[pumpStep];
+  document.getElementById('pump-info').innerHTML = `<b>ステップ ${pumpStep+1} / ${PUMP.length}: ${d.label}</b><br>${d.info}`;
+}
+document.getElementById('pump-next').addEventListener('click', ()=>{ if(pumpStep<PUMP.length-1){pumpStep++; renderPump();} });
+document.getElementById('pump-prev').addEventListener('click', ()=>{ if(pumpStep>0){pumpStep--; renderPump();} });
+document.getElementById('pump-reset').addEventListener('click', ()=>{ pumpStep=0; renderPump(); });
+renderPump();
+
+// ============================================================
+//  TAB 5: Intestinal absorption + aquaporin + cholera
+// ============================================================
+const GUT = {
+  harmony: {
+    title:'3輸送体のハーモニーによる小腸グルコース取り込み',
+    svg:`<svg viewBox="0 0 360 110" style="max-width:380px;">
+      <text x="60" y="14" font-size="9" fill="#5a6978" text-anchor="middle">腸管腔</text>
+      <text x="300" y="14" font-size="9" fill="#5a6978" text-anchor="middle">血液・組織</text>
+      <rect x="90" y="25" width="180" height="60" fill="#fafbfc" stroke="#d7dce5"/>
+      <text x="180" y="20" font-size="9" fill="#5a6978" text-anchor="middle">小腸上皮細胞</text>
+      <rect x="100" y="35" width="22" height="40" rx="6" fill="#c6f6d5" stroke="#276749" stroke-width="1.5"/>
+      <text x="111" y="98" font-size="8" fill="#276749" text-anchor="middle">SGLT1</text>
+      <rect x="238" y="35" width="22" height="40" rx="6" fill="#bfdbfe" stroke="#1e40af" stroke-width="1.5"/>
+      <text x="249" y="98" font-size="8" fill="#1e40af" text-anchor="middle">GLUT2</text>
+      <rect x="168" y="35" width="22" height="40" rx="6" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
+      <text x="179" y="98" font-size="8" fill="#92400e" text-anchor="middle">Na⁺,K⁺-ATPase</text>
+      <path d="M75,55 L98,55" stroke="#276749" stroke-width="1.5" marker-end="url(#a6)"/>
+      <path d="M124,55 L166,55" stroke="#276749" stroke-width="1.5" marker-end="url(#a6)"/>
+      <path d="M192,65 L236,65" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a6)"/>
+      <path d="M260,55 L285,55" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a6)"/>
+      <defs><marker id="a6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#276749"/></marker></defs>
+    </svg>`,
+    info:`<b>小腸からのグルコース取り込み（3種類の輸送体のハーモニー）</b><br>
+    ①<b>頂端面</b>：<b>SGLT1</b>（Na⁺駆動グルコース共輸送体）がNa⁺濃度勾配を利用してグルコースを腸管腔から細胞内へ取り込む（共輸送）。<br>
+    ②<b>基底面</b>：取り込まれたグルコースは<b>GLUT2</b>（単輸送）によって細胞外（血液側）へ放出され、他の組織で利用される。<br>
+    ③<b>Na⁺,K⁺-ATPase</b>が細胞内のNa⁺濃度を低く保つことでSGLT1の駆動力（Na⁺濃度勾配）を作り出す。<br>
+    さらに、<b>Na⁺が体内に吸収されると水の吸収も促進</b>される。`
+  },
+  aqp: {
+    title:'アクアポリン：水を運ぶチャネル',
+    svg:`<svg viewBox="0 0 360 90" style="max-width:360px;">
+      <rect x="120" y="10" width="120" height="70" fill="#fafbfc" stroke="#d7dce5"/>
+      <path d="M165,10 L195,10 L185,80 L175,80 Z" fill="#bfdbfe" stroke="#1e40af" stroke-width="2"/>
+      <text x="180" y="45" font-size="8" fill="#1e40af" text-anchor="middle">H₂O</text>
+    </svg>`,
+    info:`<b>アクアポリン</b><br>
+    ・<b>水分子のみを輸送する</b>チャネル。長い砂時計状の孔を持つ。<br>
+    ・水以外のイオンの通過を阻止する仕組み：①<b>静電的反発</b>、②<b>サイズの制限</b>、③孔内のAsnのNH₂基が水分子と結合し双極子の配向を変える。<br>
+    ・孔の内側は疎水性残基が多く、水の高速移動が可能。<br>
+    ・哺乳類では<b>13種（AQP0〜12）</b>が知られ、腎臓・唾液腺・涙腺など水分子を急速に透過させる組織に高発現。<br>
+    ・発見者の<b>Peter Agre</b>は<b>2003年ノーベル化学賞</b>を受賞（共同受賞者はK⁺チャネルの構造を解明したRoderick MacKinnon）。`
+  },
+  cholera: {
+    title:'コレラと経口補水療法',
+    svg:`<svg viewBox="0 0 360 70" style="max-width:360px;">
+      <text x="180" y="35" font-size="11" fill="#5a6978" text-anchor="middle">CFTR活性化 → Cl⁻流出 → 浸透圧↑ → 水流出 → 下痢</text>
+    </svg>`,
+    info:`<b>コレラ（Vibrio cholerae）と膜輸送</b><br>
+    ・コレラ毒素は細胞膜の<b>CFTR（Cl⁻チャネル）を開けっ放し</b>にし、腸管腔における<b>浸透圧を上げる</b>ことで水を流出させ、激しい下痢を誘発する。<br>
+    ・産業革命期のロンドンではコレラが大流行し、1854年ジョン・スノーが感染源を水ポンプに特定、1883年ロベルト・コッホがコレラ菌を同定した。<br><br>
+    <b>経口補水療法 (ORT)</b><br>
+    ・重度の下痢患者（脱水・脱塩状態）には<b>NaClと水に加えグルコースを混ぜて</b>投与する安価な処置が、現代でも多くの命を救っている。<br>
+    ・<b>グルコースを加える理由</b>：小腸上皮の<b>SGLT1（グルコース-Na⁺共輸送体）</b>がグルコースと共にNa⁺を取り込み、そのNa⁺吸収が<b>水の吸収を促進</b>する。CFTRの障害でNa⁺,K⁺-ATPaseやSGLT1自体は機能しているため、この経路を使って水分・電解質を効率よく再吸収できる。`
+  }
+};
+function renderGut(k){
+  const d = GUT[k];
+  document.getElementById('gut-display').innerHTML =
+    `<div style="font-size:16px; font-weight:bold; color:#276749; margin-bottom:6px;">${d.title}</div>${d.svg}`;
+  document.getElementById('gut-info').innerHTML = d.info;
+}
+bindSeg('gut-seg', renderGut);
+renderGut('harmony');
+
+// ============================================================
+//  TAB 6: Quiz
+// ============================================================
+const QUIZ = [
+  {
+    stem: "血漿リポタンパク質のうち、<b>密度が最も低く、粒子径が最も大きい</b>ものはどれか?",
+    options: ["キロミクロン", "VLDL", "LDL", "HDL"],
+    correct: 0,
+    explain: "正解 = 1。<b>キロミクロン</b>は密度 &lt; 0.95 g/cm³ で直径1000 nm以下の最大のリポタンパク質。密度は キロミクロン &lt; VLDL &lt; LDL &lt; HDL の順に高くなり、粒子径は逆順に小さくなる。"
+  },
+  {
+    stem: "アポリポタンパク質について正しいものはどれか?",
+    options: ["肝臓で合成され、A・B・C・D・Eの5種類が存在する", "小腸でのみ合成される", "脂質のみで構成される", "常に1種類しか存在しない"],
+    correct: 0,
+    explain: "正解 = 1。アポリポタンパク質はリポタンパク質の<b>タンパク質成分</b>で<b>肝臓で合成</b>され、<b>A, B, C, D, Eの5種類</b>が存在する。表面の荷電・極性残基が脂質を血中に溶けやすくする。"
+  },
+  {
+    stem: "キロミクロンの主な役割として正しいものはどれか?",
+    options: ["食事由来のトリアシルグリセロールやコレステロールエステルを小腸から筋肉・脂肪組織へ運搬する", "末梢組織からコレステロールを回収し肝臓へ運ぶ", "肝臓でのみ合成され脂質を運搬する", "水分子のみを輸送する"],
+    correct: 0,
+    explain: "正解 = 1。キロミクロンは<b>食事由来</b>のTG・コレステロールエステルを<b>小腸から筋肉・脂肪組織へ</b>運搬する。運搬後はキロミクロンレムナントとなり肝臓に取り込まれ分解される。"
+  },
+  {
+    stem: "HDL（高密度リポタンパク質）の働きとして正しいものはどれか?",
+    options: ["末梢組織の細胞膜やVLDL・LDLからコレステロールを取り除き肝臓へ運搬する（逆転送）", "小腸から食事由来の脂質を運搬する", "コレステロールを組織へ運ぶ主要な運搬体である", "ATPを加水分解してイオンを輸送する"],
+    correct: 0,
+    explain: "正解 = 1。HDLはタンパク質が豊富で、細胞膜からコレステロールを、VLDL・LDLなどからコレステロールエステルを取り除き<b>肝臓に運搬</b>する（コレステロール逆転送）。肝臓は過剰なコレステロールを胆汁酸に代謝・排出できる唯一の臓器。"
+  },
+  {
+    stem: "LDLが細胞に取り込まれる経路として正しいものはどれか?",
+    options: ["LDL受容体と結合した後、エンドサイトーシスによって細胞内に取り込まれる", "単純拡散で細胞膜を通過する", "アクアポリンを通って取り込まれる", "Na⁺,K⁺-ATPaseによって能動的に排出される"],
+    correct: 0,
+    explain: "正解 = 1。LDLは<b>LDL受容体</b>と結合した後、<b>エンドサイトーシス</b>によって細胞内に取り込まれる。組織へコレステロール・コレステロールエステルを運ぶ主要な運搬体。"
+  },
+  {
+    stem: "単純拡散・受動的仲介輸送・能動輸送の特徴として<b>正しくない</b>ものはどれか?",
+    options: ["単純拡散は膜タンパク質を必要とせず非特異的である", "受動的仲介輸送は膜タンパク質が必要で濃度勾配に従う（ATP不要）", "能動輸送はATP加水分解のエネルギーを使い濃度勾配に逆らって輸送できる", "能動輸送は膜タンパク質を必要としない"],
+    correct: 3,
+    explain: "正解 = 4。能動輸送も<b>膜タンパク質（ポンプ）を必要とし特異的</b>である。単純拡散のみ膜タンパク質不要・非特異的。受動的仲介輸送と能動輸送はいずれも膜タンパク質が必要で特異的だが、駆動力（濃度勾配 vs ATP）が異なる。"
+  },
+  {
+    stem: "キャリア型イオノフォア（バリノマイシン）とチャネル型イオノフォア（KcsA）の違いとして正しいものはどれか?",
+    options: ["バリノマイシンはイオンと結合して膜を拡散し反対側で解離するのに対し、KcsAは膜を貫通するチャネルを形成してイオンを通す", "両方とも膜を貫通するチャネルを形成する", "バリノマイシンは能動輸送を行う", "KcsAは片方向にのみイオンを輸送する"],
+    correct: 0,
+    explain: "正解 = 1。<b>キャリア型（バリノマイシン）</b>はイオンと選択的に結合して膜を拡散し反対側で解離。<b>チャネル型（KcsA）</b>は膜を貫通する中空のチャネルを形成しイオンを通す。両者とも輸送は両方向性。"
+  },
+  {
+    stem: "K⁺チャネル KcsA の特徴として正しいものはどれか?",
+    options: ["Na⁺に比べてK⁺を10,000倍以上通しやすい高い選択性を持つ", "Na⁺とK⁺を区別せず輸送する", "単量体として機能する", "ATPを加水分解して能動輸送を行う"],
+    correct: 0,
+    explain: "正解 = 1。KcsAは158残基の膜貫通タンパク質で<b>ホモ四量体</b>としてチャネルを形成し、<b>Na⁺に比べてK⁺を10,000倍以上</b>通しやすいイオン選択性を持つ（バリノマイシンより10,000倍速くK⁺を輸送）。ATP非依存の受動的仲介輸送。"
+  },
+  {
+    stem: "電荷を持たない溶質（例：グルコース）と電荷を持つ溶質の受動的仲介輸送で、輸送方向を決める因子について正しい組み合わせはどれか?",
+    options: ["電荷なし＝濃度勾配のみ／電荷あり＝濃度勾配と膜電位（電気化学的勾配）の両方", "どちらも濃度勾配のみで決まる", "どちらも膜電位のみで決まる", "電荷なし＝膜電位のみ／電荷あり＝濃度勾配のみ"],
+    correct: 0,
+    explain: "正解 = 1。<b>電荷を持たない溶質</b>（GLUT2によるグルコースなど）は<b>濃度勾配のみ</b>で輸送方向が決まる。<b>電荷を持つ溶質</b>は濃度勾配に加えて<b>膜電位（電気化学的勾配）</b>も影響し、両者が同方向なら駆動力が強まり、反対方向なら弱まる。"
+  },
+  {
+    stem: "単輸送・共輸送・対向輸送の組み合わせとして正しいものはどれか?",
+    options: ["GLUT1＝単輸送 / SGLT1＝共輸送 / Na⁺,K⁺-ATPase＝対向輸送", "GLUT1＝共輸送 / SGLT1＝単輸送 / Na⁺,K⁺-ATPase＝単輸送", "全て単輸送である", "全て対向輸送である"],
+    correct: 0,
+    explain: "正解 = 1。<b>単輸送</b>＝1種類の分子が移動（例：GLUT1）。<b>共輸送</b>＝2種類の分子が同じ方向に移動（例：SGLT1のグルコース-Na⁺共輸送）。<b>対向輸送</b>＝2種類の分子が逆方向に移動（例：Na⁺,K⁺-ATPase）。いずれも受動・能動輸送の両方に存在しうる。"
+  },
+  {
+    stem: "CFTR について正しいものはどれか?",
+    options: ["ABCトランスポーターの一つでCl⁻イオンチャネルであり、コレラ毒素がこのチャネルを活性化する", "Na⁺,K⁺-ATPaseの別名である", "グルコースを輸送する共輸送体である", "水のみを輸送するチャネルである"],
+    correct: 0,
+    explain: "正解 = 1。CFTR（嚢胞性線維症膜コンダクタンス制御因子）は<b>ABCトランスポーター</b>の一つでCl⁻イオンチャネル。<b>コレラ毒素はこのチャネルを活性化</b>し、開けっ放しにすることで腸管腔の浸透圧を上げ水を流出させ下痢を誘発する。"
+  },
+  {
+    stem: "Na⁺,K⁺-ATPase（Na⁺-K⁺ポンプ）の働きとして正しいものはどれか?",
+    options: ["ATPの加水分解によるエネルギーを使い、Na⁺を細胞外へ、K⁺を細胞内へ輸送する対向輸送体である", "Na⁺とK⁺を同じ方向に輸送する共輸送体である", "ATPを必要としない受動輸送体である", "水分子のみを輸送する"],
+    correct: 0,
+    explain: "正解 = 1。Na⁺,K⁺-ATPaseは<b>能動輸送</b>であり、ATP加水分解のエネルギーでNa⁺を電気化学的勾配・濃度勾配に<b>逆らって細胞外へ輸送</b>し、その際K⁺を<b>細胞内に引き込む対向輸送体</b>（ATP駆動ポンプ＝ATP分解酵素でもある）。"
+  },
+  {
+    stem: "強心配糖体（ジギタリン・ウワバイン）の薬理機序として正しいものはどれか?",
+    options: ["Na⁺,K⁺-ATPaseを阻害→細胞内Na⁺貯留→Na⁺/Ca²⁺対向輸送促進→筋細胞内Ca²⁺蓄積→心筋収縮促進", "Na⁺,K⁺-ATPaseを活性化して心筋収縮を抑制する", "CFTRを阻害して下痢を止める", "アクアポリンを阻害して脱水を防ぐ"],
+    correct: 0,
+    explain: "正解 = 1。ジギタリン・ウワバインはNa⁺,K⁺-ATPaseの細胞外部位に結合し<b>酵素活性を阻害</b>する。その結果、細胞内にNa⁺が貯留→<b>Na⁺/Ca²⁺対向輸送が促進</b>→筋細胞内へCa²⁺が蓄積→<b>心筋収縮が促進</b>される（鬱血性心不全の治療に利用）。"
+  },
+  {
+    stem: "アクアポリンについて正しいものはどれか?",
+    options: ["水分子のみを輸送するチャネルで、腎臓・唾液腺・涙腺などに高発現する", "水以外にNa⁺やK⁺も自由に輸送する", "ATPを加水分解して能動的に水を輸送する", "細菌が産生する抗生物質の一種である"],
+    correct: 0,
+    explain: "正解 = 1。アクアポリンは<b>水分子のみ</b>を輸送するチャネルで、哺乳類には13種（AQP0〜12）があり<b>腎臓・唾液腺・涙腺</b>など水を急速に透過させる組織に高発現。発見者Peter Agreは2003年ノーベル化学賞を受賞。"
+  },
+  {
+    stem: "重度の下痢患者に行う経口補水療法で、溶液に<b>グルコースを加える</b>と効果的な理由として最も適切なものはどれか?",
+    options: ["小腸のSGLT1がグルコースとNa⁺を共輸送し、そのNa⁺吸収が水の吸収を促進するため", "グルコースが直接CFTRを阻害して下痢を止めるため", "グルコースがアクアポリンを増加させるため", "グルコースがコレラ菌を直接殺菌するため"],
+    correct: 0,
+    explain: "正解 = 1。小腸上皮の<b>SGLT1（グルコース-Na⁺共輸送体）</b>がグルコースと共にNa⁺を取り込み、<b>Na⁺が体内に吸収されると水の吸収も促進</b>される。この経路はコレラ毒素によるCFTR活性化とは独立して機能するため、グルコースを加えることで効果的に水分・電解質を再吸収できる。"
+  }
+];
+
+// クイズ描画
+const quizList = document.getElementById('quiz-list');
+QUIZ.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  let optsHtml = '';
+  q.options.forEach((opt, oi) => { optsHtml += `<li data-idx="${oi}">${opt}</li>`; });
+  card.innerHTML = `<div class="stem">問 ${i + 1}. ${q.stem}</div><ul class="options">${optsHtml}</ul><div class="quiz-explain"><b>解説:</b> ${q.explain}</div>`;
+  quizList.appendChild(card);
+  const selected = new Set();
+  card.querySelectorAll('ul.options li').forEach(li => {
+    li.addEventListener('click', () => {
+      if (card.classList.contains('graded')) return;
+      const idx = parseInt(li.dataset.idx);
+      const multi = Array.isArray(q.correct);
+      if (!multi) { selected.clear(); card.querySelectorAll('ul.options li').forEach(x => x.classList.remove('selected')); }
+      if (selected.has(idx)) { selected.delete(idx); li.classList.remove('selected'); }
+      else { selected.add(idx); li.classList.add('selected'); }
+    });
+  });
+  card._selected = selected;
+});
+
+// 修了証は再度試験 (143474) のみ: ?retake=1 または referrer が再試コースの時だけ有効
+const IS_RETAKE = (function () {
+  try { return new URLSearchParams(location.search).get('retake') === '1' || /lms\.keio\.jp\/courses\/143474/.test(document.referrer || ''); }
+  catch (e) { return false; }
+})();
+
+document.getElementById('quiz-grade').addEventListener('click', () => {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i];
+    const selected = card._selected;
+    if (selected.size === 0) return;
+    answered++;
+    const correctSet = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
+    if (isCorrect) score++;
+    card.classList.add('graded');
+    const hideAnswer = IS_RETAKE && !isCorrect;
+    card.querySelectorAll('ul.options li').forEach(li => {
+      const idx = parseInt(li.dataset.idx);
+      li.classList.remove('selected');
+      if (hideAnswer) {
+        if (selected.has(idx)) li.classList.add('incorrect');
+      } else {
+        if (correctSet.has(idx)) li.classList.add('correct');
+        else if (selected.has(idx)) li.classList.add('incorrect');
+      }
+    });
+    if (!hideAnswer) card.querySelector('.quiz-explain').classList.add('shown');
+  });
+  const summary = document.getElementById('quiz-summary');
+  const certEl = document.getElementById('quiz-cert-section');
+  const passReq = Math.ceil(QUIZ.length * 0.8);
+  const allAnswered = answered === QUIZ.length;
+  const passed = allAnswered && score >= passReq;
+  let tail;
+  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
+  else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('quiz-reset').addEventListener('click', () => {
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    card.classList.remove('graded');
+    card._selected.clear();
+    card.querySelectorAll('ul.options li').forEach(li => {
+      li.classList.remove('selected', 'correct', 'incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.remove('shown');
+  });
+  document.getElementById('quiz-summary').innerHTML = '';
+  document.getElementById('quiz-cert-section').style.display = 'none';
+  const _sid = document.getElementById('cert-student-id'); if (_sid) _sid.value = '';
+});
+
+/* ---- 修了証 (Certificate) ---- */
+async function generateVerificationCode(studentId, score, date) {
+  const data = `${studentId}:biochem-lec06:${score}/${QUIZ.length}:${date}:biochem2026`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8).toUpperCase();
+}
+
+document.getElementById('quiz-pdf').addEventListener('click', async () => {
+  const studentId = document.getElementById('cert-student-id').value.trim();
+  if (!studentId) { document.getElementById('cert-error').style.display = 'block'; return; }
+  document.getElementById('cert-error').style.display = 'none';
+  let score = 0; const answers = [];
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i]; const sel = [...(card._selected || [])]; answers[i] = sel;
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    if (sel.length === cs.size && sel.every(x => cs.has(x))) score++;
+  });
+  const total = QUIZ.length;
+  const date = new Date().toLocaleDateString('ja-JP');
+  const datetime = new Date().toLocaleString('ja-JP');
+  const verCode = await generateVerificationCode(studentId, score, date);
+  let qhtml = '';
+  QUIZ.forEach((q, qi) => {
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const sel = new Set(answers[qi] || []);
+    qhtml += `<div class="q"><div class="q-num">問 ${qi + 1}</div><div class="q-stem">${q.stem}</div><ul class="opts">`;
+    q.options.forEach((opt, oi) => {
+      let cls = ''; if (cs.has(oi)) cls = 'correct'; else if (sel.has(oi)) cls = 'wrong';
+      qhtml += `<li class="${cls}"><span class="letter">${oi + 1})</span>${opt}</li>`;
+    });
+    qhtml += `</ul><div class="explain"><span class="explain-label">解説:</span> ${q.explain}</div></div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>生化学 Lec06 復習クイズ修了証</title><style>
+  @page { size: A4; margin: 18mm 15mm; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; color: #1a2633; line-height: 1.6; font-size: 11pt; margin: 0; }
+  .cert-box { border: 3px solid #2e8b57; border-radius: 12px; padding: 30px 40px; margin: 20px auto; max-width: 600px; text-align: center; }
+  .cert-title { color: #22543d; font-size: 22pt; font-weight: 700; margin-bottom: 6px; }
+  .cert-sub { color: #5a6978; font-size: 12pt; margin-bottom: 20px; }
+  .cert-field { margin: 12px 0; font-size: 13pt; }
+  .cert-field .label { color: #5a6978; font-size: 10pt; }
+  .cert-field .value { font-weight: 700; font-size: 16pt; }
+  .cert-score { font-size: 36pt; font-weight: 700; color: #2e8b57; margin: 16px 0; }
+  .cert-code { margin-top: 20px; padding: 10px; background: #f7fafc; border: 1px solid #d7dce5; border-radius: 6px; font-family: monospace; font-size: 14pt; letter-spacing: 2px; }
+  .cert-code .label { font-family: sans-serif; font-size: 9pt; color: #5a6978; letter-spacing: normal; }
+  hr { border: none; border-top: 1px solid #d7dce5; margin: 20px 0; }
+  .q { margin-bottom: 18px; page-break-inside: avoid; border-left: 3px solid #2e8b57; padding-left: 14px; text-align: left; }
+  .q-num { font-weight: 700; color: #2e8b57; font-size: 12pt; }
+  .q-stem { font-weight: 600; margin: 6px 0; font-size: 11pt; }
+  .opts { list-style: none; padding: 0; margin: 6px 0; }
+  .opts li { padding: 4px 8px 4px 30px; position: relative; font-size: 10.5pt; margin: 3px 0; }
+  .opts li .letter { position: absolute; left: 6px; font-weight: 700; color: #5a6978; }
+  .opts li.correct { background: #c6f6d5; border-left: 3px solid #2e8b57; border-radius: 3px; }
+  .opts li.correct::after { content: " \\2713 正解"; color: #22543d; font-weight: 700; font-size: 9pt; }
+  .opts li.wrong { background: #fed7d7; border-left: 3px solid #e09f3e; border-radius: 3px; }
+  .opts li.wrong::after { content: " \\2717 あなたの回答"; color: #d64545; font-weight: 700; font-size: 9pt; }
+  .explain { background: #f7fafc; border-left: 3px solid #2e8b57; padding: 8px 12px; font-size: 10pt; margin-top: 8px; line-height: 1.7; }
+  .explain-label { font-weight: 700; color: #2e8b57; }
+  footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d7dce5; font-size: 9pt; color: #5a6978; text-align: center; }
+  .print-btn { background: #2e8b57; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13pt; cursor: pointer; font-weight: 700; font-family: inherit; position: fixed; top: 20px; right: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  @media print { .print-btn { display: none; } }
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF として保存</button>
+  <div class="cert-box">
+    <div class="cert-title">生化学 復習クイズ修了証</div>
+    <div class="cert-sub">第6回: タンパク質の機能 2</div>
+    <div class="cert-field"><span class="label">学籍番号</span><br><span class="value">${studentId}</span></div>
+    <div class="cert-score">${score} / ${total}</div>
+    <div class="cert-field"><span class="label">合格基準: ${Math.ceil(total * 0.8)}問以上</span></div>
+    <div class="cert-field"><span class="label">出力日時</span><br>${datetime}</div>
+    <div class="cert-code"><span class="label">検証コード</span><br>${verCode}</div>
+  </div>
+  <hr><h2 style="text-align:center; color:#22543d;">問題・回答・解説</h2>
+  ${qhtml}
+  <footer>生化学 FY2026 · 慶應義塾大学薬学部 · 担当: 長谷耕二 / 鈴木功一郎（Interactive Lab: 高橋大輔）<br>検証コード ${verCode} · 学籍番号 ${studentId} · ${datetime}</footer>
+  </body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) { alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); URL.revokeObjectURL(url); return; }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+});
+</script>
+
+</body>
+</html>
