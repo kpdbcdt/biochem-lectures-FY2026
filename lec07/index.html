@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>生化学 Lec 07 — 酵素反応の調節 (Interactive Lab)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: #f7f9fc;
+    color: #1a2633;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.75;
+  }
+  header {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 22px; }
+  header p { margin: 0; opacity: 0.92; font-size: 13px; }
+  .meta-bar {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a6978;
+  }
+  .meta-bar b { color: #1a2633; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #5a6978;
+    border-radius: 5px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab-bar button:hover { background: #f0fff4; }
+  .tab-bar button.active {
+    background: #276749;
+    color: white;
+    border-color: #276749;
+  }
+  .panel {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 { margin: 0 0 8px 0; font-size: 18px; color: #276749; }
+  .panel h3 { margin: 16px 0 8px 0; font-size: 15px; color: #276749; }
+  .objective {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    margin: 8px 0 14px 0;
+    font-size: 13px;
+    color: #22543d;
+    border-radius: 4px;
+  }
+  .objective b { color: #1a4a3c; }
+  .ctrl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .ctrl label { font-size: 13px; color: #5a6978; font-weight: 500; margin-right: 4px; }
+  .ctrl button, .ctrl select, .ctrl input {
+    background: white;
+    border: 1px solid #d7dce5;
+    color: #1a2633;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ctrl button:hover { background: #f0fff4; }
+  .ctrl button.primary {
+    background: #38a169;
+    color: white;
+    border-color: #2f855a;
+  }
+  .ctrl button.primary:hover { background: #2f855a; }
+  .seg {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0;
+  }
+  .seg button {
+    background: white; border: 1px solid #d7dce5; color: #5a6978;
+    border-radius: 6px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .seg button:hover { background: #f0fff4; }
+  .seg button.active { background: #276749; color: white; border-color: #276749; }
+  .display-box {
+    background: #fafbfc;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    min-height: 80px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .display-box.center { text-align: center; }
+  .display-box svg { max-width: 100%; height: auto; }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  table.cmp th, table.cmp td {
+    border: 1px solid #d7dce5;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th { background: #f0fff4; color: #22543d; font-weight: 600; }
+  table.cmp tr:nth-child(even) td { background: #fafbfc; }
+  .pill {
+    display: inline-block;
+    background: #edf2f7;
+    color: #5a6978;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+  .result-box {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .result-box b { color: #22543d; }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .tile {
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: #fafbfc;
+    font-size: 12.5px;
+  }
+  .tile:hover { background: #f0fff4; border-color: #38a169; }
+  .tile.sel { background: #c6f6d5; border-color: #276749; }
+  .tile b { font-size: 13.5px; color: #276749; }
+  .steps { display:flex; flex-wrap:wrap; gap:4px; margin: 8px 0; }
+  .steps .step {
+    flex:1; min-width:90px; text-align:center; font-size:11px; padding:6px 4px;
+    border:1px solid #d7dce5; border-radius:6px; background:#fafbfc; color:#94a3b8;
+  }
+  .steps .step.done { background:#f0fff4; color:#276749; border-color:#9ae6b4; }
+  .steps .step.cur { background:#276749; color:white; border-color:#276749; font-weight:700; }
+  .quiz-card {
+    background: white;
+    border: 1px solid #d7dce5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+  .quiz-card .stem { font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+  .quiz-card ul.options { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .quiz-card ul.options li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #d7dce5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fafbfc;
+    user-select: none;
+  }
+  .quiz-card ul.options li:hover { background: #f0fff4; }
+  .quiz-card ul.options li.selected { background: #dbeafe; border-color: #2b6cb0; }
+  .quiz-card ul.options li.correct { background: #c6f6d5; border-color: #22543d; color: #22543d; }
+  .quiz-card ul.options li.incorrect { background: #fed7d7; border-color: #9b2c2c; color: #9b2c2c; }
+  .quiz-explain {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: none;
+  }
+  .quiz-explain.shown { display: block; }
+  .quiz-explain b { color: #22543d; }
+  .quiz-summary {
+    background: linear-gradient(135deg, #38a169, #276749);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 16px;
+  }
+  footer {
+    text-align: center;
+    color: #5a6978;
+    font-size: 12px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid #d7dce5;
+  }
+  footer a { color: #38a169; text-decoration: none; }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header { padding: 18px 20px; }
+    header h1 { font-size: 18px; }
+    .panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧪 生化学 Lec 07 — 酵素反応の調節 (Interactive Lab)</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 · 月曜 1 限 · 7/13 · 長谷耕二 先生</p>
+</header>
+
+<div class="meta-bar">
+  <b>学修目標 (SBO)</b>: 酵素における補酵素、微量金属の役割を説明できる。酵素の発見史・分類・触媒機構、チモーゲンの活性化、酵素阻害剤（薬と毒）についても理解する。<br>
+  <b>使い方</b>: 下のタブを切り替えて 5 つの interactive tools + 復習クイズで学習。何度でも挑戦できます。<br>
+  <b>教科書対応</b>: イラストレイテッド生化学 5章 / 参考: ヴォート基礎生化学 12章
+</div>
+
+<div style="margin: 0 0 14px 0; display:flex; gap:10px; flex-wrap:wrap;">
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6184854" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2b6cb0; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF
+  </a>
+  <a href="https://lms.keio.jp/courses/143474/modules/items/6184857" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2c7a7b; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📄 講義スライド PDF (再度試験)
+  </a>
+  <a href="https://lms.keio.jp/courses/139643/modules/items/6184855" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#805ad5; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📝 出席アンケート (7/17締切)
+  </a>
+  <a href="https://notebooklm.google.com/notebook/e42ee6a6-4106-42bc-be04-83299cf549cc" target="_blank"
+     style="display:inline-flex; align-items:center; gap:8px; background:#2e8b57; color:white; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+    📓 NotebookLM
+  </a>
+  <p style="font-size:11px; color:#64748b; margin:6px 0 0 0; flex-basis:100%;">※「講義スライド PDF」と「講義スライド PDF (再度試験)」は<strong>全く同一</strong>です。本講義の受講者は通常版、<strong>再度試験の受講者は (再度試験) 版</strong>をお開きください。</p>
+</div>
+
+<div class="tab-bar">
+  <button data-tab="history" class="active">🔬 酵素の発見と5つの特徴</button>
+  <button data-tab="classify">🏷️ 酵素の分類（EC番号）</button>
+  <button data-tab="cofactor">⚙️ 補因子・補酵素・温度とpH</button>
+  <button data-tab="mechanism">🧪 触媒機構の具体例</button>
+  <button data-tab="inhibitor">💊 チモーゲンと酵素阻害剤</button>
+  <button data-tab="quiz">📝 Quiz (15問)</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: History of enzyme discovery + 5 characteristics       -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-history">
+  <h2>🔬 酵素の発見と5つの特徴</h2>
+  <div class="objective"><b>学習目標</b>: 酵素研究の歴史（ブフナー・フィッシャー・サムナー・リボザイム）と、酵素反応の5つの特徴を説明できる。</div>
+
+  <div class="seg" id="history-seg">
+    <button data-k="buchner" class="active">ブフナー (1878)</button>
+    <button data-k="fischer">フィッシャー (1894)</button>
+    <button data-k="sumner">サムナー (1926)</button>
+    <button data-k="ribozyme">リボザイム/RNAワールド</button>
+  </div>
+  <div class="result-box" id="history-info"></div>
+
+  <h3>反応エネルギー図：酵素はΔGでなくΔG‡を下げる</h3>
+  <div class="display-box center">
+    <svg viewBox="0 0 360 130" style="max-width:380px;">
+      <path d="M20,100 Q90,20 180,55 Q270,90 340,40" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/>
+      <path d="M20,100 Q90,70 180,80 Q270,90 340,40" fill="none" stroke="#38a169" stroke-width="2.5"/>
+      <text x="180" y="18" font-size="9" fill="#5a6978" text-anchor="middle">酵素なし: 高いΔG‡</text>
+      <text x="180" y="95" font-size="9" fill="#276749" text-anchor="middle">酵素あり: 低いΔG‡</text>
+      <text x="20" y="115" font-size="9" fill="#5a6978" text-anchor="middle">反応物</text>
+      <text x="340" y="55" font-size="9" fill="#5a6978" text-anchor="middle">生成物</text>
+      <line x1="10" y1="118" x2="350" y2="118" stroke="#cbd5e0" stroke-width="1"/>
+    </svg>
+    <div style="font-size:11px; color:#718096;">酵素は反応前後の自由エネルギー差（ΔG）は変えず、遷移状態に至るための活性化自由エネルギー（ΔG‡）だけを引き下げて反応を加速する。</div>
+  </div>
+
+  <h3>酵素反応の5つの特徴</h3>
+  <table class="cmp">
+    <tr><th>#</th><th>特徴</th><th>内容</th></tr>
+    <tr><td>1</td><td><b>反応が速い</b></td><td>触媒の無い場合と比べ 10⁶〜10¹² 倍</td></tr>
+    <tr><td>2</td><td><b>穏やかな条件</b></td><td>酵素触媒は100℃以下（多くは37℃前後が最適）・常圧・中性pHで反応。化学触媒は高温・高圧・極端なpHを要することが多い</td></tr>
+    <tr><td>3</td><td><b>特異性が高い</b></td><td>基質に対する特異性が高く、副生成物がほとんどできない</td></tr>
+    <tr><td>4</td><td><b>調整可能</b></td><td>多くの酵素活性は基質以外の物質により変化する（例：アロステリック制御など）</td></tr>
+    <tr><td>5</td><td><b>ΔG‡を下げる</b></td><td>反応エネルギー（ΔG）自体は変えないが、活性化自由エネルギー（ΔG‡）を引き下げることで反応を促進する</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: EC classification                                     -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-classify">
+  <h2>🏷️ 酵素の分類（EC番号）</h2>
+  <div class="objective"><b>学習目標</b>: 酵素の6つの分類（EC1〜EC6）と、それぞれが触媒する反応の型を代表例とともに説明できる。</div>
+  <div class="result-box">酵素には「公認名」（従来の呼び名。何を触媒するか不明な場合がある）と「系統名」（一定のルールに基づく名前）、さらに<b>EC分類番号</b>がある。例：カタラーゼ（公認名）→ EC1.11.1.6（ハイドロジェンペルオキシド：ハイドロジェンペルオキシドオキシドレダクターゼ）。</div>
+
+  <div class="tile-grid" id="ec-grid" style="margin-bottom:14px;"></div>
+  <div class="display-box" id="ec-info"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: Cofactors, coenzymes, holo/apo, temp & pH             -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-cofactor">
+  <h2>⚙️ 補因子・補酵素・ホロ酵素/アポ酵素・温度とpH</h2>
+  <div class="objective"><b>学習目標</b>: 補因子（金属イオン・補酵素）の役割、ホロ酵素/アポ酵素の関係、温度とpHが酵素活性に与える影響を説明できる。</div>
+
+  <div class="seg" id="cof-seg">
+    <button data-k="metal" class="active">金属イオン</button>
+    <button data-k="cosub">共同基質（NAD⁺等）</button>
+    <button data-k="prosthetic">補欠分子族</button>
+    <button data-k="holoapo">ホロ酵素/アポ酵素</button>
+    <button data-k="temp">温度の影響</button>
+    <button data-k="ph">pHの影響</button>
+  </div>
+  <div class="result-box" id="cof-info"></div>
+
+  <h3>補因子の全体図</h3>
+  <table class="cmp">
+    <tr><th>補因子</th><th>金属イオン</th><th>補酵素 — 共同基質</th><th>補酵素 — 補欠分子族</th></tr>
+    <tr><td><b>結合の仕方</b></td><td>遷移金属 (Cu²⁺, Fe²⁺, Zn²⁺ 等)</td><td>一時的に酵素に結合 (NAD⁺, NADP⁺ 等)</td><td>酵素と結合して離れない (シトクロムのヘム等)</td></tr>
+    <tr><td><b>由来</b></td><td>生体が金属を必要とする理由の一つ</td><td colspan="2">多くはビタミン由来の有機化合物。アミノ酸側鎖に無い反応基を持つ</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: Catalytic mechanism examples                          -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-mechanism">
+  <h2>🧪 触媒機構の具体例</h2>
+  <div class="objective"><b>学習目標</b>: アルコールデヒドロゲナーゼ・膵臓リボヌクレアーゼA・リゾチーム・セリンプロテアーゼの触媒機構を、求核基/求電子基の概念とともに説明できる。</div>
+
+  <table class="cmp">
+    <tr><th>求核基（電子密度 高い）</th><th>求電子基（電子密度 低い）</th></tr>
+    <tr><td>ヒドロキシ基・メルカプト基・アミノ基・イミダゾール基</td><td>プロトン・金属イオン・カルボニル炭素原子・陽イオン性イミン（シッフ塩基）</td></tr>
+  </table>
+
+  <div class="tile-grid" id="mech-grid" style="margin:12px 0;"></div>
+  <div class="display-box" id="mech-info"></div>
+
+  <h3>酵素による触媒反応のまとめ（3原理）</h3>
+  <table class="cmp">
+    <tr><td>①</td><td>2種の基質を正確に配置し、反応が起こりやすくする</td></tr>
+    <tr><td>②</td><td>局所的に正または負の荷電を生じさせ、遷移状態を安定化する</td></tr>
+    <tr><td>③</td><td>結合した基質の立体構造を歪め、遷移状態に進みやすくする</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: Zymogens + enzyme inhibitors (drugs & poisons)        -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-inhibitor">
+  <h2>💊 チモーゲンと酵素阻害剤（薬と毒）</h2>
+  <div class="objective"><b>学習目標</b>: チモーゲン（ザイモジェン）の意義とトリプシノーゲンの活性化過程、代表的な酵素阻害剤（スタチン・HIVプロテアーゼ阻害薬・サリン）の作用機序を説明できる。</div>
+
+  <h3>① トリプシノーゲンの活性化（ステップを進めてみよう）</h3>
+  <div class="steps" id="zym-steps"></div>
+  <div class="ctrl">
+    <button id="zym-prev">← 戻る</button>
+    <button class="primary" id="zym-next">次へ →</button>
+    <button id="zym-reset">最初から</button>
+  </div>
+  <div class="result-box" id="zym-info"></div>
+
+  <h3>② 酵素阻害剤：薬にも毒にもなる</h3>
+  <table class="cmp">
+    <tr><th>阻害剤</th><th>標的酵素</th><th>作用・意義</th></tr>
+    <tr><td><b>スタチン系薬剤</b><br>（ロバスタチン・プラバスタチン・アトルバスタチン等）</td><td>HMG-CoAレダクターゼ</td><td>HMG-CoAをメバロン酸に代謝する酵素を阻害しコレステロール合成を抑制。<b>抗高脂血症薬</b>として使用</td></tr>
+    <tr><td><b>HIVプロテアーゼ阻害薬</b><br>（サキナビル・インジナビル・ネルフィナビル等）</td><td>HIVプロテアーゼ</td><td>HIVが増殖時に産生する前駆蛋白質の切断を阻害し、ウイルス粒子の組み立て（成熟）を妨げてHIVの増殖を抑制</td></tr>
+    <tr><td><b>DIPF・サリン</b>（毒性）</td><td>アセチルコリンエステラーゼ (AChE)</td><td>AChEを阻害しアセチルコリンの分解を止める → ACh受容体(Na⁺/K⁺チャネル)が開きっぱなしになり神経伝達が異常となる → 瞳孔収縮・全身痙攣・呼吸困難・死に至ることも。サリンは経皮吸収でLD₅₀=28 mg/kg（体重60kgで約1.5 mL）、1995年地下鉄サリン事件で使用された</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: Quiz                                                  -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-quiz">
+  <h2>📝 復習クイズ (15問)</h2>
+  <div class="objective"><b>使い方</b>: 各問の選択肢をクリック → 「答え合わせ」ボタンで正解と解説を表示。何度でも挑戦可。最後にスコアが集計されます。</div>
+
+  <div id="quiz-list"></div>
+
+  <div class="ctrl" style="margin-top: 20px;">
+    <button class="primary" id="quiz-grade">全問の答え合わせ + スコア集計</button>
+    <button id="quiz-reset">全問リセット</button>
+  </div>
+
+  <div id="quiz-summary"></div>
+
+  <div id="quiz-cert-section" style="display:none; margin-top:16px; padding:16px; background:#f7fafc; border:2px solid #2e8b57; border-radius:8px;">
+    <h4 style="margin:0 0 8px 0; color:#2e8b57;">📜 修了証の発行</h4>
+    <p style="font-size:13px; margin:0 0 10px 0;">学籍番号を入力して修了証 PDF を出力してください。<b>再度試験の事前課題</b>として K-LMS に提出します。</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <input type="text" id="cert-student-id" placeholder="学籍番号（例: 25-1-001）" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; font-size:14px; width:200px;">
+      <button class="primary" id="quiz-pdf" style="background:#2e8b57;">📜 修了証 PDF を出力</button>
+    </div>
+    <p id="cert-error" style="color:#9b2c2c; font-size:12px; margin:6px 0 0 0; display:none;">学籍番号を入力してください。</p>
+  </div>
+
+  <p style="font-size:12px; color:#64748b; margin-top:10px;">💡 全 15 問に回答し <b>12 問以上正解</b>で合格。<b>再度試験の受講者</b>は合格後に修了証 PDF を発行し提出します。不合格時はリセットして再挑戦してください。</p>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部<br>
+  教材・コードともに <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> で公開<br>
+  <a href="../">← Interactive Labs 一覧へ戻る</a> · <a href="https://github.com/kpdbcdt/biochem-lectures-FY2026">GitHub</a><br>
+  <small style="color: #94a3b8;">イラストレイテッド生化学 5章の内容に基づく自作の概念図 (schematic)</small>
+</footer>
+
+<script>
+// ============================================================
+//  Tab switching
+// ============================================================
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+function bindSeg(segId, cb){
+  const seg = document.getElementById(segId);
+  seg.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      cb(b.dataset.k);
+    });
+  });
+}
+
+// ============================================================
+//  TAB 1: History
+// ============================================================
+const HISTORY = {
+  buchner: `<b>エドゥアルト・ブフナー (1878年)</b><br>
+    ・<b>酵母の抽出液</b>（細胞を含まない）でグルコースからアルコールが合成されることを示した（C₆H₁₂O₆ → 2CH₃CH₂OH + 2CO₂）。<br>
+    ・酵母の中の"何か"が発酵反応を行うことが判明。<b>Enzyme（酵素）</b>という語はギリシャ語の <i>en</i>（中の）+ <i>zyme</i>（酵母）に由来する。`,
+  fischer: `<b>エミール・フィッシャー (1894年) — 鍵と鍵穴説</b><br>
+    ・基質の形状と酵素の活性部位は<b>鍵と鍵穴の関係</b>にあり、形が相補的でないものは結合しないと提唱。ただしその実体（分子レベルの仕組み）は当時不明だった。<br>
+    ・酵素は形態的相補性と電子的相補性の両方により、非共有結合で基質と結び付く。`,
+  sumner: `<b>ジェームズ・サムナー (1926年)</b><br>
+    ・ナタマメの<b>ウレアーゼ</b>（尿素をNH₃とCO₂に加水分解する酵素）を<b>結晶化</b>し、酵素がタンパク質であることを実証した。`,
+  ribozyme: `<b>リボザイム / RNAワールド仮説</b><br>
+    ・まだタンパク質が無かった原始の地球には、RNAからなる自己複製系が存在したと仮定されている（＝<b>RNAワールド仮説</b>、未証明）。<br>
+    ・RNA分子にも酵素活性を持つものがあり、これを<b>リボザイム</b>と呼ぶ。<br>
+    ・核酸は4種類の核酸のポリマー、タンパク質は20種のアミノ酸のポリマー → タンパク質の方が圧倒的に変化に富んだ構造を作れ、様々な反応を触媒できる。`
+};
+function renderHistory(k){ document.getElementById('history-info').innerHTML = HISTORY[k]; }
+bindSeg('history-seg', renderHistory);
+renderHistory('buchner');
+
+// ============================================================
+//  TAB 2: EC classification
+// ============================================================
+const EC = {
+  ec1: { name:'EC1 オキシレダクターゼ', tag:'酸化還元反応・アルコールデヒドロゲナーゼ',
+    info:`<b>EC1 オキシレダクターゼ（酸化還元反応）</b><br>例：<b>アルコールデヒドロゲナーゼ</b><br>
+    CH₃CH₂OH + NAD⁺ → CH₃CHO + NADH + H⁺（エタノール → アセトアルデヒド）` },
+  ec2: { name:'EC2 トランスフェラーゼ', tag:'転移酵素・ヘキソキナーゼ',
+    info:`<b>EC2 トランスフェラーゼ（転移酵素）</b><br>例：<b>ヘキソキナーゼ</b><br>
+    グルコース + ATP → グルコース-6-リン酸 + ADP（ATPからリン酸基を転移）` },
+  ec3: { name:'EC3 ヒドロラーゼ', tag:'加水分解酵素・キモトリプシン',
+    info:`<b>EC3 ヒドロラーゼ（加水分解酵素）</b><br>例：<b>キモトリプシン</b><br>
+    ポリペプチド + H₂O → ペプチド（水を使ってペプチド結合を加水分解）` },
+  ec4: { name:'EC4 リアーゼ', tag:'脱離酵素・ピルビン酸デカルボキシラーゼ',
+    info:`<b>EC4 リアーゼ（脱離酵素）</b><br>例：<b>ピルビン酸デカルボキシラーゼ</b><br>
+    ピルビン酸 + H⁺ → アセトアルデヒド + CO₂（脱炭酸により基を脱離）` },
+  ec5: { name:'EC5 イソメラーゼ', tag:'異性化酵素・アラニンラセマーゼ',
+    info:`<b>EC5 イソメラーゼ（異性化酵素）</b><br>例：<b>アラニンラセマーゼ</b><br>
+    D-アラニン ⇌ L-アラニン（分子内で構造を異性化）` },
+  ec6: { name:'EC6 リガーゼ', tag:'連結酵素・ピルビン酸カルボキシラーゼ',
+    info:`<b>EC6 リガーゼ（連結酵素）</b><br>例：<b>ピルビン酸カルボキシラーゼ</b><br>
+    ピルビン酸 + HCO₃⁻ + ATP → オキサロ酢酸 + ADP + Pi（ATPのエネルギーで2分子を連結）<br>
+    ※多くのリガーゼには「シンテターゼ」という用語が含まれる。` }
+};
+const EC_ORDER = ['ec1','ec2','ec3','ec4','ec5','ec6'];
+let ecSel = 'ec1';
+function renderEcGrid(){
+  const grid = document.getElementById('ec-grid');
+  grid.innerHTML = '';
+  EC_ORDER.forEach(k=>{
+    const m = EC[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===ecSel?' sel':'');
+    t.innerHTML = `<b>${m.name}</b><br><span style="color:#5a6978;">${m.tag}</span>`;
+    t.addEventListener('click', ()=>{ ecSel=k; renderEcGrid(); renderEcDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderEcDetail(){ document.getElementById('ec-info').innerHTML = EC[ecSel].info; }
+renderEcGrid(); renderEcDetail();
+
+// ============================================================
+//  TAB 3: Cofactors / coenzymes / holo-apo / temp / pH
+// ============================================================
+const COF = {
+  metal: `<b>金属イオン（遷移金属：Cu²⁺, Fe²⁺, Zn²⁺ など）</b><br>
+    役割は主に3つ：①<b>基質を反応しやすいように結合</b>する、②金属イオンの<b>酸化状態が変化</b>し酸化還元反応を仲介する、③<b>負電荷を安定化</b>させる。<br>
+    遷移金属は正電荷が強く低分子化合物と結合しやすい。<b>ルイス酸（電子受容体）</b>として作用するため強い求電子剤といえる（アミノ酸側鎖は不対電子を受容できないため弱い求電子剤）。<br>
+    例：炭酸脱水酵素では<b>亜鉛イオンが水分子を分極</b>させ、生じた −OH が求核剤としてCO₂を攻撃する。`,
+  cosub: `<b>共同基質としての補酵素（例：NAD⁺, NADP⁺）</b><br>
+    <b>一時的に酵素に結合</b>する補酵素。ニコチンアミドアデニンジヌクレオチド（NAD⁺）はある種の酵素に結合し共同基質として働く。<br>
+    例：CH₃CH₂OH + NAD⁺ → CH₃CHO + NADH + H⁺（ADHが触媒）。<br>
+    補酵素が関わる反応型：酸化・還元／アミノ基転移／アシル基転移／脱炭酸・アルデヒド基転移／カルボキシル基転移／C1基転移／分子内転移／ヒドロキシ化。<br>
+    多くの補酵素は<b>ビタミン由来</b>の有機化合物で、アミノ酸側鎖に見られない反応基を酵素に与える。`,
+  prosthetic: `<b>補欠分子族（例：シトクロムのヘム）</b><br>
+    <b>酵素と結合して離れない</b>タイプの補因子。金属イオンが補欠分子族として結合する場合（ヘム鉄など）と、有機化合物の補酵素が補欠分子族として結合する場合の両方がある。`,
+  holoapo: `<b>ホロ酵素 / アポ酵素</b><br>
+    ・<b>ホロ酵素</b>：触媒活性を持つ「酵素—補因子」複合体。<br>
+    ・<b>アポ酵素</b>：ホロ酵素から補因子を取り去った、酵素活性の無いタンパク質。<br>
+    例：プロコラーゲン-プロリンジオキシゲナーゼ（補因子が結合して初めて触媒活性を持つ）。`,
+  temp: `<b>温度の影響</b><br>
+    一般的な化学反応では温度が高くなるほど分子の衝突頻度が増え反応速度が増すが、<b>酵素はタンパク質のため高温では変性</b>してしまう。そのため酵素は固有の<b>最適温度</b>を持つ（多くは37℃前後）。<br>
+    <b>例外：Taqポリメラーゼ</b> — イエローストーンの熱水噴出孔に棲息する好熱菌 <i>Thermus aquaticus</i> から単離されたDNA合成酵素。至適温度は<b>72〜80℃</b>で、<b>PCR（ポリメラーゼ連鎖反応）</b>に欠かせない。<br>
+    （余談：PCRを考案したキャリー・マリスは、DNAを高温で熱変性する際にDNAポリメラーゼが失活する問題を、イエローストーンの間欠泉に棲む細菌のポリメラーゼで解決した。）`,
+  ph: `<b>pHの影響</b><br>
+    水素イオン濃度（pH）は活性部位の<b>イオン化状態</b>に影響を与える。基質に解離基がある場合、pHの変化によって活性部位への結合能や立体構造が変化する。<b>酵素反応が最大となる最適pHは酵素によって異なる。</b><br>
+    例：<b>ペプシン</b>（胃に存在するタンパク分解酵素・プロテアーゼ）は酸性側が至適、<b>キモトリプシン</b>（小腸に存在するプロテアーゼ）は中性〜弱アルカリ側が至適。`
+};
+function renderCof(k){ document.getElementById('cof-info').innerHTML = COF[k]; }
+bindSeg('cof-seg', renderCof);
+renderCof('metal');
+
+// ============================================================
+//  TAB 4: Catalytic mechanism gallery
+// ============================================================
+const MECH = {
+  adh: { name:'アルコールデヒドロゲナーゼ (ADH)', tag:'金属触媒 + 補酵素 (Zn²⁺, NAD⁺)',
+    info:`<b>アルコールデヒドロゲナーゼ (ADH)</b>　公認名：アルコールデヒドロゲナーゼ／系統名：アルコール:NAD⁺オキシドレダクターゼ／EC 1.1.1.1<br>
+    ①基質が無いときは<b>水分子がZn²⁺に配位</b>している。<br>
+    ②基質のエタノールが存在すると、水分子と置き換わり<b>アルコラートアニオンとしてZn²⁺に結合</b>する。<br>
+    ③<b>NAD⁺</b>が基質から<b>ヒドリドイオン（H⁻）</b>を受け取り、アルデヒドが生じる。` },
+  rnase: { name:'膵臓リボヌクレアーゼA (RNアーゼA)', tag:'酸塩基触媒 (His12 / His119)',
+    info:`<b>膵臓リボヌクレアーゼA (RNアーゼA)</b> — 膵臓から小腸に分泌され、RNAをヌクレオチドに加水分解する酵素。<b>酸塩基触媒</b>（プロトンの移動）による機構：<br>
+    ①<b>His12</b>が一般塩基（プロトンを引き抜く官能基）として機能し、RNAの2′-OHからプロトンを引き抜いて隣のリン酸基への求核置換反応を促す。<br>
+    ②<b>His119</b>が一般酸（プロトンを放出）として働き、ヌクレオチドの結合を切断する。<br>
+    ③切断された片方が離れると、代わりに水が入り込み②と①の逆反応が行われる（この時はHis119が一般塩基、His12が一般酸として働く）。<br>
+    ④中間体が壊れて、反対側のヌクレオチドも離れる。` },
+  lysozyme: { name:'リゾチーム', tag:'細菌細胞壁の加水分解 (Glu35 / Asp52)',
+    info:`<b>リゾチーム</b> — 細菌の細胞壁を壊す酵素。細胞壁ペプチドグリカンを構成するN-アセチルムラミン酸(NAM)とN-アセチルグルコサミン(NAG)の間の<b>グリコシド結合</b>を切断する。<br>
+    酵素-基質複合体(ES)を形成すると酵素はD環のコンフォメーションを半いす型に歪める。<b>Glu35</b>のプロトンがD環とE環の間の酸素に移行し切れやすくなる。<b>Asp52</b>のカルボキシ基がC1を求核攻撃してD環と共有結合する。続いてGlu35が水を極性化し、水分子の酸素がC1炭素を攻撃してAsp52との結合を切断。水分子の反応により加水分解が完了し、Asp52とGlu35は最初の状態に戻る。` },
+  serine: { name:'セリンプロテアーゼ', tag:'触媒トリオ (His・Ser・Asp)',
+    info:`<b>セリンプロテアーゼ</b>（キモトリプシン・トリプシン・エラスターゼなど）— 反応性に富むセリンを使ってタンパク質を分解する酵素の総称。消化酵素として働くものの他、発生・炎症・血液凝固に関わるものも存在する。<br>
+    約240残基のアミノ酸配列の相同性は約40%だが、いずれも触媒作用に必須の<b>His・Ser・Asp</b>を活性中心に持つ（水素結合により一定の配置を取り、<b>触媒トリオ</b>と呼ばれる）。<br>
+    機構：①His57が水分子のプロトンを取り、Serの酸素がペプチド結合を求核攻撃して<b>四面体中間体</b>が生成 → ②四面体中間体が壊れペプチド結合が切断 → ③アミン産物が放出され水が入る → ④His57が水分子のプロトンを取り、酸素がカルボキシ基に求核置換（再び四面体中間体） → ⑤中間体が壊れカルボキシ基が離脱。<br>
+    酵素は<b>遷移状態を安定化</b>（立体構造の変化・水素結合など）することでΔG‡を下げる。プロテアーゼインヒビター（例：トリプシンインヒビターBPTI）は活性中心に強く結合し反応を阻害する。` }
+};
+const MECH_ORDER = ['adh','rnase','lysozyme','serine'];
+let mechSel = 'adh';
+function renderMechGrid(){
+  const grid = document.getElementById('mech-grid');
+  grid.innerHTML = '';
+  MECH_ORDER.forEach(k=>{
+    const m = MECH[k];
+    const t = document.createElement('div');
+    t.className = 'tile' + (k===mechSel?' sel':'');
+    t.innerHTML = `<b>${m.name}</b><br><span style="color:#5a6978;">${m.tag}</span>`;
+    t.addEventListener('click', ()=>{ mechSel=k; renderMechGrid(); renderMechDetail(); });
+    grid.appendChild(t);
+  });
+}
+function renderMechDetail(){ document.getElementById('mech-info').innerHTML = MECH[mechSel].info; }
+renderMechGrid(); renderMechDetail();
+
+// ============================================================
+//  TAB 5: Zymogen activation stepper
+// ============================================================
+const ZYM = [
+  { label:'不活性なチモーゲンとして合成', info:'消化酵素が最初から活性体として生成されると<b>組織を自己消化</b>してしまうため、消化管内腔に到達するまで<b>不活性化(トリプシノーゲン)</b>しておく必要がある。※<b>急性膵炎</b>は消化酵素が膵臓内で活性化してしまうことで起きる。' },
+  { label:'エンテロペプチダーゼによる部分切断', info:'十二指腸の粘膜から放出される<b>エンテロペプチダーゼ</b>がトリプシノーゲンを部分切断し、<b>活性化型（トリプシン）</b>となる。' },
+  { label:'トリプシンによる自己触媒的活性化', info:'生じた<b>トリプシン</b>はさらに他のトリプシノーゲン分子を部分切断し、トリプシンを増加させる（＝<b>自己触媒的</b>に作用）。' }
+];
+let zymStep = 0;
+function renderZym(){
+  document.getElementById('zym-steps').innerHTML =
+    ZYM.map((s,i)=>`<div class="step ${i<zymStep?'done':''} ${i===zymStep?'cur':''}">${i+1}. ${s.label}</div>`).join('');
+  const d = ZYM[zymStep];
+  document.getElementById('zym-info').innerHTML = `<b>ステップ ${zymStep+1} / ${ZYM.length}: ${d.label}</b><br>${d.info}`;
+}
+document.getElementById('zym-next').addEventListener('click', ()=>{ if(zymStep<ZYM.length-1){zymStep++; renderZym();} });
+document.getElementById('zym-prev').addEventListener('click', ()=>{ if(zymStep>0){zymStep--; renderZym();} });
+document.getElementById('zym-reset').addEventListener('click', ()=>{ zymStep=0; renderZym(); });
+renderZym();
+
+// ============================================================
+//  TAB 6: Quiz
+// ============================================================
+const QUIZ = [
+  {
+    stem: "酵素反応の特徴として<b>正しくない</b>ものはどれか?",
+    options: ["反応が速い（触媒の無い場合と比べ10⁶〜10¹²倍）", "穏やかな条件（低温・常圧・中性pH）で進む", "特異性が高く副生成物がほとんどできない", "反応エネルギー（ΔG）そのものを変化させることで反応を促進する"],
+    correct: 3,
+    explain: "正解 = 4。酵素は反応エネルギー（ΔG）は<b>変えず</b>、活性化自由エネルギー（ΔG‡）を引き下げることで反応を促進する。他の3つは酵素反応の特徴として正しい（反応速度・穏やかな条件・高い特異性）。"
+  },
+  {
+    stem: "ヘキソキナーゼが属する酵素分類とその反応として正しい組み合わせはどれか?",
+    options: ["EC2トランスフェラーゼ（転移酵素）— ATPからグルコースへリン酸基を転移しグルコース-6-リン酸を生成", "EC1オキシレダクターゼ — 酸化還元反応でエタノールをアセトアルデヒドにする", "EC3ヒドロラーゼ — ペプチド結合を加水分解する", "EC6リガーゼ — 2分子をATPのエネルギーで連結する"],
+    correct: 0,
+    explain: "正解 = 1。<b>ヘキソキナーゼ</b>はEC2<b>トランスフェラーゼ（転移酵素）</b>の代表例で、グルコース + ATP → グルコース-6-リン酸 + ADP という<b>リン酸基の転移反応</b>を触媒する。"
+  },
+  {
+    stem: "補酵素の説明として正しいものはどれか?",
+    options: ["多くはビタミン由来の有機化合物で、アミノ酸側鎖に見られない反応基を酵素に付与する", "補酵素は常に酵素と共有結合せず基質のみと結合する", "補酵素は常にタンパク質である", "補酵素は必ず金属イオンである"],
+    correct: 0,
+    explain: "正解 = 1。補酵素の多くは<b>ビタミン由来</b>の有機化合物で、タンパク分子（アミノ酸側鎖）には無い反応基を酵素に与える「化学的な歯」として働く。金属イオンは補因子のうち<b>別カテゴリ</b>（金属イオン）に分類される。"
+  },
+  {
+    stem: "酵素反応の補因子として使われる遷移金属（Cu²⁺, Fe²⁺, Zn²⁺など）の役割として<b>正しくない</b>ものはどれか?",
+    options: ["基質を反応しやすいように結合する", "金属イオンの酸化状態が変化し酸化還元反応を仲介する", "負電荷を安定化させる", "酵素をリン酸化して活性を調節する"],
+    correct: 3,
+    explain: "正解 = 4。遷移金属の役割は①基質の結合、②酸化還元反応の仲介、③負電荷の安定化の3つ。リン酸化による活性調節（共有結合修飾）は別の調節機構であり、遷移金属補因子の役割ではない。"
+  },
+  {
+    stem: "ホロ酵素とアポ酵素の関係として正しいものはどれか?",
+    options: ["ホロ酵素は触媒活性を持つ酵素-補因子複合体で、そこから補因子を取り去ると活性の無いアポ酵素になる", "アポ酵素は補因子と結合した活性型の酵素である", "ホロ酵素とアポ酵素は同じものを指す別名である", "アポ酵素の方がホロ酵素より高い触媒活性を持つ"],
+    correct: 0,
+    explain: "正解 = 1。<b>ホロ酵素</b>＝触媒活性を持つ「酵素—補因子」複合体。<b>アポ酵素</b>＝ホロ酵素から補因子を取り去った、酵素活性の無いタンパク質（例：プロコラーゲン-プロリンジオキシゲナーゼ）。"
+  },
+  {
+    stem: "酵素反応における温度とpHの影響として正しいものはどれか?",
+    options: ["酵素はタンパク質のため高温では変性し、固有の最適温度・最適pHを持つ（例外的にTaqポリメラーゼは72〜80℃が至適）", "酵素活性は温度やpHの影響を全く受けない", "全ての酵素は同一の最適pHを持つ", "pHは酵素の一次構造（アミノ酸配列）を変化させることで活性を調節する"],
+    correct: 0,
+    explain: "正解 = 1。酵素は固有の最適温度（多くは37℃前後）・最適pHを持ち、高温では変性する。例外的に好熱菌由来の<b>Taqポリメラーゼ</b>は72〜80℃が至適でPCRに使われる。ペプシン（酸性至適）とキモトリプシン（中性〜弱アルカリ至適）のように酵素ごとに最適pHは異なる。"
+  },
+  {
+    stem: "アルコールデヒドロゲナーゼ(ADH)の反応機構として正しいものはどれか?",
+    options: ["基質エタノールがZn²⁺に結合していた水分子と置き換わりアルコラートアニオンとなり、NAD⁺がヒドリドイオンを受け取ってアセトアルデヒドが生じる", "His12とHis119による酸塩基触媒でRNAを加水分解する", "Glu35とAsp52によりグリコシド結合を加水分解する", "セリンが求核攻撃してペプチド結合を切断する"],
+    correct: 0,
+    explain: "正解 = 1。ADH（EC1.1.1.1）は<b>Zn²⁺</b>にエタノールがアルコラートアニオンとして結合し、<b>NAD⁺</b>がヒドリドイオン（H⁻）を受け取ってアセトアルデヒドが生じる。His12/His119はRNアーゼA、Glu35/Asp52はリゾチーム、セリンの求核攻撃はセリンプロテアーゼの機構。"
+  },
+  {
+    stem: "膵臓リボヌクレアーゼA(RNアーゼA)の触媒機構として正しいものはどれか?",
+    options: ["His12が一般塩基、His119が一般酸として働く酸塩基触媒によりRNAをヌクレオチドに加水分解する", "Zn²⁺を用いた金属触媒でDNAを合成する", "セリンの求核攻撃でタンパク質を分解する", "Asp52とGlu35によりペプチドグリカンを切断する"],
+    correct: 0,
+    explain: "正解 = 1。RNアーゼAは<b>His12（一般塩基）とHis119（一般酸）</b>によるプロトン移動（酸塩基触媒）でRNAをヌクレオチドに加水分解する。反応の後半では役割が入れ替わる（His119が塩基、His12が酸）。"
+  },
+  {
+    stem: "生体にとって重要な求核基の例として正しい組み合わせはどれか?",
+    options: ["ヒドロキシ基・メルカプト基・アミノ基・イミダゾール基", "プロトン・金属イオン・カルボニル炭素・陽イオン性イミン", "ATP・ADP・Pi", "NAD⁺・NADP⁺"],
+    correct: 0,
+    explain: "正解 = 1。<b>求核基（電子密度が高い）</b>の例はヒドロキシ基・メルカプト基・アミノ基・イミダゾール基。<b>求電子基（電子密度が低い）</b>の例はプロトン・金属イオン・カルボニル炭素原子・陽イオン性イミン（シッフ塩基）。"
+  },
+  {
+    stem: "リゾチームの触媒機構として正しいものはどれか?",
+    options: ["Glu35が酸としてグリコシド結合の酸素にプロトンを移し、Asp52のカルボキシ基がC1を求核攻撃して結合を切断する", "His12とHis119による酸塩基触媒でRNAを切断する", "Zn²⁺がエタノールを配位してNAD⁺にヒドリドを渡す", "セリンプロテアーゼと全く同じ触媒トリオを用いる"],
+    correct: 0,
+    explain: "正解 = 1。リゾチームは<b>Glu35</b>のプロトンがD環-E環間の酸素に移行し結合が切れやすくなり、<b>Asp52</b>のカルボキシ基がC1を求核攻撃してNAM-NAG間のグリコシド結合を切断する。"
+  },
+  {
+    stem: "セリンプロテアーゼの説明として正しいものはどれか?",
+    options: ["キモトリプシン・トリプシン・エラスターゼなどが代表例で、His・Ser・Aspからなる触媒トリオを活性中心に持つ", "常にセリン単独で触媒作用を担い他の残基は関与しない", "DNAを切断する酵素の総称である", "全て補酵素NAD⁺を必要とする"],
+    correct: 0,
+    explain: "正解 = 1。セリンプロテアーゼの代表例は<b>キモトリプシン・トリプシン・エラスターゼ</b>。いずれも触媒作用に必須の<b>His・Ser・Asp</b>を活性中心に持ち、水素結合で一定の配置を取る「<b>触媒トリオ</b>」と呼ばれる。"
+  },
+  {
+    stem: "酵素による触媒反応の一般原理として<b>正しくない</b>ものはどれか?",
+    options: ["2種の基質を正確な位置に配置し反応が起こりやすくする", "局所的な荷電により遷移状態を安定化する", "基質の立体構造を歪め遷移状態に進みやすくする", "基質の共有結合エネルギーを丸ごと消去する"],
+    correct: 3,
+    explain: "正解 = 4。酵素による触媒反応の一般原理は①正確な基質配置、②局所的荷電による遷移状態の安定化、③基質の立体構造の歪みによる遷移状態への誘導、の3つ。「共有結合エネルギーを丸ごと消去する」という機構は存在しない。"
+  },
+  {
+    stem: "トリプシノーゲンの活性化について正しいものはどれか?",
+    options: ["十二指腸粘膜から放出されるエンテロペプチダーゼによる部分切断で活性化型トリプシンとなり、以後トリプシンが自己触媒的に他のトリプシノーゲンを活性化する", "トリプシノーゲンは膵臓内で常に活性型として存在する", "活性化には補酵素NAD⁺が必須である", "チモーゲン（ザイモジェン）とは活性型酵素の別名である"],
+    correct: 0,
+    explain: "正解 = 1。<b>チモーゲン</b>は不活性な酵素前駆体のこと。トリプシノーゲンは十二指腸粘膜由来の<b>エンテロペプチダーゼ</b>で部分切断され活性化型（トリプシン）となり、以後トリプシン自身が他のトリプシノーゲンを部分切断する（<b>自己触媒的</b>）。膵臓内で消化酵素が活性化すると<b>急性膵炎</b>を引き起こす。"
+  },
+  {
+    stem: "スタチン系薬剤とHIVプロテアーゼ阻害薬の作用機序として正しいものはどれか?",
+    options: ["スタチンはHMG-CoAレダクターゼを阻害しコレステロール合成を抑制、HIVプロテアーゼ阻害薬はウイルス蛋白質の切断を阻害しHIVの増殖を抑制する", "両者とも同じ酵素（アセチルコリンエステラーゼ）を標的とする", "スタチンはアセチルコリンエステラーゼを阻害する薬剤である", "HIVプロテアーゼ阻害薬はDNAポリメラーゼを阻害する薬剤である"],
+    correct: 0,
+    explain: "正解 = 1。<b>スタチン系薬剤</b>（ロバスタチン等）は<b>HMG-CoAレダクターゼ</b>を阻害しコレステロール合成を抑制する抗高脂血症薬。<b>HIVプロテアーゼ阻害薬</b>（サキナビル等）はHIV特有のプロテアーゼによる前駆蛋白質の切断を阻害し、ウイルスの増殖を抑制する。"
+  },
+  {
+    stem: "サリンが強い毒性を示す理由として正しいものはどれか?",
+    options: ["アセチルコリンエステラーゼを阻害し、アセチルコリン受容体（Na⁺/K⁺チャネル）が長時間開放されたままとなり神経伝達が異常となるため", "HMG-CoAレダクターゼを阻害しコレステロール合成を止めるため", "HIVプロテアーゼを阻害するため", "Taqポリメラーゼを阻害しPCRを妨げるため"],
+    correct: 0,
+    explain: "正解 = 1。サリン（DIPFも同様）は<b>アセチルコリンエステラーゼ(AChE)</b>を阻害する。AChEが働かないとアセチルコリンが分解されず、ACh受容体であるNa⁺/K⁺チャネルが長時間開放され続けて神経伝達が異常となり、瞳孔収縮・全身痙攣・呼吸困難・死に至ることもある。"
+  }
+];
+
+// クイズ描画
+const quizList = document.getElementById('quiz-list');
+QUIZ.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  let optsHtml = '';
+  q.options.forEach((opt, oi) => { optsHtml += `<li data-idx="${oi}">${opt}</li>`; });
+  card.innerHTML = `<div class="stem">問 ${i + 1}. ${q.stem}</div><ul class="options">${optsHtml}</ul><div class="quiz-explain"><b>解説:</b> ${q.explain}</div>`;
+  quizList.appendChild(card);
+  const selected = new Set();
+  card.querySelectorAll('ul.options li').forEach(li => {
+    li.addEventListener('click', () => {
+      if (card.classList.contains('graded')) return;
+      const idx = parseInt(li.dataset.idx);
+      const multi = Array.isArray(q.correct);
+      if (!multi) { selected.clear(); card.querySelectorAll('ul.options li').forEach(x => x.classList.remove('selected')); }
+      if (selected.has(idx)) { selected.delete(idx); li.classList.remove('selected'); }
+      else { selected.add(idx); li.classList.add('selected'); }
+    });
+  });
+  card._selected = selected;
+});
+
+// 修了証は再度試験 (143474) のみ: ?retake=1 または referrer が再試コースの時だけ有効
+const IS_RETAKE = (function () {
+  try { return new URLSearchParams(location.search).get('retake') === '1' || /lms\.keio\.jp\/courses\/143474/.test(document.referrer || ''); }
+  catch (e) { return false; }
+})();
+
+document.getElementById('quiz-grade').addEventListener('click', () => {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i];
+    const selected = card._selected;
+    if (selected.size === 0) return;
+    answered++;
+    const correctSet = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const isCorrect = selected.size === correctSet.size && [...selected].every(x => correctSet.has(x));
+    if (isCorrect) score++;
+    card.classList.add('graded');
+    const hideAnswer = IS_RETAKE && !isCorrect;
+    card.querySelectorAll('ul.options li').forEach(li => {
+      const idx = parseInt(li.dataset.idx);
+      li.classList.remove('selected');
+      if (hideAnswer) {
+        if (selected.has(idx)) li.classList.add('incorrect');
+      } else {
+        if (correctSet.has(idx)) li.classList.add('correct');
+        else if (selected.has(idx)) li.classList.add('incorrect');
+      }
+    });
+    if (!hideAnswer) card.querySelector('.quiz-explain').classList.add('shown');
+  });
+  const summary = document.getElementById('quiz-summary');
+  const certEl = document.getElementById('quiz-cert-section');
+  const passReq = Math.ceil(QUIZ.length * 0.8);
+  const allAnswered = answered === QUIZ.length;
+  const passed = allAnswered && score >= passReq;
+  let tail;
+  if (passed) { tail = ` — <span style="color:#2e8b57;font-weight:700;">✅ 合格（${passReq}問以上）！修了証を発行できます。</span>`; certEl.style.display = 'block'; }
+  else if (!allAnswered) { tail = ` — <span style="color:#9b2c2c;">全 ${QUIZ.length} 問に回答してから採点してください。</span>`; certEl.style.display = 'none'; }
+  else { tail = ` — <span style="color:#9b2c2c;">不合格（合格は ${passReq}問以上）。リセットして再挑戦してください。</span>`; certEl.style.display = 'none'; }
+  summary.innerHTML = `<div class="quiz-summary">スコア: <b>${score} / ${QUIZ.length}</b> (回答済 ${answered} 問)${tail}</div>`;
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('quiz-reset').addEventListener('click', () => {
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    card.classList.remove('graded');
+    card._selected.clear();
+    card.querySelectorAll('ul.options li').forEach(li => {
+      li.classList.remove('selected', 'correct', 'incorrect');
+    });
+    card.querySelector('.quiz-explain').classList.remove('shown');
+  });
+  document.getElementById('quiz-summary').innerHTML = '';
+  document.getElementById('quiz-cert-section').style.display = 'none';
+  const _sid = document.getElementById('cert-student-id'); if (_sid) _sid.value = '';
+});
+
+/* ---- 修了証 (Certificate) ---- */
+async function generateVerificationCode(studentId, score, date) {
+  const data = `${studentId}:biochem-lec07:${score}/${QUIZ.length}:${date}:biochem2026`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 8).toUpperCase();
+}
+
+document.getElementById('quiz-pdf').addEventListener('click', async () => {
+  const studentId = document.getElementById('cert-student-id').value.trim();
+  if (!studentId) { document.getElementById('cert-error').style.display = 'block'; return; }
+  document.getElementById('cert-error').style.display = 'none';
+  let score = 0; const answers = [];
+  document.querySelectorAll('.quiz-card').forEach((card, i) => {
+    const q = QUIZ[i]; const sel = [...(card._selected || [])]; answers[i] = sel;
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    if (sel.length === cs.size && sel.every(x => cs.has(x))) score++;
+  });
+  const total = QUIZ.length;
+  const date = new Date().toLocaleDateString('ja-JP');
+  const datetime = new Date().toLocaleString('ja-JP');
+  const verCode = await generateVerificationCode(studentId, score, date);
+  let qhtml = '';
+  QUIZ.forEach((q, qi) => {
+    const cs = new Set(Array.isArray(q.correct) ? q.correct : [q.correct]);
+    const sel = new Set(answers[qi] || []);
+    qhtml += `<div class="q"><div class="q-num">問 ${qi + 1}</div><div class="q-stem">${q.stem}</div><ul class="opts">`;
+    q.options.forEach((opt, oi) => {
+      let cls = ''; if (cs.has(oi)) cls = 'correct'; else if (sel.has(oi)) cls = 'wrong';
+      qhtml += `<li class="${cls}"><span class="letter">${oi + 1})</span>${opt}</li>`;
+    });
+    qhtml += `</ul><div class="explain"><span class="explain-label">解説:</span> ${q.explain}</div></div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>生化学 Lec07 復習クイズ修了証</title><style>
+  @page { size: A4; margin: 18mm 15mm; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; color: #1a2633; line-height: 1.6; font-size: 11pt; margin: 0; }
+  .cert-box { border: 3px solid #2e8b57; border-radius: 12px; padding: 30px 40px; margin: 20px auto; max-width: 600px; text-align: center; }
+  .cert-title { color: #22543d; font-size: 22pt; font-weight: 700; margin-bottom: 6px; }
+  .cert-sub { color: #5a6978; font-size: 12pt; margin-bottom: 20px; }
+  .cert-field { margin: 12px 0; font-size: 13pt; }
+  .cert-field .label { color: #5a6978; font-size: 10pt; }
+  .cert-field .value { font-weight: 700; font-size: 16pt; }
+  .cert-score { font-size: 36pt; font-weight: 700; color: #2e8b57; margin: 16px 0; }
+  .cert-code { margin-top: 20px; padding: 10px; background: #f7fafc; border: 1px solid #d7dce5; border-radius: 6px; font-family: monospace; font-size: 14pt; letter-spacing: 2px; }
+  .cert-code .label { font-family: sans-serif; font-size: 9pt; color: #5a6978; letter-spacing: normal; }
+  hr { border: none; border-top: 1px solid #d7dce5; margin: 20px 0; }
+  .q { margin-bottom: 18px; page-break-inside: avoid; border-left: 3px solid #2e8b57; padding-left: 14px; text-align: left; }
+  .q-num { font-weight: 700; color: #2e8b57; font-size: 12pt; }
+  .q-stem { font-weight: 600; margin: 6px 0; font-size: 11pt; }
+  .opts { list-style: none; padding: 0; margin: 6px 0; }
+  .opts li { padding: 4px 8px 4px 30px; position: relative; font-size: 10.5pt; margin: 3px 0; }
+  .opts li .letter { position: absolute; left: 6px; font-weight: 700; color: #5a6978; }
+  .opts li.correct { background: #c6f6d5; border-left: 3px solid #2e8b57; border-radius: 3px; }
+  .opts li.correct::after { content: " \\2713 正解"; color: #22543d; font-weight: 700; font-size: 9pt; }
+  .opts li.wrong { background: #fed7d7; border-left: 3px solid #e09f3e; border-radius: 3px; }
+  .opts li.wrong::after { content: " \\2717 あなたの回答"; color: #d64545; font-weight: 700; font-size: 9pt; }
+  .explain { background: #f7fafc; border-left: 3px solid #2e8b57; padding: 8px 12px; font-size: 10pt; margin-top: 8px; line-height: 1.7; }
+  .explain-label { font-weight: 700; color: #2e8b57; }
+  footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d7dce5; font-size: 9pt; color: #5a6978; text-align: center; }
+  .print-btn { background: #2e8b57; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13pt; cursor: pointer; font-weight: 700; font-family: inherit; position: fixed; top: 20px; right: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  @media print { .print-btn { display: none; } }
+  </style></head><body>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF として保存</button>
+  <div class="cert-box">
+    <div class="cert-title">生化学 復習クイズ修了証</div>
+    <div class="cert-sub">第7回: 酵素反応の調節</div>
+    <div class="cert-field"><span class="label">学籍番号</span><br><span class="value">${studentId}</span></div>
+    <div class="cert-score">${score} / ${total}</div>
+    <div class="cert-field"><span class="label">合格基準: ${Math.ceil(total * 0.8)}問以上</span></div>
+    <div class="cert-field"><span class="label">出力日時</span><br>${datetime}</div>
+    <div class="cert-code"><span class="label">検証コード</span><br>${verCode}</div>
+  </div>
+  <hr><h2 style="text-align:center; color:#22543d;">問題・回答・解説</h2>
+  ${qhtml}
+  <footer>生化学 FY2026 · 慶應義塾大学薬学部 · 担当: 長谷耕二 / 鈴木功一郎（Interactive Lab: 高橋大輔）<br>検証コード ${verCode} · 学籍番号 ${studentId} · ${datetime}</footer>
+  </body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) { alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); URL.revokeObjectURL(url); return; }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+});
+</script>
+
+</body>
+</html>
